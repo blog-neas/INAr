@@ -2,7 +2,7 @@
 % Please edit documentation in R/INAR1_different_innovations.R
 \name{genINAR}
 \alias{genINAR}
-\title{Add together two numbers}
+\title{Generate INAR(1) models with different innovations}
 \usage{
 genINAR(n, par, arrival = "poisson", burnout = 500)
 }
@@ -19,7 +19,7 @@ genINAR(n, par, arrival = "poisson", burnout = 500)
 A number.
 }
 \description{
-Add together two numbers
+Generate INAR(1) models with different innovations
 }
 \details{
 The function generates observations drawn from an INAR(1) model
@@ -52,9 +52,10 @@ The positive real number \eqn{\lambda} is equal to the expected value and also t
 By the way, gatto gatto miao miao \code{\link[=genINAR]{genINAR()}}.
 }
 \examples{
-# Generate 500 an INAR(1) model with thinning \alpha=0.5 Poisson(2) innovations
+# Generate 500 an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
+set.seed(1234)
 pars <- c(0.5,2)
-INAr::genINAR(500, pars, arrival = "poisson")
+genINAR(500, pars, arrival = "poisson")
 
 }
 \references{

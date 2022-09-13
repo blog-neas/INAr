@@ -5,7 +5,7 @@
 
 # Rcpp::sourceCpp("src/INAR1_gen.cpp")
 
-#' Add together two numbers
+#' Generate INAR(1) models with different innovations
 #'
 #' @param n integer, number of observations, length of the series.
 #' @param par vector, parameters related with the model, see the details section.
@@ -36,9 +36,10 @@
 #'   \insertAllCited{}
 #' @return A number.
 #' @examples
-#' # Generate 500 an INAR(1) model with thinning \alpha=0.5 Poisson(2) innovations
+#' # Generate 500 an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
+#' set.seed(1234)
 #' pars <- c(0.5,2)
-#' INAr::genINAR(500, pars, arrival = "poisson")
+#' genINAR(500, pars, arrival = "poisson")
 #'
 #' @export
 genINAR <- function(n,par,arrival="poisson",burnout=500){
