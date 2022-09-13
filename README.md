@@ -32,7 +32,6 @@ Generation, estimation and testing of INteger Autoregressive models
 	- [ ] References
 - [ ] Further steps and developments
 
-
 ## Installation
 
 ``` r
@@ -49,36 +48,36 @@ devtools::install_github("blog-neas/INAr")
 
 <!-- This section is adapted from https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c -->
 
-First of all, thanks for considering contributing to INAr! 👍 It's people like you that make it rewarding for us - the project maintainers - to work on INAr package.
-INAr is an open source project, maintained by people who care. We are not directly funded to do so. 😊
+First of all, thanks for considering contributing to `INAr`! 👍 
+`INAr` is an open source project maintained by people who care, and an help is always appreciated. 😊
 
-<!-- [repo]: https://github.com/our_org/our_package -->
-<!-- [issues]: https://github.com/our_org/our_package/issues -->
-<!-- [new_issue]: https://github.com/our_org/our_package/issues/new -->
-<!-- [website]: https://our_org.github.io/our_package -->
-<!-- [citation]: https://our_org.github.io/our_package/authors.html -->
-<!-- [email]: mailto:maintainer_email -->
+ [repo]: https://github.com/blog-neas/INAr
+ [issues]: https://github.com/blog-neas/INAr/issues
+ [new_issue]: https://github.com/blog-neas/INAr/issues/new
+ [website]: https://blog-neas.github.io/en/
+ [citation]: https://blog-neas.github.io/en/INAr/authors.html
+ [email]: mailto:lucio.palazzo@unina.it
 
 There are several ways you can contribute to this project. 
 
- - Think INAr is useful? Let others discover it, by telling them in person, via Twitter or a blog post.
+ - Think `INAr` is useful? Let others discover it, by telling them in person, via Twitter or a blog post.
 
- - Using INAr for a paper you are writing? Consider [citing it][citation].
+ - Using `INAr` for a paper you are writing? Consider [citing it][citation].
 
 ### Ask a question ⁉️
 
-Using INAr and got stuck? Browse the [documentation][website] to see if you can find a solution. Still stuck? Post your question as an [issue on GitHub][new_issue]. While we cannot offer user support, we'll try to do our best to address it, as questions often lead to better documentation or the discovery of bugs.
+Using `INAr` and got stuck? Browse the [documentation][website] to see if you can find a solution. Still stuck? Post your question as an [issue on GitHub][new_issue]. While we cannot offer user support, we'll try to do our best to address it, as questions often lead to better documentation or the discovery of bugs.
 
-Want to ask a question in private? Contact the package maintainer by [email][mailto:email].
+Want to ask a question in private? Contact the package maintainer by [email][mailto:lucio.palazzo@unina.it].
 
 ### Propose an idea 💡
 
-Have an idea for a new INAr feature? Take a look at the [documentation][website] and [issue list][issues] to see if it isn't included or suggested yet. If not, suggest your idea as an [issue on GitHub][new_issue]. While we can't promise to implement your idea, it helps to:
+Have an idea for a new `INAr` feature? Take a look at the [documentation][website] and [issue list][issues] to see if it isn't included or suggested yet. If not, suggest your idea as an [issue on GitHub][new_issue]. While we can't promise to implement your idea, it helps to:
 
 * Explain in detail how it would work.
 * Keep the scope as narrow as possible.
 
-See below if you want to contribute code for your idea as well.
+See below if you want to contribute code for your idea as well. See also the Roadmap section above.
 
 ### Report a bug 🐛
 
@@ -88,7 +87,7 @@ Using `INAr` and discovered a bug? That's annoying! Don't let others have the sa
 * Any details about your local setup that might be helpful in troubleshooting.
 * Detailed steps to reproduce the bug.
 
-Care to fix bugs or implement new functionality for INAr? Awesome! 👏 Have a look at the [issue list][issues] and leave a comment on the things you want to work on. See also the Roadmap section above.
+Care to fix bugs or implement new functionality for `INAr`? Awesome! 👏 Have a look at the [issue list][issues] and leave a comment on the things you want to work on.
 
 ### Improve the documentation 📖
 
