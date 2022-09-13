@@ -1,12 +1,12 @@
 # INAr R Package
 Generation, estimation and testing of INteger Autoregressive models
 
+<!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
 
 [![CRAN status](https://www.r-pkg.org/badges/version/INAr?color=orange)](https://cran.r-project.org/package=INAr)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: Active - The project is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R build status](https://github.com/blog-neas/INAr/workflows/R-CMD-check/badge.svg)](https://github.com/blog-neas/INAr/actions)
 [![License: GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 
 <!-- badges: end -->
