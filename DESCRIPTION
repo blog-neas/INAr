@@ -16,7 +16,7 @@ Authors@R:
 Maintainer: Lucio Palazzo <lucio.palazzo@unina.it>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-    Mettere citazioni INAR models Al-Osh etc...
+    Mettere citazioni INAR models Al-Osh 1987, etc...
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -28,6 +28,8 @@ Imports: Rcpp (>= 1.0.0),
     MASS,
     gamlss.dist,
     RNGforGPD,
-    skellam
+    skellam,
+    Rdpack
+RdMacros: Rdpack
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.2.1

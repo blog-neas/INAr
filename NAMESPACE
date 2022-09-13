@@ -2,4 +2,5 @@
 
 export(genINAR)
 importFrom(Rcpp,sourceCpp)
+importFrom(Rdpack,reprompt)
 useDynLib(INAr)

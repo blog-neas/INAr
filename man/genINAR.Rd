@@ -24,7 +24,7 @@ Add together two numbers
 \details{
 The function generates observations drawn from an INAR(1) model
 \deqn{X_t = \alpha {*} X_{t-1} + \varepsilon_t}
-where \eqn{*} is the binomial thinning operator and \eqn{\alpha} is the thinning parameter.
+where \eqn{*} is the binomial thinning operator and \eqn{\alpha} is the thinning parameter \insertCite{Steutel1979,al1987first}{INAr}.
 The first value of the \code{par} vector is the thinning operator \eqn{\alpha}, while the remaining depend mainly on the type of arrival distribution. The arrivals already implemented are listed below.
 
 \strong{Poisson}. Innovations are drawn from a Poisson distribution \eqn{Poi(\lambda)}
@@ -56,4 +56,7 @@ By the way, gatto gatto miao miao \code{\link[=genINAR]{genINAR()}}.
 pars <- c(0.5,2)
 INAr::genINAR(500, pars, arrival = "poisson")
 
+}
+\references{
+\insertAllCited{}
 }

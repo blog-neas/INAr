@@ -14,7 +14,7 @@
 #' @details
 #' The function generates observations drawn from an INAR(1) model
 #' \deqn{X_t = \alpha {*} X_{t-1} + \varepsilon_t}
-#' where \eqn{*} is the binomial thinning operator and \eqn{\alpha} is the thinning parameter.
+#' where \eqn{*} is the binomial thinning operator and \eqn{\alpha} is the thinning parameter \insertCite{Steutel1979,al1987first}{INAr}.
 #' The first value of the `par` vector is the thinning operator \eqn{\alpha}, while the remaining depend mainly on the type of arrival distribution. The arrivals already implemented are listed below.
 #'
 #' **Poisson**. Innovations are drawn from a Poisson distribution \eqn{Poi(\lambda)}
@@ -32,6 +32,8 @@
 #' * `par` = ...
 #'
 #' By the way, gatto gatto miao miao [genINAR()].
+#' @references
+#'   \insertAllCited{}
 #' @return A number.
 #' @examples
 #' # Generate 500 an INAR(1) model with thinning \alpha=0.5 Poisson(2) innovations
