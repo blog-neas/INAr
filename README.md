@@ -98,7 +98,7 @@ Noticed a typo on the website? Think a function could use a better example? Good
 3. [Propose a file change](https://help.github.com/articles/editing-files-in-another-user-s-repository/) to update the function documentation in the roxygen comments (starting with `#'`).
 
 
-## Code of conduct
+--------------------------------------------------------------------------------------------------------------------------------------------------
 
 Please note that this project is released with a [Contributor Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
 By contributing to this project, you agree to abide by its terms.
