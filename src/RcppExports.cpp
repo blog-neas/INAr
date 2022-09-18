@@ -23,6 +23,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// INARp_cpp
+NumericVector INARp_cpp(NumericVector resid, DoubleVector a);
+RcppExport SEXP _INAr_INARp_cpp(SEXP residSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type resid(residSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(INARp_cpp(resid, a));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_genINARmarg
 IntegerVector rcpp_genINARmarg(double a, IntegerVector Xseries, IntegerVector resid);
 RcppExport SEXP _INAr_rcpp_genINARmarg(SEXP aSEXP, SEXP XseriesSEXP, SEXP residSEXP) {
@@ -39,6 +51,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_INAr_INAR1_cpp", (DL_FUNC) &_INAr_INAR1_cpp, 2},
+    {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_rcpp_genINARmarg", (DL_FUNC) &_INAr_rcpp_genINARmarg, 3},
     {NULL, NULL, 0}
 };

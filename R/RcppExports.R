@@ -5,6 +5,10 @@ INAR1_cpp <- function(resid, a) {
     .Call('_INAr_INAR1_cpp', PACKAGE = 'INAr', resid, a)
 }
 
+INARp_cpp <- function(resid, a) {
+    .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
+}
+
 rcpp_genINARmarg <- function(a, Xseries, resid) {
     .Call('_INAr_rcpp_genINARmarg', PACKAGE = 'INAr', a, Xseries, resid)
 }

@@ -4,7 +4,7 @@
 \alias{genINAR}
 \title{Generate INAR(1) models with different innovations}
 \usage{
-genINAR(n, par, arrival = "poisson", burnout = 500)
+genINAR(n, a, par, arrival = "poisson", burnout = 500)
 }
 \arguments{
 \item{n}{integer, number of observations, length of the series.}

@@ -42,57 +42,47 @@
 #' genINAR(500, pars, arrival = "poisson")
 #'
 #' @export
-genINAR <- function(n,par,arrival="poisson",burnout=500){
+genINAR <- function(n,a,par,arrival="poisson",burnout=500){
 
-  s <- n+burnout
+    stopifnot(is.vector(a))
+    arrival <- tolower(arrival)
 
-  # -9999 = valori NA che saranno sovrascritti!
-  sim_X <- rep(-9999,s)
+    s <- n + burnout
+    lags <- length(a)
 
-  # Poisson marginal
-  if(arrival=="poisson"){
+    # -9999 = valori NA che saranno sovrascritti!
+    sim_X <- rep(-99,s)
+
+    # Poisson marginal
+    if(arrival=="poisson"){
+        stopifnot(length(par)==1)
+        l_ <- unname(par)
+        resid_ <- rpois(s,l_)
+
+    }
+    else if(arrival=="overdisp_poisson"){
+        stopifnot(length(par)==2)
+
+        l_ <- unname(par[1])
+        d_ <- unname(par[2])
+        stopifnot(d_ > 1)
+
+        resid_ <- rnbinom(s, size=(l_/(d_-1)), mu=l_)
+    }
+    else if(arrival=="zip"){
     stopifnot(length(par)==2)
 
-    # a_ <- unname(par[1])
-    l_ <- unname(par[2])
+    l_ <- unname(par[1])
+    sig_ <- unname(par[2])
 
-    # OLD
-    # sim_X[1] <- rpois(1,l_) # come hanno fatto alosh alzaid 1987 round(runif(1,1,start_unif)) # fisso X_0
-    # resid_ <- rPINAR(s,lambda=l_)
-
-    resid_ <- rpois(s,l_)
-
-  }
-  else if(arrival=="overdisp_poisson"){
-    stopifnot(length(par)==3)
-
-    # a_ <- unname(par[1])
-    l_ <- unname(par[2])
-    d_ <- unname(par[3])
-    stopifnot(d_ > 1)
-
-    # sim_X[1] <- rpois.overdisp(1,lambda=l_,d=d_)
-    # resid_ <- rpois.overdisp(s,lambda=l_,d=d_)
-    resid_ <- rnbinom(s, size=(l_/(d_-1)), mu=l_)
-  }
-  else if(arrival=="zip"){
-    stopifnot(length(par)==3)
-
-    # a_ <- unname(par[1])
-    l_ <- unname(par[2])
-    sig_ <- unname(par[3])
-
-    # sim_X[1] <- rZIP(1, mu = l_, sigma = sig_)
-    # resid_ <- rZIP(s, mu = l_, sigma = sig_)
     resid_ <- gamlss.dist::rZIP(s, mu = l_, sigma = sig_)
   }
   else if(arrival=="bimodal_poisson"){
-    stopifnot(length(par)==4)
+    stopifnot(length(par)==3)
 
-    # a_ <- unname(par[1])
-    lam1_ <- unname(par[2])
-    lam2_ <- unname(par[3])
-    mixp_ <- unname(par[4])
+    lam1_ <- unname(par[1])
+    lam2_ <- unname(par[2])
+    mixp_ <- unname(par[3])
 
     u_rand <- runif(s)
 
@@ -100,53 +90,40 @@ genINAR <- function(n,par,arrival="poisson",burnout=500){
     resid_ <- rep(NA,s)
     resid_[selettore] <- rpois(sum(selettore),lam1_)
     resid_[!selettore] <- rpois(sum(!selettore),lam2_)
-
-    # alternativa (piu' veloce???)
-    # resid_ <- ifelse(selettore,rpois(1,lam1),rpois(1,lam2))
-
-
-    # sim_X[1] <- ifelse(runif(1) < mixp_,
-    #                    rpois(1,lam1_),
-    #                    rpois(1,lam2_)) # random starting point
   }
   else if(arrival=="negbin"){
-    stopifnot(length(par)==3)
-
-    # a_ <- unname(par[1])
-    g_ <- unname(par[2]) # size, gamma
-    b_ <- unname(par[3]) # transf. prob, beta
+    stopifnot(length(par)==2)
+    g_ <- unname(par[1]) # size, gamma
+    b_ <- unname(par[2]) # transf. prob, beta
 
     p.compl_ <- b_/(1+b_)
     # dato che rnbinom prende le prob. invertite uso il complemento ad 1
     # della vera formula, che sarebbe: p_ <- 1/(1+b_)
 
     resid_ <- rnbinom(s,g_,p.compl_)
-
-    # resid_ <- rNBINAR(s,par)
-    # sim_X[1] <- rnbinom(1,g_,p.compl_) # random starting point
   }
   else if(arrival=="discunif"){
-    stopifnot(length(par)==3)
+    stopifnot(length(par)==2)
 
-    minu_ <- unname(par[2])
-    maxu_ <- unname(par[3])
+    minu_ <- unname(par[1])
+    maxu_ <- unname(par[2])
     stopifnot(minu_ < maxu_)
 
     resid_ <- round(runif(s,minu_,maxu_),0)
   }
   else if(arrival=="binomial"){
-    stopifnot(length(par)==3)
+    stopifnot(length(par)==2)
 
-    enne_ <- unname(par[2]) # size
-    p_ <- unname(par[3]) # prob
+    enne_ <- unname(par[1]) # size
+    p_ <- unname(par[2]) # prob
 
     resid_ <- rbinom(s,enne_,p_)
   }
   else if(arrival=="genpoi"){
-    stopifnot(length(par)==3)
+    stopifnot(length(par)==2)
 
-    l_ <- unname(par[2]) # lambda, come in sunmccabe
-    k_ <- unname(par[3]) # kappa, come in sunmccabe
+    l_ <- unname(par[1]) # lambda, come in sunmccabe
+    k_ <- unname(par[2]) # kappa, come in sunmccabe
 
     # methods: five methods including Inversion, Branching, Normal-Approximation, Build-Up, and Chop-Down.
     # All five methods come from Demirtas (2017).
@@ -163,22 +140,22 @@ genINAR <- function(n,par,arrival="poisson",burnout=500){
     #
   }
   else if(arrival=="truncnorm"){
-    mu_ <- unname(par[2])
-    sig_ <- unname(par[3])
+    mu_ <- unname(par[1])
+    sig_ <- unname(par[2])
 
     vals <- round(rnorm(s,mu_,sig_),0)
     resid_ <- ifelse(vals < 0,0,vals)
   }
   else if(arrival=="truncskel"){
-    lam1_ <- unname(par[2])
-    lam2_ <- unname(par[3])
+    lam1_ <- unname(par[1])
+    lam2_ <- unname(par[2])
 
     vals <- skellam::rskellam(s, lam1_, lam2_)
     resid_ <- ifelse(vals < 0,0,vals)
   }
   else if(arrival=="good"){
-    z_ <- unname(par[2])
-    s_ <- unname(par[3])
+    z_ <- unname(par[1])
+    s_ <- unname(par[2])
 
     resid_ <- good::rgood(s, z_, s_)
   }
@@ -187,16 +164,12 @@ genINAR <- function(n,par,arrival="poisson",burnout=500){
   }
 
   # generazione del campione
-  a_ <- unname(par[1]) # alpha
+  a_ <- unname(a) # alpha
 
 
   ##### VERSIONE C++ #####
-  sim_X <- INAR1_cpp(resid_,a_)
-
-  ##   VERSIONE STANDARD #####
-  # for(i in 2:s){
-  #   sim_X[i] <- rbinom(1,sim_X[i-1],prob=a_) + resid_[i]
-  # }
+  # sim_X <- INAR1_cpp(resid_,a_) # per INAR1
+  sim_X <- INARp_cpp(resid_,a_)
 
   dati_sim <- data.frame(X=sim_X[(burnout+1):s],res=resid_[(burnout+1):s])
   return(dati_sim)

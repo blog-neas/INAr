@@ -1,4 +1,20 @@
 
+# INAr 0.0.3
+
+* Generalization of genINAR function, now it generates INAR(p) models nstead of INAR(1).
+* The old `par` input vector contained both the thinning operator (at the first position) and innovations' parameters, now this vector is split is two: `a` and `par`, where:
+  * `a` contains the p thinning parameters of the INAR(p) to be generated
+  * `par` contains exclusively the innovations' parmeters
+
+* Development of the C++ part to generate INAR(p) processes
+
+  * deleted INAR1\_gen.cpp and included the routine `INAR1\_ cpp` in  INARp\_gen.cpp
+  * development of the more general routine `INARp\_ cpp`; 
+  * the line `sim = clone(resid)` was added to avoid the shallow copy effect;
+  * INARp_gen.cpp contains the routine to generate an INAR(p) process;
+  * at the moment `INAR1\_ cpp` si obsolete, after some testing it will be deleted.
+ 
+
 # INAr 0.0.2
 
 * Updated `README.md` file.
