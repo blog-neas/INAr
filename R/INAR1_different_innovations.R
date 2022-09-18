@@ -43,12 +43,21 @@
 #'
 #' @export
 genINAR <- function(n,a,par,arrival="poisson",burnout=500){
-
+    # n <- 500
+    # a <- c(0.2,0.9,0.8)
+    # par <- 2
+    # arrival="poisson"
+    # burnout=500
     stopifnot(is.vector(a))
+    lags <- length(a)
     arrival <- tolower(arrival)
 
     s <- n + burnout
-    lags <- length(a)
+    mat <- matrix(0, nrow = lags, ncol = lags)
+    mat[row(mat) - 1 == col(mat)] <- 1
+    mat[1,] <- a
+    ev <- eigen(mat)$values
+    stopifnot(all(abs(ev) < 1))
 
     # -9999 = valori NA che saranno sovrascritti!
     sim_X <- rep(-99,s)
@@ -166,7 +175,6 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
   # generazione del campione
   a_ <- unname(a) # alpha
 
-
   ##### VERSIONE C++ #####
   # sim_X <- INAR1_cpp(resid_,a_) # per INAR1
   sim_X <- INARp_cpp(resid_,a_)
@@ -174,7 +182,6 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
   dati_sim <- data.frame(X=sim_X[(burnout+1):s],res=resid_[(burnout+1):s])
   return(dati_sim)
 }
-
 
 # zzz <- rbinom(1000,40,0.7)
 # asd <- function(A,B){
@@ -190,8 +197,9 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
 
 # veloce esempio --------------------------------------------------------
 # N <- 500
-#
-# #
+# y <- genINAR(N,c(0.2,0.3,0.4),2,arrival="poisson")$X
+# plot(y)
+# N <- 500
 # par <- c("a"=0.7,"lambda"=2)
 # set.seed(1926)
 # sim <- genINAR(N,par,arrival="poisson")$X

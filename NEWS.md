@@ -2,6 +2,7 @@
 # INAr 0.0.3
 
 * Generalization of genINAR function, now it generates INAR(p) models nstead of INAR(1).
+* Added stationarity condition check in `genINAR()` function.
 * The old `par` input vector contained both the thinning operator (at the first position) and innovations' parameters, now this vector is split is two: `a` and `par`, where:
   * `a` contains the p thinning parameters of the INAR(p) to be generated
   * `par` contains exclusively the innovations' parmeters
