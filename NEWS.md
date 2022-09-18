@@ -1,4 +1,10 @@
 
+# INAr 0.0.4
+
+* First `INARfit.R` code to fit INAR(p) models:
+  * `INARfit()` [in development], fitting an INAR(p) process, by using several procedures. At the momemt is hardcoded and works only for the Poisson case and only YW is provided;
+  * `est_mom()` [in development], estimation of innovations' parameters. At the momemt is hardcoded and works only for the Poisson case.
+
 # INAr 0.0.3
 
 * Generalization of genINAR function, now it generates INAR(p) models nstead of INAR(1).
