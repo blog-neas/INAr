@@ -49,6 +49,7 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
     # arrival="poisson"
     # burnout=500
     stopifnot(is.vector(a))
+    stopifnot(all(a >= 0))
     lags <- length(a)
     arrival <- tolower(arrival)
 
@@ -197,7 +198,7 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
 
 # veloce esempio --------------------------------------------------------
 # N <- 500
-# y <- genINAR(N,c(0.2,0.3,0.4),2,arrival="poisson")$X
+# y <- genINAR(N,0.9,2,arrival="poisson")$X
 # plot(y)
 # N <- 500
 # par <- c("a"=0.7,"lambda"=2)
