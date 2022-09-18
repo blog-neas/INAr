@@ -17,6 +17,18 @@ Generation, estimation and testing of INteger Autoregressive models
 
 ## Roadmap
 
+- [ ] Phases
+	- [ ] Generation
+        	- [x] Simulating INAR(p) process with different innovations
+        - [ ] Estimation
+        	- [x] YW estimation of INAR(p) processes with Poisson innovations
+        	- [ ] YW estimation of INAR(p) processes with several innovations
+        	- [ ] CML estimation of INAR(p) processes
+        - [ ] Test
+        	- [ ] Bootstrap test
+        - [ ] Visualization
+        	- [ ] Summary
+        	- [ ] Plotting
 - [ ] Define package structure and state
 	- [ ] Functions
 	- [ ] Dependencies list
