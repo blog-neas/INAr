@@ -1,6 +1,8 @@
 # INARfit
 # fit INAR(p) model
 
+#'
+#' @export
 INARfit <- function(X,order,arrival="poisson"){
 
     n <- length(X)
@@ -37,30 +39,38 @@ INARfit <- function(X,order,arrival="poisson"){
 
     # sempre secondo Du and Li
     resid <- rep(NA,n-order)
-    for(t in (order+1):n ){
+    for(t in (order+1):n){
         resid[t - order] <- X[t] - X[(t-1):(t-order)]%*%a
     }
-    mX <- mean(X)
-    varX <- var(X)
-    mINN <- (1 - sum(a))*mean(X)
-    varINN <- (1/(n-order))*sum((resid - mean(resid))^2)
 
-    arr_mom <- est_mom(mX,varX,mINN,varINN,arrival)
+    # mX <- mean(X)
+    # varX <- var(X)
+    # mINN <- (1 - sum(a))*mean(X)
+    # varINN <- (1/(n-order))*sum((resid - mean(resid))^2)
+
+    arr_mom <- Xmoments(X,a)
+    est <- est_mom(arr_mom$meanX, arr_mom$varX,arr_mom$meanINN,arr_mom$varINN,arrival)
 
     names(a) <- paste0("a",1:order)
-    out <- list("alphas"=a,"par"=arr_mom,"moments"=c("mean_X"=mX,"var_X"=varX,"mean_EPS"=mINN,"var_EPS"=varINN),"resid"=resid,"err"=err)
+    out <- list("alphas"=a,"par"=est,
+                "moments"=c("mean_X"=arr_mom$meanX,"var_X"=arr_mom$varX,"mean_EPS"=arr_mom$meanINN,"var_EPS"=arr_mom$varINN),"resid"=arr_mom$resid,"err"=err)
     return(out)
 }
 
+#'
+#' @export
 est_mom <- function(mX,varX,mINN,varINN,arrival){
-    # if(arrival=="poisson"){}
-    lambda <- mINN
-    return(c("lambda"=lambda))
+    if(arrival=="poisson"){
+        lambda <- mINN
+        OUT <- list("lambda"=lambda)
+    }
+    return(OUT)
 }
 
+# TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------
 # N <- 500
-# y <- genINAR(N,0.1,0.3,arrival="poisson")$X
+# y <- genINAR(N,0.1,1.2,arrival="poisson")$X
 # INARfit(y,order=1)
 # y <- genINAR(N,c(0.9,0.01),2,arrival="poisson")$X
 # INARfit(y,order=2)

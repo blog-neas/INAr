@@ -9,6 +9,14 @@ INARp_cpp <- function(resid, a) {
     .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
 
+Xresid <- function(X, alphas) {
+    .Call('_INAr_Xresid', PACKAGE = 'INAr', X, alphas)
+}
+
+Xmoments <- function(X, alphas) {
+    .Call('_INAr_Xmoments', PACKAGE = 'INAr', X, alphas)
+}
+
 rcpp_genINARmarg <- function(a, Xseries, resid) {
     .Call('_INAr_rcpp_genINARmarg', PACKAGE = 'INAr', a, Xseries, resid)
 }

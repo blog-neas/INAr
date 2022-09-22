@@ -35,6 +35,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Xresid
+NumericVector Xresid(NumericVector X, NumericVector alphas);
+RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP);
+    rcpp_result_gen = Rcpp::wrap(Xresid(X, alphas));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Xmoments
+Rcpp::List Xmoments(NumericVector X, NumericVector alphas);
+RcppExport SEXP _INAr_Xmoments(SEXP XSEXP, SEXP alphasSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP);
+    rcpp_result_gen = Rcpp::wrap(Xmoments(X, alphas));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_genINARmarg
 IntegerVector rcpp_genINARmarg(double a, IntegerVector Xseries, IntegerVector resid);
 RcppExport SEXP _INAr_rcpp_genINARmarg(SEXP aSEXP, SEXP XseriesSEXP, SEXP residSEXP) {
@@ -52,6 +76,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_INAr_INAR1_cpp", (DL_FUNC) &_INAr_INAR1_cpp, 2},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
+    {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 2},
+    {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
     {"_INAr_rcpp_genINARmarg", (DL_FUNC) &_INAr_rcpp_genINARmarg, 3},
     {NULL, NULL, 0}
 };

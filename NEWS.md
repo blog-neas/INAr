@@ -1,4 +1,10 @@
 
+# INAr 0.0.5
+
+* Improvement of the `INARfit.R` code to fit INAR(p) models. Now `INARfit()` performs a full Y-W estimation from a Poisson INAR(r) family, following the results of Du and Li. Some additional Rcpp utility functions (script `Xmoments.cpp`) have been added:
+  * `Xmoments()` [in development], compute the first two moments for the original series and the residual series. As output it returns mean and variance of both the starting and residual series, and the estimated residual series;
+  * `Xresid()` [in development], generates the series of residual values.
+
 # INAr 0.0.4
 
 * First `INARfit.R` code to fit INAR(p) models:
