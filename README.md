@@ -24,7 +24,7 @@ Generation, estimation and testing of INteger Autoregressive models
 	- [x] Simulating INAR(p) process with different innovations
 - [ ] Estimation
 	- [x] YW estimation of INAR(p) processes with Poisson innovations
-	- [ ] YW estimation of INAR(p) processes with several innovations
+	- [ ] YW estimation of INAR(p) processes with several innovations (Negative Binomial, Genaralized Poisson, ...)
 	- [ ] CML estimation of INAR(p) processes
 - [ ] Test
 	- [ ] Bootstrap test
