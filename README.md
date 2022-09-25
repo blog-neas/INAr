@@ -1,5 +1,5 @@
 
-# INAr R Package <img src="man/img/hexlogo.png" align="right" width="30" height="30" />
+# INAr R Package <img src="man/img/hexlogo.png" align="right" height="138.5" />
 Generation, estimation and testing of INteger Autoregressive models
 
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
