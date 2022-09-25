@@ -1,11 +1,14 @@
 // [[Rcpp::plugins("cpp11")]]
-// [[Rcpp::depends(RcppArmadillo)]]
 
-#include <RcppArmadilloExtensions/sample.h>
 #include <Rcpp.h>
 
 using namespace R;
 using namespace Rcpp;
+
+//
+// NB. per ragioni di conflitti con inarboot.cpp ho rimosso 2 righe
+// prima riga: // [[Rcpp::depends(RcppArmadillo)]]
+// seconda riga: #include <RcppArmadilloExtensions/sample.h>
 
 
 // [[Rcpp::export]]
