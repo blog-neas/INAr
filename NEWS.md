@@ -1,3 +1,9 @@
+# INAr 0.0.6
+
+* Added package sticker.
+
+* Implementing the SUn-MC.Cabe bootstrap test 
+
 
 # INAr 0.0.5
 
@@ -5,11 +11,13 @@
   * `Xmoments()` [in development], compute the first two moments for the original series and the residual series. As output it returns mean and variance of both the starting and residual series, and the estimated residual series;
   * `Xresid()` [in development], generates the series of residual values.
 
+
 # INAr 0.0.4
 
 * First `INARfit.R` code to fit INAR(p) models:
   * `INARfit()` [in development], fitting an INAR(p) process, by using several procedures. At the momemt is hardcoded and works only for the Poisson case and only YW is provided;
   * `est_mom()` [in development], estimation of innovations' parameters. At the momemt is hardcoded and works only for the Poisson case.
+
 
 # INAr 0.0.3
 

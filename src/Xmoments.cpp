@@ -38,9 +38,6 @@ Rcpp::List Xmoments(NumericVector X, NumericVector alphas) {
 
     NumericVector resid = Xresid(X, alphas);
 
-    // double sa = std::accumulate(a.begin(), a.end(), 0.0);
-    // double ssr = 0;
-
     double mINN = (1 - sum(alphas))*mX; // (1 - sum(a))*mean(X)
     double vINN = var(resid);
 
