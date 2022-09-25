@@ -2,7 +2,7 @@
 
 * Added package sticker.
 
-* Implementing the SUn-MC.Cabe bootstrap test 
+* Implementing the Sun-MC Cabe bootstrap test. This cose is still in development and works properly only for INAR(1) processes. 
 
 
 # INAr 0.0.5
