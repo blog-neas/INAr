@@ -79,7 +79,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>INAr package, INteger Autoregressive models for time series of counts</h1>
+                        <h4 data-toc-skip class="author">Lucio Palazzo and Riccardo Ievoli</h4>
             
+            <h4 data-toc-skip class="date">2022-09-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/blog-neas/INAr/blob/HEAD/vignettes/inar.Rmd" class="external-link"><code>vignettes/inar.Rmd</code></a></small>
       <div class="hidden name"><code>inar.Rmd</code></div>
@@ -90,6 +92,31 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/blog-neas/INAr" class="external-link">INAr</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Esempio citazione: <span class="citation">(Alzaid and Al-Osh 1990)</span></p>
+</div>
+<div class="section level2">
+<h2 id="some-theoretical-results">Some theoretical results<a class="anchor" aria-label="anchor" href="#some-theoretical-results"></a>
+</h2>
+<p>DEF. INAR(p)</p>
+<div class="section level3">
+<h3 id="poisson-innovations">Poisson innovations<a class="anchor" aria-label="anchor" href="#poisson-innovations"></a>
+</h3>
+<p>FORMULA pmf POISSON</p>
+<p>Estimation</p>
+</div>
+<div class="section level3">
+<h3 id="negative-binomial-innovations">Negative Binomial innovations<a class="anchor" aria-label="anchor" href="#negative-binomial-innovations"></a>
+</h3>
+<p>FORMULA pmf NEGBIN</p>
+<p>Estimation</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="real-data-applications">Real data applications<a class="anchor" aria-label="anchor" href="#real-data-applications"></a>
+</h2>
 <p>Example of INAr plot</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -97,11 +124,23 @@
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">downloads</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">date</span>,y<span class="op">=</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="inar_files/figure-html/plot-1.png" width="700"></p>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-alzaid1990integer" class="csl-entry">
+Alzaid, AA, and M Al-Osh. 1990. <span>“An Integer-Valued Pth-Order Autoregressive Structure (INAR (p)) Process.”</span> <em>Journal of Applied Probability</em> 27 (2): 314–24.
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
