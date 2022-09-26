@@ -1,3 +1,10 @@
+# INAr 0.0.7
+
+* Added downloads dataset, source Weiss (2008).
+
+* First build of the package vignette. 
+
+
 # INAr 0.0.6
 
 * Added package sticker.

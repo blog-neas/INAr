@@ -1,13 +1,13 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.0.6
+Version: 0.0.7
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
            role = c("aut", "cre"),
            email = "lucio.palazzo@unina.it",
-           comment = c(ORCID = "0000-0001-0000-0000")), 
+           comment = c(ORCID = "0000-0001-7529-4689")), 
            person(given = "Riccardo",
            family = "Ievoli",
            role = c("aut"),
@@ -21,6 +21,7 @@ License: GPL-3
 URL: https://github.com/blog-neas/INAr
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.2.1)
@@ -31,6 +32,9 @@ Imports: Rcpp (>= 1.0.0),
     RNGforGPD,
     skellam,
     Rdpack
+Suggests: knitr,
+    rmarkdown,
+    tidyverse
 RdMacros: Rdpack
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.2.1

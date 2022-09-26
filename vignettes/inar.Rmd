@@ -1,0 +1,28 @@
+---
+title: "INAr package, INteger Autoregressive models for time series of counts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{INAr package, INteger Autoregressive models for time series of counts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(INAr)
+```
+
+Example of INAr plot
+
+```{r plot}
+library(ggplot2)
+data(downloads)
+ggplot(downloads,aes(x=date,y=X)) +
+    geom_line()
+```
