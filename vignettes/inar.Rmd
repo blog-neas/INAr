@@ -1,5 +1,8 @@
 ---
 title: "INAr package, INteger Autoregressive models for time series of counts"
+author: "Lucio Palazzo and Riccardo Ievoli"
+date: "`r Sys.Date()`"
+bibliography: bibliography.bib
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{INAr package, INteger Autoregressive models for time series of counts}
@@ -18,6 +21,31 @@ knitr::opts_chunk$set(
 library(INAr)
 ```
 
+## Introduction 
+
+Esempio citazione: [@alzaid1990integer] 
+
+
+## Some theoretical results
+
+DEF. INAR(p)
+
+### Poisson innovations 
+
+FORMULA pmf POISSON
+
+Estimation
+
+
+### Negative Binomial innovations 
+
+FORMULA pmf NEGBIN
+
+Estimation
+
+
+## Real data applications
+
 Example of INAr plot
 
 ```{r plot}
@@ -26,3 +54,5 @@ data(downloads)
 ggplot(downloads,aes(x=date,y=X)) +
     geom_line()
 ```
+
+## References
