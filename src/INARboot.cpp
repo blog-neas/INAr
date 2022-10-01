@@ -14,7 +14,7 @@ using namespace Rcpp;
 //
 // !!!! DA IMPLEMENTARE ANCORA !!!!
 //
-
+//' @export
 // [[Rcpp::export]]
 NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
   int n = x.length();
@@ -63,11 +63,13 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
     double mu_x = mean(noNA(x));
     double var_x = var(noNA(x));
     double sd_x = sd(noNA(x));
+    double diffvarmu = std::fabs(var_x - mu_x); // # trick, uso VAL ASS DIFF
     // printf("1) %f, %f %f \n",mu_x,var_x,std::abs(var_x-mu_x));
     // printf("2) %f, %f \n",pow(mu_x,2),var_x-mu_x);
 
-    double r_hat = pow(mu_x,2)/std::fabs(var_x-mu_x); // # trick
-    double p_hat = std::fabs(var_x - mu_x)/var_x; // # trick
+    // CHECK!
+    double r_hat = pow(mu_x,2)/diffvarmu;
+    double p_hat = diffvarmu/var_x; // # trick, uso VAL ASS DIFF
     // printf("%f, %f \n",r_hat,p_hat);
 
     // NumericVector ind_val (n-1); // n-1 = xsum.length()

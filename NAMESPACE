@@ -3,6 +3,7 @@
 export(INARfit)
 export(est_mom)
 export(genINAR)
+export(sunMC_Cpp)
 importFrom(Rcpp,sourceCpp)
 importFrom(Rdpack,reprompt)
 useDynLib(INAr)
