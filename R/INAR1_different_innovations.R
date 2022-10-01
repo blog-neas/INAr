@@ -50,6 +50,7 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
     # burnout=500
     stopifnot(is.vector(a))
     stopifnot(all(a >= 0))
+    stopifnot(sum(a) < 1)
     lags <- length(a)
     arrival <- tolower(arrival)
 
@@ -102,15 +103,23 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
     resid_[!selettore] <- rpois(sum(!selettore),lam2_)
   }
   else if(arrival=="negbin"){
-    stopifnot(length(par)==2)
-    g_ <- unname(par[1]) # size, gamma
-    b_ <- unname(par[2]) # transf. prob, beta
+      stopifnot(length(par)==2)
 
-    p.compl_ <- b_/(1+b_)
-    # dato che rnbinom prende le prob. invertite uso il complemento ad 1
-    # della vera formula, che sarebbe: p_ <- 1/(1+b_)
+      # # VECCHIA PARAMETRIZZAZIONE, CON GAMMA E BETA
+      # g_ <- unname(par[1]) # size, gamma
+      # b_ <- unname(par[2]) # transf. prob, beta
+      #
+      # p.compl_ <- b_/(1+b_)
+      # # dato che rnbinom prende le prob. invertite uso il complemento ad 1
+      # # della vera formula, che sarebbe: p_ <- 1/(1+b_)
+      # resid_ <- rnbinom(s,g_,p.compl_
 
-    resid_ <- rnbinom(s,g_,p.compl_)
+      g_ <- unname(par[1]) # size, gamma
+      p_ <- unname(par[2]) # prob successo
+
+      p.compl_ <- 1-p
+      resid_ <- rnbinom(s,g_,p.compl_)
+
   }
   else if(arrival=="discunif"){
     stopifnot(length(par)==2)

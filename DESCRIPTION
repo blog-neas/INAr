@@ -21,7 +21,7 @@ License: GPL-3
 URL: https://github.com/blog-neas/INAr
 Encoding: UTF-8
 LazyData: true
-VignetteBuilder: knitr
+VignetteBuilder: R.rsp
 Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.2.1)
@@ -32,8 +32,11 @@ Imports: Rcpp (>= 1.0.0),
     RNGforGPD,
     skellam,
     Rdpack
-Suggests: knitr,
+Suggests: 
+    covr,
+    knitr,
     rmarkdown,
+    R.rsp,
     tidyverse
 RdMacros: Rdpack
 LinkingTo: Rcpp, RcppArmadillo

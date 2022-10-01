@@ -7,6 +7,7 @@ INARfit <- function(X,order,arrival="poisson"){
 
     n <- length(X)
     err <- NULL
+    stopifnot(orded < n)
 
     # YULE-WALKER ESTIMATION ----------------------------
     # - secondo Du and Li -------------------------------
@@ -31,7 +32,7 @@ INARfit <- function(X,order,arrival="poisson"){
         }else{
             warning("Y-W estimation not reliable. Please rely on more consistent estimators.")
             err <- as.vector(NMF::fcnnls(R,r)$x) # ,pseudo=TRUE per Monroe-Penrose version
-            names(err) <- paste0("fcnnls_solve_",1:order)
+            names(err) <- paste0("fcnnls_solve_a",1:order)
         }
     }else{
         a <- r
@@ -53,7 +54,7 @@ INARfit <- function(X,order,arrival="poisson"){
 
     names(a) <- paste0("a",1:order)
     out <- list("alphas"=a,"par"=est,
-                "moments"=c("mean_X"=arr_mom$meanX,"var_X"=arr_mom$varX,"mean_EPS"=arr_mom$meanINN,"var_EPS"=arr_mom$varINN),"resid"=arr_mom$resid,"err"=err)
+                "moments"=c("mean_X"=arr_mom$meanX,"var_X"=arr_mom$varX,"mean_EPS"=arr_mom$meanINN,"var_EPS"=arr_mom$varINN),"resid"=arr_mom$resid,"stdresid"=arr_mom$stdresid,"err"=err)
     return(out)
 }
 

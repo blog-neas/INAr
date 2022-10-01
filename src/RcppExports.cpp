@@ -88,14 +88,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // Xresid
-NumericVector Xresid(NumericVector X, NumericVector alphas);
-RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP) {
+Rcpp::List Xresid(NumericVector X, NumericVector alphas, double mINN, double vINN);
+RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP, SEXP mINNSEXP, SEXP vINNSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP);
-    rcpp_result_gen = Rcpp::wrap(Xresid(X, alphas));
+    Rcpp::traits::input_parameter< double >::type mINN(mINNSEXP);
+    Rcpp::traits::input_parameter< double >::type vINN(vINNSEXP);
+    rcpp_result_gen = Rcpp::wrap(Xresid(X, alphas, mINN, vINN));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -132,7 +134,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_sunMCtest_boot", (DL_FUNC) &_INAr_sunMCtest_boot, 4},
     {"_INAr_INAR1_cpp", (DL_FUNC) &_INAr_INAR1_cpp, 2},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
-    {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 2},
+    {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
     {"_INAr_rcpp_genINARmarg", (DL_FUNC) &_INAr_rcpp_genINARmarg, 3},
     {NULL, NULL, 0}

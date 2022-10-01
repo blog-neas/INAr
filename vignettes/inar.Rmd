@@ -1,11 +1,11 @@
 ---
-title: "INAr package, INteger Autoregressive models for time series of counts"
+title: "INAr package, integer autoregressive models for time series of counts"
 author: "Lucio Palazzo and Riccardo Ievoli"
 date: "`r Sys.Date()`"
 bibliography: bibliography.bib
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{INAr package, INteger Autoregressive models for time series of counts}
+  %\VignetteIndexEntry{INAr package, integer autoregressive models for time series of counts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,19 +30,133 @@ Esempio citazione: [@alzaid1990integer]
 
 DEF. INAR(p)
 
+\begin{equation}\label{eq:inarp}
+X_t = \alpha_1 * X_{t-1} + \cdots + \alpha_p * X_{t-p} + \varepsilon_t
+\end{equation}
+
+where the Binomial thinning operator ${*}$ .......
+is ...
+
+$$
+\alpha * X = \sum_{i=1}^{X} Y_i, \qquad \text{ where } Y_i \sim Ber(\alpha)
+$$
+Moments 
+
+$$
+\begin{align}
+\text{E}(X_t) = \mu_X = & \dfrac{\mu_\varepsilon}{1 - \sum_{i=1}^{p}\alpha_i} \\
+\text{Var}(X_t) = \gamma_0 = \sigma_X^2 = & \dfrac{\mu_X\sum_{i=1}^{p} \alpha_i(1-\alpha_i) + \sigma_\varepsilon}{1-\sum_{i=1}^{p} \alpha_i^2} \\
+\text{E}(X_t| \Im_{t-1}) = & \sum_{i=1}^{p} \alpha_i X_{t-i} + \mu_\varepsilon \\
+\text{Var}(X_t| \Im_{t-1}) = & \sum_{i=1}^{p} \alpha_i (1- \alpha_i) X_{t-i} + \sigma_\varepsilon^2
+\end{align}
+$$
+
+Then the first two moments for the innovation process are:
+$$
+\begin{align}
+\text{E}(\varepsilon_t) = \mu_\varepsilon = & \left(1 - \sum_{i=1}^{p}\alpha_i \right) \mu_X \\
+\text{Var}(\varepsilon_t) = \sigma_\varepsilon^2 = &
+\sigma_X^2 \left( 1-\sum_{i=1}^{p} \alpha_i^2 \right) - \mu_X \sum_{i=1}^{p} \alpha_i(1-\alpha_i)
+\end{align}
+$$
+
+
+Variance, autocovariance and autocorrelation functions of INAR$(p)$ can be also derived by applying Yule-Walker equations.
+Partial autocorrelation is defined as conditional correlation between two variables under the assumption that we know and take into account the values of some other set of variables, analytically it can be expressed as
+\begin{equation*}
+	\phi_k = \mbox{Cov}\big( X_{t} - \mbox{E}(X_t | X_{t-1}, \ldots, X_{t + k-1}),  X_{t-k} - \mbox{E}(X_{t-k} | X_{t-1}, \ldots, X_{t + k-1})\big) = \frac{|\mathbf{Q}_k|}{|\mathbf{P}_k|}
+\end{equation*}
+where $\mathbf{P}_k$ is the $k$--th order Toeplitz matrix, with $k \geq 1$, of autocorrelations defined as
+\begin{equation*}
+ \mathbf{P}_k  = 
+% \begin{pmatrix}
+%  \rho_0 & \rho_1 & \cdots & \rho_{k-1} \\ 
+%  \rho_1 & \rho_0 & \cdots & \rho_{k-2} \\ 
+%  \vdots & \vdots & \ddots & \vdots \\ 
+%  \rho_{k-1} & \rho_{k-2} & \cdots & \rho_0 \\ 
+% \end{pmatrix}
+% =
+\begin{pmatrix}
+	1 & \rho_1 & \cdots & \rho_{k-1} \\ 
+	\rho_1 & 1 & \cdots & \rho_{k-2} \\ 
+	\vdots & \vdots & \ddots & \vdots \\ 
+	\rho_{k-1} & \rho_{k-2} & \cdots & 1 \\ 
+\end{pmatrix}
+\end{equation*}
+and $\mathbf{Q}_k$ is the same matrix obtained substituting last column with vector $(\rho_1, \ldots, \rho_k )$.\par\medskip
+
 ### Poisson innovations 
 
-FORMULA pmf POISSON
+Poisson distribution$\lambda >0$,
 
-Estimation
+$$
+\text{P}(\varepsilon = k)= \frac{\lambda^k e^{-\lambda}}{k!}, \qquad k = 0, 1, 2, \ldots
+$$
+where $e$ is Euler's number.
 
+Estimation: the parameter is equal to the expected value of the process and also to its variance
+$$
+\begin{align}
+\text{E}(\varepsilon) = & \lambda \\
+\text{Var}(\varepsilon) = & \lambda  
+\end{align}
+$$
+
+{\displaystyle \lambda =\operatorname {E} (X)=\operatorname {Var} (X).}\lambda =\operatorname {E} (X)=\operatorname {Var} (X).
 
 ### Negative Binomial innovations 
 
-FORMULA pmf NEGBIN
+support $\mathbb{N}$
+parameters $\gamma \in \mathbb{N}$ and $\beta > 0$
+$$ 
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots
+$$
+this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process.
+
+An alternative parametrization considers the use of $\pi \in (0,1)$:
+$$ 
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^\gamma \left(1-\pi \right)^k, \qquad k = 0, 1, \ldots
+$$
+in this case the parameter $\pi = \beta/(1+\beta)$ is the probability of success.
 
 Estimation
 
+$$
+\begin{align}
+\text{E}(\varepsilon) = & \dfrac{\gamma}{\beta} \\
+\text{Var}(\varepsilon) = & \dfrac{\gamma}{\beta^2} \left( \beta + 1 \right)
+\end{align}
+$$
+
+$$
+\begin{align}
+\text{E}(\varepsilon) = & \gamma \dfrac{\pi}{1-\pi} \\
+\text{Var}(\varepsilon) = &  \gamma \dfrac{1 - \pi}{\pi^2}
+\end{align}
+$$
+
+## Generating INAR processes
+
+
+```{r geninar1}
+N <- 500
+lambda <- 2
+# Poisson INAR(1) with innovations Poi(2)
+pinar1 <- genINAR(N,0.3,par = lambda,arrival = "poisson")$X
+
+# Poisson INAR(2) with innovations Poi(2)
+pinar2 <- genINAR(N,c(0.1,0.3),par = lambda,arrival = "poisson")$X
+
+# Poisson INAR(5) with innovations Poi(2)
+pinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = lambda,arrival = "poisson")$X
+
+plot(pinar1,type = "l", main = "PINAR(1)")
+plot(pinar2,type = "l", main = "PINAR(2)")
+plot(pinar5,type = "l", main = "PINAR(5)")
+
+# PARAMETER ESTIMATION
+
+```
 
 ## Real data applications
 

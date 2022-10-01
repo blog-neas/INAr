@@ -25,8 +25,8 @@ INARp_cpp <- function(resid, a) {
     .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
 
-Xresid <- function(X, alphas) {
-    .Call('_INAr_Xresid', PACKAGE = 'INAr', X, alphas)
+Xresid <- function(X, alphas, mINN, vINN) {
+    .Call('_INAr_Xresid', PACKAGE = 'INAr', X, alphas, mINN, vINN)
 }
 
 Xmoments <- function(X, alphas) {
