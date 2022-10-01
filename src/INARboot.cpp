@@ -69,7 +69,7 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
 
     // CHECK!
     double r_hat = pow(mu_x,2)/diffvarmu;
-    double p_hat = diffvarmu/var_x; // # trick, uso VAL ASS DIFF
+    double p_hat = diffvarmu/var_x;
     // printf("%f, %f \n",r_hat,p_hat);
 
     // NumericVector ind_val (n-1); // n-1 = xsum.length()
