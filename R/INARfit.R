@@ -7,7 +7,7 @@ INARfit <- function(X,order,arrival="poisson"){
 
     n <- length(X)
     err <- NULL
-    stopifnot(orded < n)
+    stopifnot(order < n)
 
     # YULE-WALKER ESTIMATION ----------------------------
     # - secondo Du and Li -------------------------------
