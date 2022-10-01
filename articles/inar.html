@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INAr package, INteger Autoregressive models for time series of counts • INAr</title>
+<title>INAr package, integer autoregressive models for time series of counts • INAr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="INAr package, INteger Autoregressive models for time series of counts">
+<script src="../pkgdown.js"></script><meta property="og:title" content="INAr package, integer autoregressive models for time series of counts">
 <meta property="og:description" content="INAr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -50,7 +50,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/inar.html">INAr package, INteger Autoregressive models for time series of counts</a>
+      <a href="../articles/inar.html">INAr package, integer autoregressive models for time series of counts</a>
     </li>
   </ul>
 </li>
@@ -78,10 +78,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>INAr package, INteger Autoregressive models for time series of counts</h1>
+      <h1 data-toc-skip>INAr package, integer autoregressive models for time series of counts</h1>
                         <h4 data-toc-skip class="author">Lucio Palazzo and Riccardo Ievoli</h4>
             
-            <h4 data-toc-skip class="date">2022-09-26</h4>
+            <h4 data-toc-skip class="date">2022-10-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/blog-neas/INAr/blob/HEAD/vignettes/inar.Rmd" class="external-link"><code>vignettes/inar.Rmd</code></a></small>
       <div class="hidden name"><code>inar.Rmd</code></div>
@@ -101,24 +101,117 @@
 <h2 id="some-theoretical-results">Some theoretical results<a class="anchor" aria-label="anchor" href="#some-theoretical-results"></a>
 </h2>
 <p>DEF. INAR(p)</p>
+<p><span class="math display">\[\begin{equation}\label{eq:inarp}
+X_t = \alpha_1 * X_{t-1} + \cdots + \alpha_p * X_{t-p} + \varepsilon_t
+\end{equation}\]</span></p>
+<p>where the Binomial thinning operator <span class="math inline">\({*}\)</span> ……. is …</p>
+<p><span class="math display">\[
+\alpha * X = \sum_{i=1}^{X} Y_i, \qquad \text{ where } Y_i \sim Ber(\alpha)
+\]</span> Moments</p>
+<p><span class="math display">\[
+\begin{align}
+\text{E}(X_t) = \mu_X = &amp; \dfrac{\mu_\varepsilon}{1 - \sum_{i=1}^{p}\alpha_i} \\
+\text{Var}(X_t) = \gamma_0 = \sigma_X^2 = &amp; \dfrac{\mu_X\sum_{i=1}^{p} \alpha_i(1-\alpha_i) + \sigma_\varepsilon}{1-\sum_{i=1}^{p} \alpha_i^2} \\
+\text{E}(X_t| \Im_{t-1}) = &amp; \sum_{i=1}^{p} \alpha_i X_{t-i} + \mu_\varepsilon \\
+\text{Var}(X_t| \Im_{t-1}) = &amp; \sum_{i=1}^{p} \alpha_i (1- \alpha_i) X_{t-i} + \sigma_\varepsilon^2
+\end{align}
+\]</span></p>
+<p>Then the first two moments for the innovation process are: <span class="math display">\[
+\begin{align}
+\text{E}(\varepsilon_t) = \mu_\varepsilon = &amp; \left(1 - \sum_{i=1}^{p}\alpha_i \right) \mu_X \\
+\text{Var}(\varepsilon_t) = \sigma_\varepsilon^2 = &amp;
+\sigma_X^2 \left( 1-\sum_{i=1}^{p} \alpha_i^2 \right) - \mu_X \sum_{i=1}^{p} \alpha_i(1-\alpha_i)
+\end{align}
+\]</span></p>
+Variance, autocovariance and autocorrelation functions of INAR<span class="math inline">\((p)\)</span> can be also derived by applying Yule-Walker equations. Partial autocorrelation is defined as conditional correlation between two variables under the assumption that we know and take into account the values of some other set of variables, analytically it can be expressed as <span class="math display">\[\begin{equation*}
+    \phi_k = \mbox{Cov}\big( X_{t} - \mbox{E}(X_t | X_{t-1}, \ldots, X_{t + k-1}),  X_{t-k} - \mbox{E}(X_{t-k} | X_{t-1}, \ldots, X_{t + k-1})\big) = \frac{|\mathbf{Q}_k|}{|\mathbf{P}_k|}
+\end{equation*}\]</span> where <span class="math inline">\(\mathbf{P}_k\)</span> is the <span class="math inline">\(k\)</span>–th order Toeplitz matrix, with <span class="math inline">\(k \geq 1\)</span>, of autocorrelations defined as <span class="math display">\[\begin{equation*}
+ \mathbf{P}_k  = 
+% \begin{pmatrix}
+%  \rho_0 &amp; \rho_1 &amp; \cdots &amp; \rho_{k-1} \\ 
+%  \rho_1 &amp; \rho_0 &amp; \cdots &amp; \rho_{k-2} \\ 
+%  \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ 
+%  \rho_{k-1} &amp; \rho_{k-2} &amp; \cdots &amp; \rho_0 \\ 
+% \end{pmatrix}
+% =
+\begin{pmatrix}
+    1 &amp; \rho_1 &amp; \cdots &amp; \rho_{k-1} \\ 
+    \rho_1 &amp; 1 &amp; \cdots &amp; \rho_{k-2} \\ 
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ 
+    \rho_{k-1} &amp; \rho_{k-2} &amp; \cdots &amp; 1 \\ 
+\end{pmatrix}
+\end{equation*}\]</span> and <span class="math inline">\(\mathbf{Q}_k\)</span> is the same matrix obtained substituting last column with vector <span class="math inline">\((\rho_1, \ldots, \rho_k )\)</span>.
 <div class="section level3">
 <h3 id="poisson-innovations">Poisson innovations<a class="anchor" aria-label="anchor" href="#poisson-innovations"></a>
 </h3>
-<p>FORMULA pmf POISSON</p>
-<p>Estimation</p>
+<p>Poisson distribution<span class="math inline">\(\lambda &gt;0\)</span>,</p>
+<p><span class="math display">\[
+\text{P}(\varepsilon = k)= \frac{\lambda^k e^{-\lambda}}{k!}, \qquad k = 0, 1, 2, \ldots
+\]</span> where <span class="math inline">\(e\)</span> is Euler’s number.</p>
+<p>Estimation: the parameter is equal to the expected value of the process and also to its variance <span class="math display">\[
+\begin{align}
+\text{E}(\varepsilon) = &amp; \lambda \\
+\text{Var}(\varepsilon) = &amp; \lambda  
+\end{align}
+\]</span></p>
+<p>{= (X)= (X).}= (X)= (X).</p>
 </div>
 <div class="section level3">
 <h3 id="negative-binomial-innovations">Negative Binomial innovations<a class="anchor" aria-label="anchor" href="#negative-binomial-innovations"></a>
 </h3>
-<p>FORMULA pmf NEGBIN</p>
+<p>support <span class="math inline">\(\mathbb{N}\)</span> parameters <span class="math inline">\(\gamma \in \mathbb{N}\)</span> and <span class="math inline">\(\beta &gt; 0\)</span> <span class="math display">\[ 
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots
+\]</span> this equation expresses the probability of having <span class="math inline">\(k\)</span> successes before <span class="math inline">\(\gamma\)</span> failures and <span class="math inline">\(\beta\)</span> expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process.</p>
+<p>An alternative parametrization considers the use of <span class="math inline">\(\pi \in (0,1)\)</span>: <span class="math display">\[ 
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^\gamma \left(1-\pi \right)^k, \qquad k = 0, 1, \ldots
+\]</span> in this case the parameter <span class="math inline">\(\pi = \beta/(1+\beta)\)</span> is the probability of success.</p>
 <p>Estimation</p>
+<p><span class="math display">\[
+\begin{align}
+\text{E}(\varepsilon) = &amp; \dfrac{\gamma}{\beta} \\
+\text{Var}(\varepsilon) = &amp; \dfrac{\gamma}{\beta^2} \left( \beta + 1 \right)
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\text{E}(\varepsilon) = &amp; \gamma \dfrac{\pi}{1-\pi} \\
+\text{Var}(\varepsilon) = &amp;  \gamma \dfrac{1 - \pi}{\pi^2}
+\end{align}
+\]</span></p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="generating-inar-processes">Generating INAR processes<a class="anchor" aria-label="anchor" href="#generating-inar-processes"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
+<span><span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="co"># Poisson INAR(1) with innovations Poi(2)</span></span>
+<span><span class="va">pinar1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">0.3</span>,par <span class="op">=</span> <span class="va">lambda</span>,arrival <span class="op">=</span> <span class="st">"poisson"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span></span>
+<span><span class="co"># Poisson INAR(2) with innovations Poi(2)</span></span>
+<span><span class="va">pinar2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.3</span><span class="op">)</span>,par <span class="op">=</span> <span class="va">lambda</span>,arrival <span class="op">=</span> <span class="st">"poisson"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span></span>
+<span><span class="co"># Poisson INAR(5) with innovations Poi(2)</span></span>
+<span><span class="va">pinar5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.15</span>,<span class="fl">0.2</span>,<span class="fl">0.1</span>,<span class="fl">0.2</span><span class="op">)</span>,par <span class="op">=</span> <span class="va">lambda</span>,arrival <span class="op">=</span> <span class="st">"poisson"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar1</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"PINAR(1)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-1.png" width="700"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar2</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"PINAR(2)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-2.png" width="700"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar5</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"PINAR(5)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-3.png" width="700"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># PARAMETER ESTIMATION</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="real-data-applications">Real data applications<a class="anchor" aria-label="anchor" href="#real-data-applications"></a>
 </h2>
 <p>Example of INAr plot</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">downloads</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">downloads</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">date</span>,y<span class="op">=</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
