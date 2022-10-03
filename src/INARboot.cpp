@@ -12,8 +12,6 @@ using namespace Rcpp;
 //
 
 //
-// !!!! DA IMPLEMENTARE ANCORA !!!!
-//
 //' @export
 // [[Rcpp::export]]
 NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
@@ -169,9 +167,13 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
 
 
 
+//
+//' @export
 // [[Rcpp::export]]
 NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
-  int n = x.length();
+    int n = x.length();
+    unsigned int niter;
+
   // NumericVector out(3);
   // NumericVector MB(B);
   // NumericVector VB(B);
@@ -180,18 +182,33 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
   for(int i = 0; i < B; i++){
 
     NumericVector xb(n);
+    niter = 0;
     // print(xb);
 
     // check!
     LogicalVector id(n);
-    id = xb==xb[0];
+    do {
+        id = xb==xb[0];
 
-    while(Rcpp::all(id).is_true()) {
-      xb = RcppArmadillo::sample(x,n,true);
-      id = xb==xb[0];
-    }
+        while(Rcpp::all(id).is_true()) {
+            xb = RcppArmadillo::sample(x,n,true);
+            id = xb==xb[0];
+        }
 
-    s_temp[i] = sunMC_Cpp(xb,method)[0];
+        s_temp[i] = sunMC_Cpp(xb,method)[0];
+
+        // asd = std::isnan(s_temp[i]);
+        // if(asd){
+        //     std::cout << std::isnan(s_temp[i]) << std::endl;
+        //     // Rprintf("condition is: %d \n", asd);
+        //     // Rprintf("s_temp is: %f \n", s_temp[i]);
+        // }
+
+        niter += 1;
+
+        // con false esce, con true resta
+    } while ( std::isnan(s_temp[i]) & (niter < 10) );
+
   }
 
   return s_temp;
@@ -200,32 +217,65 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
 //
 // !!!! DA IMPLEMENTARE !!!!
 //
+//' @export
 // [[Rcpp::export]]
 NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
-    double lambda_x = mean(noNA(x)); // = lambda
+    unsigned int niter;
+    double mean_x = mean(noNA(x));
+    double var_x = var(noNA(x));
 
     // NumericVector out(3);
     // NumericVector MB(B);
     // NumericVector VB(B);
 
     NumericVector s_temp(B);
-    for(int i = 0; i < B; i++){
+    if(method==1){
 
-        NumericVector xb(n);
-        // print(xb);
+        // POISSON
+        for(int i = 0; i < B; i++){
+            niter = 0;
+            NumericVector xb(n);
+            LogicalVector id(n);
+            do {
+                id = xb==xb[0];
 
-        // check!
-        LogicalVector id(n);
-        id = xb==xb[0];
+                while(Rcpp::all(id).is_true()) {
+                    // SOLO CASO POISSON
+                    // lambda_x = mean_x
+                    xb = Rcpp::rpois(n,mean_x);
+                    id = xb==xb[0];
+                }
 
-        while(Rcpp::all(id).is_true()) {
-            // POISSON
-            xb = Rcpp::rpois(n,lambda_x);
-            id = xb==xb[0];
+                s_temp[i] = sunMC_Cpp(xb,method)[0];
+
+                niter += 1;
+                // con false esce, con true resta
+            } while ( std::isnan(s_temp[i]) & (niter < 10) );
         }
+    }
+    if(method==2){
+        // NEGBIN
+        for(int i = 0; i < B; i++){
+            NumericVector xb(n);
+            // print(xb);
 
-        s_temp[i] = sunMC_Cpp(xb,method)[0];
+            // check!
+            LogicalVector id(n);
+            id = xb==xb[0];
+            niter = 0;
+
+            while(Rcpp::all(id).is_true()) {
+                // SOLO CASO NEGBIN
+                // gamma_x = mean_x/(var_x-mean_x);
+                // p_x = mean_x/var_x;
+                // pcompl_x = 1-p_x = (var_x-mean_x)/var_x;
+                xb = Rcpp::rnbinom(n, mean_x/(var_x-mean_x), (var_x-mean_x)/var_x);
+                id = xb==xb[0];
+            }
+
+            s_temp[i] = sunMC_Cpp(xb,method)[0];
+        }
     }
 
     return s_temp;

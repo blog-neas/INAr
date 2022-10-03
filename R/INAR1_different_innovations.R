@@ -55,6 +55,7 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
     arrival <- tolower(arrival)
 
     s <- n + burnout
+    # CHECK CONDIZ DI STAZIONARIETà
     mat <- matrix(0, nrow = lags, ncol = lags)
     mat[row(mat) - 1 == col(mat)] <- 1
     mat[1,] <- a
@@ -117,7 +118,7 @@ genINAR <- function(n,a,par,arrival="poisson",burnout=500){
       g_ <- unname(par[1]) # size, gamma
       p_ <- unname(par[2]) # prob successo
 
-      p.compl_ <- 1-p
+      p.compl_ <- 1-p_
       resid_ <- rnbinom(s,g_,p.compl_)
 
   }

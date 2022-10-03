@@ -6,10 +6,12 @@ sunMC_Cpp <- function(x, method) {
     .Call('_INAr_sunMC_Cpp', PACKAGE = 'INAr', x, method)
 }
 
+#' @export
 sunMC_semiparBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_sunMC_semiparBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
 
+#' @export
 sunMC_parBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_sunMC_parBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }

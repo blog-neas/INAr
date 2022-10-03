@@ -39,10 +39,10 @@ INARfit <- function(X,order,arrival="poisson"){
     }
 
     # sempre secondo Du and Li
-    resid <- rep(NA,n-order)
-    for(t in (order+1):n){
-        resid[t - order] <- X[t] - X[(t-1):(t-order)]%*%a
-    }
+    # resid <- rep(NA,n-order)
+    # for(t in (order+1):n){
+    #     resid[t - order] <- X[t] - X[(t-1):(t-order)]%*%a
+    # }
 
     # mX <- mean(X)
     # varX <- var(X)
@@ -50,7 +50,7 @@ INARfit <- function(X,order,arrival="poisson"){
     # varINN <- (1/(n-order))*sum((resid - mean(resid))^2)
 
     arr_mom <- Xmoments(X,a)
-    est <- est_mom(arr_mom$meanX, arr_mom$varX,arr_mom$meanINN,arr_mom$varINN,arrival)
+    est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
 
     names(a) <- paste0("a",1:order)
     out <- list("alphas"=a,"par"=est,
@@ -61,9 +61,16 @@ INARfit <- function(X,order,arrival="poisson"){
 #'
 #' @export
 est_mom <- function(mX,varX,mINN,varINN,arrival){
-    if(arrival=="poisson"){
+    if(arrival == "poisson"){
         lambda <- mINN
         OUT <- list("lambda"=lambda)
+    }
+    if(arrival == "negbin"){
+        gamma <- mINN/(varINN - mINN)
+        # pi <- mINN/varINN
+        pi_compl <- (varINN - mINN)/varINN
+
+        OUT <- list("gamma"=gamma,"pi"=pi_compl)
     }
     return(OUT)
 }
