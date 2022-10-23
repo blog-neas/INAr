@@ -28,7 +28,9 @@ Generation, estimation and testing of INteger Autoregressive models
 	- [ ] YW estimation of INAR(p) processes with several innovations (Negative Binomial, Genaralized Poisson, ...)
 	- [ ] CML estimation of INAR(p) processes
 - [ ] Test
-	- [ ] Bootstrap test
+	- [x] Semiparametric Bootstrap test
+	- [x] Parametric Bootstrap test - Poisson
+	- [ ] Parametric Bootstrap test - Other distributions
 - [ ] Visualization
 	- [ ] Summary
 	- [ ] Plotting
