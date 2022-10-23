@@ -8,6 +8,8 @@ vignette: >
   %\VignetteIndexEntry{INAr package, integer autoregressive models for time series of counts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteKeyword{PDF}
+  %\VignetteKeyword{HTML}
 ---
 
 ```{r, include = FALSE}

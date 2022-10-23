@@ -1,7 +1,15 @@
 # INARfit
 # fit INAR(p) model
 
+#' Estimation of the innovation process' parameters
 #'
+#' @param X data vector
+#' @param order p, the order of the INAR(p) process
+#' @param arrival distribution of the innovation process
+#'
+#' @return The fitted model
+#' @details
+#' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
 #' @export
 INARfit <- function(X,order,arrival="poisson"){
 
@@ -58,7 +66,17 @@ INARfit <- function(X,order,arrival="poisson"){
     return(out)
 }
 
+#' Estimation of the innovation process' parameters
 #'
+#' @param mX mean of the INAR process
+#' @param vX variance of the INAR process
+#' @param mINN mean of the innovation process
+#' @param vINN variance of the innovation process
+#' @param arrival distribution of the innovation process
+#'
+#' @return A list with parameter estimates
+#' @details
+#' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
 #' @export
 est_mom <- function(mX,varX,mINN,varINN,arrival){
     if(arrival == "poisson"){

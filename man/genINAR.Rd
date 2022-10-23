@@ -58,8 +58,8 @@ By the way, gatto gatto miao miao \code{\link[=genINAR]{genINAR()}}.
 \examples{
 # Generate 500 an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
 set.seed(1234)
-pars <- c(0.5,2)
-genINAR(500, pars, arrival = "poisson")
+lam <- 2
+genINAR(500, a = 0.5, par = lam, arrival = "poisson")
 
 }
 \references{
