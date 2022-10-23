@@ -66,11 +66,14 @@ est_mom <- function(mX,varX,mINN,varINN,arrival){
         OUT <- list("lambda"=lambda)
     }
     if(arrival == "negbin"){
-        gamma <- mINN/(varINN - mINN)
-        # pi <- mINN/varINN
-        pi_compl <- (varINN - mINN)/varINN
 
-        OUT <- list("gamma"=gamma,"pi"=pi_compl)
+        # trick
+        diffvarmu <- abs(varINN - mINN)
+        gamma <- (mINN^2)/diffvarmu
+        # pi <- mINN/varINN # old
+        pi <- diffvarmu/varINN
+
+        OUT <- list("gamma"=gamma,"pi"=pi)
     }
     return(OUT)
 }
@@ -78,7 +81,11 @@ est_mom <- function(mX,varX,mINN,varINN,arrival){
 # TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------
 # N <- 500
-# y <- genINAR(N,0.1,1.2,arrival="poisson")$X
-# INARfit(y,order=1)
-# y <- genINAR(N,c(0.9,0.01),2,arrival="poisson")$X
-# INARfit(y,order=2)
+# y <- genINAR(N,0.1,par=1.2,arrival="poisson")$X
+# INARfit(y, order=1)
+# y <- genINAR(N,c(0.9,0.01),par=2,arrival="poisson")$X
+# INARfit(y, order=2)
+# y <- genINAR(N,0.1,par=c(1,0.5),arrival="negbin")$X
+# INARfit(y, order=1, arrival="negbin)
+# y <- genINAR(N,c(0.9,0.01),par=c(2,0.66),arrival="poisson")$X
+# INARfit(y, order=2, arrival="negbin)

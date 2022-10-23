@@ -267,10 +267,15 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
             while(Rcpp::all(id).is_true()) {
                 // SOLO CASO NEGBIN
-                // gamma_x = mean_x/(var_x-mean_x);
-                // p_x = mean_x/var_x;
-                // pcompl_x = 1-p_x = (var_x-mean_x)/var_x;
-                xb = Rcpp::rnbinom(n, mean_x/(var_x-mean_x), (var_x-mean_x)/var_x);
+                // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
+                // gamma_x = mean_x^2/(var_x-mean_x);
+                // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
+                // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
+                // pcompl_x = 1-p_x = mean_x/var_x;
+                double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
+                double gamma_x = pow(mean_x,2)/diffvarmu;
+                double pcompl_x = 1- diffvarmu/var_x;
+                xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
                 id = xb==xb[0];
             }
 

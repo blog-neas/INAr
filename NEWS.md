@@ -1,3 +1,12 @@
+# INAr 0.0.75
+
+* Cleaning and few modifications.
+
+* Changed the formula regarding he Negative Binomial parameters' estimation acording with Sun, McCabe (2013).
+
+* Parametric bootstrap of INAR with Negative Binomial innovations is now available, although it needs some testing.
+
+
 # INAr 0.0.7
 
 * Added downloads dataset, source Weiss (2008).

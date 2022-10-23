@@ -12,14 +12,17 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+    collapse = TRUE,
+    comment = "#>",
+    fig.width = 7,
+    out.height = "\\textheight",
+    out.width = "\\textwidth")
 ```
 
 ```{r setup}
 library(INAr)
 ```
+
 
 ## Introduction 
 
@@ -60,7 +63,6 @@ $$
 \end{align}
 $$
 
-
 Variance, autocovariance and autocorrelation functions of INAR$(p)$ can be also derived by applying Yule-Walker equations.
 Partial autocorrelation is defined as conditional correlation between two variables under the assumption that we know and take into account the values of some other set of variables, analytically it can be expressed as
 \begin{equation*}
@@ -85,12 +87,13 @@ where $\mathbf{P}_k$ is the $k$--th order Toeplitz matrix, with $k \geq 1$, of a
 \end{equation*}
 and $\mathbf{Q}_k$ is the same matrix obtained substituting last column with vector $(\rho_1, \ldots, \rho_k )$.\par\medskip
 
+
 ### Poisson innovations 
 
-Poisson distribution$\lambda >0$,
+Poisson distribution $\lambda >0$,
 
 $$
-\text{P}(\varepsilon = k)= \frac{\lambda^k e^{-\lambda}}{k!}, \qquad k = 0, 1, 2, \ldots
+\text{P}(\varepsilon = s)= \frac{\lambda^s e^{-\lambda}}{s!}, \qquad s = 0, 1, 2, \ldots
 $$
 where $e$ is Euler's number.
 
@@ -104,36 +107,57 @@ $$
 
 {\displaystyle \lambda =\operatorname {E} (X)=\operatorname {Var} (X).}\lambda =\operatorname {E} (X)=\operatorname {Var} (X).
 
+
 ### Negative Binomial innovations 
 
 support $\mathbb{N}$
-parameters $\gamma \in \mathbb{N}$ and $\beta > 0$
-$$ 
-\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots
-$$
-this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process.
+<!-- parameters $\gamma \in \mathbb{N}$ and $\beta > 0$ -->
+<!-- $$  -->
+<!-- \text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots -->
+<!-- $$ -->
+<!-- this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process. -->
 
-An alternative parametrization considers the use of $\pi \in (0,1)$:
+support $\mathbb{N}$
 $$ 
-\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^\gamma \left(1-\pi \right)^k, \qquad k = 0, 1, \ldots
+\text{P}(\varepsilon = s) = \dfrac{\Gamma(s + \gamma)}{\Gamma(\gamma) s!} \pi^s \left(1-\pi \right)^\gamma, \qquad s = 0, 1, \ldots
 $$
-in this case the parameter $\pi = \beta/(1+\beta)$ is the probability of success.
+This distribution describes the number of failures in a sequence of independent and identically distributed Bernoulli trials before a given number of failures $\gamma$ occurs. In this case the parameter $\pi$ is the probability of success of the event.
 
 Estimation
-
 $$
 \begin{align}
-\text{E}(\varepsilon) = & \dfrac{\gamma}{\beta} \\
-\text{Var}(\varepsilon) = & \dfrac{\gamma}{\beta^2} \left( \beta + 1 \right)
+\text{E}(\varepsilon) = & \gamma\dfrac{\pi}{1- \pi} \\
+\text{Var}(\varepsilon) = &\gamma\dfrac{\pi}{(1- \pi)^2}
 \end{align}
 $$
 
+
+### Generalized Poisson innovations 
+
+Support $\mathbb{N}$.
+Parameters $\lambda >0$ and $\kappa < 1$ such that $\max(-1,-\lambda /m) < \kappa < 1$, and $m \geq 4$ is the largest positive integer to ensure $\lambda + \kappa m > 0$, when $\kappa < 0$.
+
+$$ 
+\text{P}(\varepsilon = s) =
+\begin{cases}
+\lambda(\lambda + \kappa s )^{s-1}\dfrac{e^{-(\lambda + \kappa s)}}{k!},  & \text{ for } s = 0, 1, \ldots \\
+0, & \text{ for } s > m \text{ if } \kappa < 0 
+\end{cases}
+$$
+The generalized Poisson distribution reduces to Pois($\lambda$) if $\kappa = 0$.
+
+$$ 
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^k \left(1-\pi \right)^\gamma, \qquad k = 0, 1, \ldots
+$$
+
+Estimation
 $$
 \begin{align}
-\text{E}(\varepsilon) = & \gamma \dfrac{\pi}{1-\pi} \\
-\text{Var}(\varepsilon) = &  \gamma \dfrac{1 - \pi}{\pi^2}
+\text{E}(\varepsilon) = &   \\
+\text{Var}(\varepsilon) = & 
 \end{align}
 $$
+
 
 ## Generating INAR processes
 
@@ -150,13 +174,29 @@ pinar2 <- genINAR(N,c(0.1,0.3),par = lambda,arrival = "poisson")$X
 # Poisson INAR(5) with innovations Poi(2)
 pinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = lambda,arrival = "poisson")$X
 
-plot(pinar1,type = "l", main = "PINAR(1)")
-plot(pinar2,type = "l", main = "PINAR(2)")
-plot(pinar5,type = "l", main = "PINAR(5)")
+gamma <- 2
+pi <- 0.33
+# Negative Binomial INAR(1) with innovations NB(2,0.33)
+nbinar1 <- genINAR(N,0.3,par = c(gamma,pi),arrival = "negbin")$X
+
+# Negative Binomial INAR(2) with innovations NB(2,0.33)
+nbinar2 <- genINAR(N,c(0.1,0.3),par = c(gamma,pi),arrival = "negbin")$X
+
+# Negative Binomial INAR(5) with innovations NB(2,0.33)
+nbinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = c(gamma,pi),arrival = "negbin")$X
+
+plot(pinar1,type = "l", main = "P-INAR(1)")
+plot(pinar2,type = "l", main = "P-INAR(2)")
+plot(pinar5,type = "l", main = "P-INAR(5)")
+
+plot(nbinar1,type = "l", main = "NB-INAR(1)")
+plot(nbinar2,type = "l", main = "NB-INAR(2)")
+plot(nbinar5,type = "l", main = "NB-INAR(5)")
 
 # PARAMETER ESTIMATION
 
 ```
+
 
 ## Real data applications
 
@@ -165,6 +205,7 @@ Example of INAr plot
 ```{r plot}
 library(ggplot2)
 data(downloads)
+
 ggplot(downloads,aes(x=date,y=X)) +
     geom_line()
 ```
