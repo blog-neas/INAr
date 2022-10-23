@@ -25,7 +25,13 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/INARfit.html</loc>
+  </url>
+  <url>
     <loc>/reference/downloads.html</loc>
+  </url>
+  <url>
+    <loc>/reference/est_mom.html</loc>
   </url>
   <url>
     <loc>/reference/genINAR.html</loc>
