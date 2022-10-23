@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">INAr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.75</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
       <h1 data-toc-skip>INAr package, integer autoregressive models for time series of counts</h1>
                         <h4 data-toc-skip class="author">Lucio Palazzo and Riccardo Ievoli</h4>
             
-            <h4 data-toc-skip class="date">2022-10-03</h4>
+            <h4 data-toc-skip class="date">2022-10-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/blog-neas/INAr/blob/HEAD/vignettes/inar.Rmd" class="external-link"><code>vignettes/inar.Rmd</code></a></small>
       <div class="hidden name"><code>inar.Rmd</code></div>
@@ -144,9 +144,9 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 <div class="section level3">
 <h3 id="poisson-innovations">Poisson innovations<a class="anchor" aria-label="anchor" href="#poisson-innovations"></a>
 </h3>
-<p>Poisson distribution<span class="math inline">\(\lambda &gt;0\)</span>,</p>
+<p>Poisson distribution <span class="math inline">\(\lambda &gt;0\)</span>,</p>
 <p><span class="math display">\[
-\text{P}(\varepsilon = k)= \frac{\lambda^k e^{-\lambda}}{k!}, \qquad k = 0, 1, 2, \ldots
+\text{P}(\varepsilon = s)= \frac{\lambda^s e^{-\lambda}}{s!}, \qquad s = 0, 1, 2, \ldots
 \]</span> where <span class="math inline">\(e\)</span> is Euler’s number.</p>
 <p>Estimation: the parameter is equal to the expected value of the process and also to its variance <span class="math display">\[
 \begin{align}
@@ -159,23 +159,35 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 <div class="section level3">
 <h3 id="negative-binomial-innovations">Negative Binomial innovations<a class="anchor" aria-label="anchor" href="#negative-binomial-innovations"></a>
 </h3>
-<p>support <span class="math inline">\(\mathbb{N}\)</span> parameters <span class="math inline">\(\gamma \in \mathbb{N}\)</span> and <span class="math inline">\(\beta &gt; 0\)</span> <span class="math display">\[ 
-\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots
-\]</span> this equation expresses the probability of having <span class="math inline">\(k\)</span> successes before <span class="math inline">\(\gamma\)</span> failures and <span class="math inline">\(\beta\)</span> expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process.</p>
-<p>An alternative parametrization considers the use of <span class="math inline">\(\pi \in (0,1)\)</span>: <span class="math display">\[ 
-\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^\gamma \left(1-\pi \right)^k, \qquad k = 0, 1, \ldots
-\]</span> in this case the parameter <span class="math inline">\(\pi = \beta/(1+\beta)\)</span> is the probability of success.</p>
-<p>Estimation</p>
-<p><span class="math display">\[
+<p>support <span class="math inline">\(\mathbb{N}\)</span> <!-- parameters $\gamma \in \mathbb{N}$ and $\beta > 0$ --> <!-- $$  --> <!-- \text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots --> <!-- $$ --> <!-- this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process. --></p>
+<p>support <span class="math inline">\(\mathbb{N}\)</span> <span class="math display">\[ 
+\text{P}(\varepsilon = s) = \dfrac{\Gamma(s + \gamma)}{\Gamma(\gamma) s!} \pi^s \left(1-\pi \right)^\gamma, \qquad s = 0, 1, \ldots
+\]</span> This distribution describes the number of failures in a sequence of independent and identically distributed Bernoulli trials before a given number of failures <span class="math inline">\(\gamma\)</span> occurs. In this case the parameter <span class="math inline">\(\pi\)</span> is the probability of success of the event.</p>
+<p>Estimation <span class="math display">\[
 \begin{align}
-\text{E}(\varepsilon) = &amp; \dfrac{\gamma}{\beta} \\
-\text{Var}(\varepsilon) = &amp; \dfrac{\gamma}{\beta^2} \left( \beta + 1 \right)
+\text{E}(\varepsilon) = &amp; \gamma\dfrac{\pi}{1- \pi} \\
+\text{Var}(\varepsilon) = &amp;\gamma\dfrac{\pi}{(1- \pi)^2}
 \end{align}
 \]</span></p>
-<p><span class="math display">\[
+</div>
+<div class="section level3">
+<h3 id="generalized-poisson-innovations">Generalized Poisson innovations<a class="anchor" aria-label="anchor" href="#generalized-poisson-innovations"></a>
+</h3>
+<p>Support <span class="math inline">\(\mathbb{N}\)</span>. Parameters <span class="math inline">\(\lambda &gt;0\)</span> and <span class="math inline">\(\kappa &lt; 1\)</span> such that <span class="math inline">\(\max(-1,-\lambda /m) &lt; \kappa &lt; 1\)</span>, and <span class="math inline">\(m \geq 4\)</span> is the largest positive integer to ensure <span class="math inline">\(\lambda + \kappa m &gt; 0\)</span>, when <span class="math inline">\(\kappa &lt; 0\)</span>.</p>
+<p><span class="math display">\[ 
+\text{P}(\varepsilon = s) =
+\begin{cases}
+\lambda(\lambda + \kappa s )^{s-1}\dfrac{e^{-(\lambda + \kappa s)}}{k!},  &amp; \text{ for } s = 0, 1, \ldots \\
+0, &amp; \text{ for } s &gt; m \text{ if } \kappa &lt; 0 
+\end{cases}
+\]</span> The generalized Poisson distribution reduces to Pois(<span class="math inline">\(\lambda\)</span>) if <span class="math inline">\(\kappa = 0\)</span>.</p>
+<p><span class="math display">\[ 
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^k \left(1-\pi \right)^\gamma, \qquad k = 0, 1, \ldots
+\]</span></p>
+<p>Estimation <span class="math display">\[
 \begin{align}
-\text{E}(\varepsilon) = &amp; \gamma \dfrac{\pi}{1-\pi} \\
-\text{Var}(\varepsilon) = &amp;  \gamma \dfrac{1 - \pi}{\pi^2}
+\text{E}(\varepsilon) = &amp;   \\
+\text{Var}(\varepsilon) = &amp; 
 \end{align}
 \]</span></p>
 </div>
@@ -195,15 +207,36 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 <span><span class="co"># Poisson INAR(5) with innovations Poi(2)</span></span>
 <span><span class="va">pinar5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.15</span>,<span class="fl">0.2</span>,<span class="fl">0.1</span>,<span class="fl">0.2</span><span class="op">)</span>,par <span class="op">=</span> <span class="va">lambda</span>,arrival <span class="op">=</span> <span class="st">"poisson"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar1</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"PINAR(1)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="inar_files/figure-html/geninar1-1.png" width="700"></p>
+<span><span class="va">gamma</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">pi</span> <span class="op">&lt;-</span> <span class="fl">0.33</span></span>
+<span><span class="co"># Negative Binomial INAR(1) with innovations NB(2,0.33)</span></span>
+<span><span class="va">nbinar1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">0.3</span>,par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">gamma</span>,<span class="va">pi</span><span class="op">)</span>,arrival <span class="op">=</span> <span class="st">"negbin"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span></span>
+<span><span class="co"># Negative Binomial INAR(2) with innovations NB(2,0.33)</span></span>
+<span><span class="va">nbinar2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.3</span><span class="op">)</span>,par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">gamma</span>,<span class="va">pi</span><span class="op">)</span>,arrival <span class="op">=</span> <span class="st">"negbin"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span></span>
+<span><span class="co"># Negative Binomial INAR(5) with innovations NB(2,0.33)</span></span>
+<span><span class="va">nbinar5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genINAR.html">genINAR</a></span><span class="op">(</span><span class="va">N</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.15</span>,<span class="fl">0.2</span>,<span class="fl">0.1</span>,<span class="fl">0.2</span><span class="op">)</span>,par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">gamma</span>,<span class="va">pi</span><span class="op">)</span>,arrival <span class="op">=</span> <span class="st">"negbin"</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar1</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"P-INAR(1)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-1.png" width="\textwidth" height="\textheight"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar2</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"PINAR(2)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="inar_files/figure-html/geninar1-2.png" width="700"></p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar2</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"P-INAR(2)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-2.png" width="\textwidth" height="\textheight"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar5</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"PINAR(5)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="inar_files/figure-html/geninar1-3.png" width="700"></p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pinar5</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"P-INAR(5)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-3.png" width="\textwidth" height="\textheight"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">nbinar1</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"NB-INAR(1)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-4.png" width="\textwidth" height="\textheight"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">nbinar2</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"NB-INAR(2)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-5.png" width="\textwidth" height="\textheight"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">nbinar5</span>,type <span class="op">=</span> <span class="st">"l"</span>, main <span class="op">=</span> <span class="st">"NB-INAR(5)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="inar_files/figure-html/geninar1-6.png" width="\textwidth" height="\textheight"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># PARAMETER ESTIMATION</span></span></code></pre></div>
 </div>
@@ -211,12 +244,13 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 <h2 id="real-data-applications">Real data applications<a class="anchor" aria-label="anchor" href="#real-data-applications"></a>
 </h2>
 <p>Example of INAr plot</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">downloads</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">downloads</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">date</span>,y<span class="op">=</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="inar_files/figure-html/plot-1.png" width="700"></p>
+<p><img src="inar_files/figure-html/plot-1.png" width="\textwidth" height="\textheight"></p>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
