@@ -10,7 +10,7 @@ Generation, estimation and testing of INteger Autoregressive models
 [![Project Status: Active - The project is being actively developed](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Codecov](https://app.codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/blog-neas/INAr)
 [![License: GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
-[![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
 ## Overview
