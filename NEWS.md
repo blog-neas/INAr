@@ -1,6 +1,11 @@
-# INAr 0.0.8
+# INAr 0.0.9
 
-* Preparing for the first CRAN submission.
+* Preparing for the first CRAN submission:
+  * Minor changes and few modifications;
+  * Script cleaning.
+
+
+# INAr 0.0.8
 
 * Cleaning and few modifications.
 

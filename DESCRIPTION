@@ -1,7 +1,7 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.0.8
+Version: 0.0.9
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
@@ -37,8 +37,8 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    ggplot2,
     tidyverse,
+    ggplot2,
     testthat (>= 3.0.0)
 RdMacros: Rdpack
 LinkingTo: Rcpp, RcppArmadillo
