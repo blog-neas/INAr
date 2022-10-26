@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">INAr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.75</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8</span>
       </span>
     </div>
 
@@ -78,10 +78,12 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>INAr package, integer autoregressive models for time series of counts</h1>
-                        <h4 data-toc-skip class="author">Lucio Palazzo and Riccardo Ievoli</h4>
+      <h1 data-toc-skip>INAr package, integer autoregressive models for
+time series of counts</h1>
+                        <h4 data-toc-skip class="author">Lucio Palazzo
+and Riccardo Ievoli</h4>
             
-            <h4 data-toc-skip class="date">2022-10-23</h4>
+            <h4 data-toc-skip class="date">2022-10-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/blog-neas/INAr/blob/HEAD/vignettes/inar.Rmd" class="external-link"><code>vignettes/inar.Rmd</code></a></small>
       <div class="hidden name"><code>inar.Rmd</code></div>
@@ -95,7 +97,8 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>Esempio citazione: <span class="citation">(Alzaid and Al-Osh 1990)</span></p>
+<p>Esempio citazione: <span class="citation">(Alzaid and Al-Osh
+1990)</span></p>
 </div>
 <div class="section level2">
 <h2 id="some-theoretical-results">Some theoretical results<a class="anchor" aria-label="anchor" href="#some-theoretical-results"></a>
@@ -106,49 +109,69 @@ X_t = \alpha_1 * X_{t-1} + \cdots + \alpha_p * X_{t-p} + \varepsilon_t
 \end{equation}\]</span></p>
 <p>where the Binomial thinning operator <span class="math inline">\({*}\)</span> ……. is …</p>
 <p><span class="math display">\[
-\alpha * X = \sum_{i=1}^{X} Y_i, \qquad \text{ where } Y_i \sim Ber(\alpha)
+\alpha * X = \sum_{i=1}^{X} Y_i, \qquad \text{ where } Y_i \sim
+Ber(\alpha)
 \]</span> Moments</p>
 <p><span class="math display">\[
 \begin{align}
-\text{E}(X_t) = \mu_X = &amp; \dfrac{\mu_\varepsilon}{1 - \sum_{i=1}^{p}\alpha_i} \\
-\text{Var}(X_t) = \gamma_0 = \sigma_X^2 = &amp; \dfrac{\mu_X\sum_{i=1}^{p} \alpha_i(1-\alpha_i) + \sigma_\varepsilon}{1-\sum_{i=1}^{p} \alpha_i^2} \\
-\text{E}(X_t| \Im_{t-1}) = &amp; \sum_{i=1}^{p} \alpha_i X_{t-i} + \mu_\varepsilon \\
-\text{Var}(X_t| \Im_{t-1}) = &amp; \sum_{i=1}^{p} \alpha_i (1- \alpha_i) X_{t-i} + \sigma_\varepsilon^2
+\text{E}(X_t) = \mu_X = &amp; \dfrac{\mu_\varepsilon}{1 -
+\sum_{i=1}^{p}\alpha_i} \\
+\text{Var}(X_t) = \gamma_0 = \sigma_X^2 = &amp;
+\dfrac{\mu_X\sum_{i=1}^{p} \alpha_i(1-\alpha_i) +
+\sigma_\varepsilon}{1-\sum_{i=1}^{p} \alpha_i^2} \\
+\text{E}(X_t| \Im_{t-1}) = &amp; \sum_{i=1}^{p} \alpha_i X_{t-i} +
+\mu_\varepsilon \\
+\text{Var}(X_t| \Im_{t-1}) = &amp; \sum_{i=1}^{p} \alpha_i (1- \alpha_i)
+X_{t-i} + \sigma_\varepsilon^2
 \end{align}
 \]</span></p>
 <p>Then the first two moments for the innovation process are: <span class="math display">\[
 \begin{align}
-\text{E}(\varepsilon_t) = \mu_\varepsilon = &amp; \left(1 - \sum_{i=1}^{p}\alpha_i \right) \mu_X \\
+\text{E}(\varepsilon_t) = \mu_\varepsilon = &amp; \left(1 -
+\sum_{i=1}^{p}\alpha_i \right) \mu_X \\
 \text{Var}(\varepsilon_t) = \sigma_\varepsilon^2 = &amp;
-\sigma_X^2 \left( 1-\sum_{i=1}^{p} \alpha_i^2 \right) - \mu_X \sum_{i=1}^{p} \alpha_i(1-\alpha_i)
+\sigma_X^2 \left( 1-\sum_{i=1}^{p} \alpha_i^2 \right) - \mu_X
+\sum_{i=1}^{p} \alpha_i(1-\alpha_i)
 \end{align}
 \]</span></p>
-Variance, autocovariance and autocorrelation functions of INAR<span class="math inline">\((p)\)</span> can be also derived by applying Yule-Walker equations. Partial autocorrelation is defined as conditional correlation between two variables under the assumption that we know and take into account the values of some other set of variables, analytically it can be expressed as <span class="math display">\[\begin{equation*}
-    \phi_k = \mbox{Cov}\big( X_{t} - \mbox{E}(X_t | X_{t-1}, \ldots, X_{t + k-1}),  X_{t-k} - \mbox{E}(X_{t-k} | X_{t-1}, \ldots, X_{t + k-1})\big) = \frac{|\mathbf{Q}_k|}{|\mathbf{P}_k|}
-\end{equation*}\]</span> where <span class="math inline">\(\mathbf{P}_k\)</span> is the <span class="math inline">\(k\)</span>–th order Toeplitz matrix, with <span class="math inline">\(k \geq 1\)</span>, of autocorrelations defined as <span class="math display">\[\begin{equation*}
- \mathbf{P}_k  = 
+Variance, autocovariance and autocorrelation functions of INAR<span class="math inline">\((p)\)</span> can be also derived by applying
+Yule-Walker equations. Partial autocorrelation is defined as conditional
+correlation between two variables under the assumption that we know and
+take into account the values of some other set of variables,
+analytically it can be expressed as <span class="math display">\[\begin{equation*}
+    \phi_k = \mbox{Cov}\big( X_{t} - \mbox{E}(X_t | X_{t-1}, \ldots,
+X_{t + k-1}),  X_{t-k} - \mbox{E}(X_{t-k} | X_{t-1}, \ldots, X_{t +
+k-1})\big) = \frac{|\mathbf{Q}_k|}{|\mathbf{P}_k|}
+\end{equation*}\]</span> where <span class="math inline">\(\mathbf{P}_k\)</span> is the <span class="math inline">\(k\)</span>–th order Toeplitz matrix, with <span class="math inline">\(k \geq 1\)</span>, of autocorrelations defined as
+<span class="math display">\[\begin{equation*}
+\mathbf{P}_k  =
 % \begin{pmatrix}
-%  \rho_0 &amp; \rho_1 &amp; \cdots &amp; \rho_{k-1} \\ 
-%  \rho_1 &amp; \rho_0 &amp; \cdots &amp; \rho_{k-2} \\ 
-%  \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ 
-%  \rho_{k-1} &amp; \rho_{k-2} &amp; \cdots &amp; \rho_0 \\ 
+%  \rho_0 &amp; \rho_1 &amp; \cdots &amp; \rho_{k-1} \\
+%  \rho_1 &amp; \rho_0 &amp; \cdots &amp; \rho_{k-2} \\
+%  \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+%  \rho_{k-1} &amp; \rho_{k-2} &amp; \cdots &amp; \rho_0 \\
 % \end{pmatrix}
 % =
 \begin{pmatrix}
-    1 &amp; \rho_1 &amp; \cdots &amp; \rho_{k-1} \\ 
-    \rho_1 &amp; 1 &amp; \cdots &amp; \rho_{k-2} \\ 
-    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ 
-    \rho_{k-1} &amp; \rho_{k-2} &amp; \cdots &amp; 1 \\ 
+    1 &amp; \rho_1 &amp; \cdots &amp; \rho_{k-1} \\
+    \rho_1 &amp; 1 &amp; \cdots &amp; \rho_{k-2} \\
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+    \rho_{k-1} &amp; \rho_{k-2} &amp; \cdots &amp; 1 \\
 \end{pmatrix}
-\end{equation*}\]</span> and <span class="math inline">\(\mathbf{Q}_k\)</span> is the same matrix obtained substituting last column with vector <span class="math inline">\((\rho_1, \ldots, \rho_k )\)</span>.
+\end{equation*}\]</span> and <span class="math inline">\(\mathbf{Q}_k\)</span> is the same matrix obtained
+substituting last column with vector <span class="math inline">\((\rho_1, \ldots, \rho_k )\)</span>.
 <div class="section level3">
 <h3 id="poisson-innovations">Poisson innovations<a class="anchor" aria-label="anchor" href="#poisson-innovations"></a>
 </h3>
-<p>Poisson distribution <span class="math inline">\(\lambda &gt;0\)</span>,</p>
+<p>Poisson distribution <span class="math inline">\(\lambda
+&gt;0\)</span>,</p>
 <p><span class="math display">\[
-\text{P}(\varepsilon = s)= \frac{\lambda^s e^{-\lambda}}{s!}, \qquad s = 0, 1, 2, \ldots
-\]</span> where <span class="math inline">\(e\)</span> is Euler’s number.</p>
-<p>Estimation: the parameter is equal to the expected value of the process and also to its variance <span class="math display">\[
+\text{P}(\varepsilon = s)= \frac{\lambda^s e^{-\lambda}}{s!}, \qquad s =
+0, 1, 2, \ldots
+\]</span> where <span class="math inline">\(e\)</span> is Euler’s
+number.</p>
+<p>Estimation: the parameter is equal to the expected value of the
+process and also to its variance <span class="math display">\[
 \begin{align}
 \text{E}(\varepsilon) = &amp; \lambda \\
 \text{Var}(\varepsilon) = &amp; \lambda  
@@ -159,10 +182,19 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 <div class="section level3">
 <h3 id="negative-binomial-innovations">Negative Binomial innovations<a class="anchor" aria-label="anchor" href="#negative-binomial-innovations"></a>
 </h3>
-<p>support <span class="math inline">\(\mathbb{N}\)</span> <!-- parameters $\gamma \in \mathbb{N}$ and $\beta > 0$ --> <!-- $$  --> <!-- \text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots --> <!-- $$ --> <!-- this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process. --></p>
-<p>support <span class="math inline">\(\mathbb{N}\)</span> <span class="math display">\[ 
-\text{P}(\varepsilon = s) = \dfrac{\Gamma(s + \gamma)}{\Gamma(\gamma) s!} \pi^s \left(1-\pi \right)^\gamma, \qquad s = 0, 1, \ldots
-\]</span> This distribution describes the number of failures in a sequence of independent and identically distributed Bernoulli trials before a given number of failures <span class="math inline">\(\gamma\)</span> occurs. In this case the parameter <span class="math inline">\(\pi\)</span> is the probability of success of the event.</p>
+<p>support <span class="math inline">\(\mathbb{N}\)</span>
+<!-- parameters $\gamma \in \mathbb{N}$ and $\beta > 0$ --> <!-- $$  -->
+<!-- \text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots -->
+<!-- $$ -->
+<!-- this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process. --></p>
+<p>support <span class="math inline">\(\mathbb{N}\)</span> <span class="math display">\[
+\text{P}(\varepsilon = s) = \dfrac{\Gamma(s + \gamma)}{\Gamma(\gamma)
+s!} \pi^s \left(1-\pi \right)^\gamma, \qquad s = 0, 1, \ldots
+\]</span> This distribution describes the number of failures in a
+sequence of independent and identically distributed Bernoulli trials
+before a given number of failures <span class="math inline">\(\gamma\)</span> occurs. In this case the parameter
+<span class="math inline">\(\pi\)</span> is the probability of success
+of the event.</p>
 <p>Estimation <span class="math display">\[
 \begin{align}
 \text{E}(\varepsilon) = &amp; \gamma\dfrac{\pi}{1- \pi} \\
@@ -173,21 +205,28 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 <div class="section level3">
 <h3 id="generalized-poisson-innovations">Generalized Poisson innovations<a class="anchor" aria-label="anchor" href="#generalized-poisson-innovations"></a>
 </h3>
-<p>Support <span class="math inline">\(\mathbb{N}\)</span>. Parameters <span class="math inline">\(\lambda &gt;0\)</span> and <span class="math inline">\(\kappa &lt; 1\)</span> such that <span class="math inline">\(\max(-1,-\lambda /m) &lt; \kappa &lt; 1\)</span>, and <span class="math inline">\(m \geq 4\)</span> is the largest positive integer to ensure <span class="math inline">\(\lambda + \kappa m &gt; 0\)</span>, when <span class="math inline">\(\kappa &lt; 0\)</span>.</p>
-<p><span class="math display">\[ 
+<p>Support <span class="math inline">\(\mathbb{N}\)</span>. Parameters
+<span class="math inline">\(\lambda &gt;0\)</span> and <span class="math inline">\(\kappa &lt; 1\)</span> such that <span class="math inline">\(\max(-1,-\lambda /m) &lt; \kappa &lt; 1\)</span>,
+and <span class="math inline">\(m \geq 4\)</span> is the largest
+positive integer to ensure <span class="math inline">\(\lambda + \kappa
+m &gt; 0\)</span>, when <span class="math inline">\(\kappa &lt;
+0\)</span>.</p>
+<p><span class="math display">\[
 \text{P}(\varepsilon = s) =
 \begin{cases}
-\lambda(\lambda + \kappa s )^{s-1}\dfrac{e^{-(\lambda + \kappa s)}}{k!},  &amp; \text{ for } s = 0, 1, \ldots \\
-0, &amp; \text{ for } s &gt; m \text{ if } \kappa &lt; 0 
+\lambda(\lambda + \kappa s )^{s-1}\dfrac{e^{-(\lambda + \kappa
+s)}}{k!},  &amp; \text{ for } s = 0, 1, \ldots \\
+0, &amp; \text{ for } s &gt; m \text{ if } \kappa &lt; 0
 \end{cases}
 \]</span> The generalized Poisson distribution reduces to Pois(<span class="math inline">\(\lambda\)</span>) if <span class="math inline">\(\kappa = 0\)</span>.</p>
-<p><span class="math display">\[ 
-\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^k \left(1-\pi \right)^\gamma, \qquad k = 0, 1, \ldots
+<p><span class="math display">\[
+\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma)
+k!} \pi^k \left(1-\pi \right)^\gamma, \qquad k = 0, 1, \ldots
 \]</span></p>
 <p>Estimation <span class="math display">\[
 \begin{align}
 \text{E}(\varepsilon) = &amp;   \\
-\text{Var}(\varepsilon) = &amp; 
+\text{Var}(\varepsilon) = &amp;
 \end{align}
 \]</span></p>
 </div>
@@ -245,7 +284,8 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 </h2>
 <p>Example of INAr plot</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: ggplot2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">downloads</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">downloads</span>,<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">date</span>,y<span class="op">=</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -257,7 +297,9 @@ Variance, autocovariance and autocorrelation functions of INAR<span class="math 
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-alzaid1990integer" class="csl-entry">
-Alzaid, AA, and M Al-Osh. 1990. <span>“An Integer-Valued Pth-Order Autoregressive Structure (INAR (p)) Process.”</span> <em>Journal of Applied Probability</em> 27 (2): 314–24.
+Alzaid, AA, and M Al-Osh. 1990. <span>“An Integer-Valued Pth-Order
+Autoregressive Structure (INAR (p)) Process.”</span> <em>Journal of
+Applied Probability</em> 27 (2): 314–24.
 </div>
 </div>
 </div>

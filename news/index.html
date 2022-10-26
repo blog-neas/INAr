@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">INAr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.75</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8</span>
       </span>
     </div>
 
@@ -58,8 +58,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.0.75" id="inar-0075">INAr 0.0.75<a class="anchor" aria-label="anchor" href="#inar-0075"></a></h2>
-<ul><li><p>Cleaning and few modifications.</p></li>
+<h2 class="page-header" data-toc-text="0.0.8" id="inar-008">INAr 0.0.8<a class="anchor" aria-label="anchor" href="#inar-008"></a></h2>
+<ul><li><p>Preparing for the first CRAN submission.</p></li>
+<li><p>Cleaning and few modifications.</p></li>
 <li><p>Changed the formula regarding he Negative Binomial parameters’ estimation acording with Sun, McCabe (2013).</p></li>
 <li><p>Parametric bootstrap of INAR with Negative Binomial innovations is now available, although it needs some testing.</p></li>
 </ul></div>
@@ -75,18 +76,22 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.5" id="inar-005">INAr 0.0.5<a class="anchor" aria-label="anchor" href="#inar-005"></a></h2>
-<ul><li>Improvement of the <code>INARfit.R</code> code to fit INAR(p) models. Now <code><a href="../reference/INARfit.html">INARfit()</a></code> performs a full Y-W estimation from a Poisson INAR(r) family, following the results of Du and Li. Some additional Rcpp utility functions (script <code>Xmoments.cpp</code>) have been added:<ul><li>
+<ul><li>Improvement of the <code>INARfit.R</code> code to fit INAR(p) models. Now <code><a href="../reference/INARfit.html">INARfit()</a></code> performs a full Y-W estimation from a Poisson INAR(r) family, following the results of Du and Li. Some additional Rcpp utility functions (script <code>Xmoments.cpp</code>) have been added:
+<ul><li>
 <code>Xmoments()</code> [in development], compute the first two moments for the original series and the residual series. As output it returns mean and variance of both the starting and residual series, and the estimated residual series;</li>
 <li>
 <code>Xresid()</code> [in development], generates the series of residual values.</li>
-</ul></li></ul></div>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.4" id="inar-004">INAr 0.0.4<a class="anchor" aria-label="anchor" href="#inar-004"></a></h2>
-<ul><li>First <code>INARfit.R</code> code to fit INAR(p) models:<ul><li>
+<ul><li>First <code>INARfit.R</code> code to fit INAR(p) models:
+<ul><li>
 <code><a href="../reference/INARfit.html">INARfit()</a></code> [in development], fitting an INAR(p) process, by using several procedures. At the momemt is hardcoded and works only for the Poisson case and only YW is provided;</li>
 <li>
 <code><a href="../reference/est_mom.html">est_mom()</a></code> [in development], estimation of innovations’ parameters. At the momemt is hardcoded and works only for the Poisson case.</li>
-</ul></li></ul></div>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.3" id="inar-003">INAr 0.0.3<a class="anchor" aria-label="anchor" href="#inar-003"></a></h2>
 <ul><li><p>Generalization of genINAR function, now it generates INAR(p) models nstead of INAR(1).</p></li>
