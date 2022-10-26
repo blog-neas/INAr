@@ -223,7 +223,7 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
   return s_temp;
 }
 
-//' Semiparametric bootstrap version of the Sun McCabe score test.
+//' Parametric bootstrap version of the Sun McCabe score test.
 //' @param x NumericVector
 //' @param B int
 //' @param method unsigned int

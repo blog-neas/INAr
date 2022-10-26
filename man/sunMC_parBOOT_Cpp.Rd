@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{sunMC_parBOOT_Cpp}
 \alias{sunMC_parBOOT_Cpp}
-\title{Semiparametric bootstrap version of the Sun McCabe score test.}
+\title{Parametric bootstrap version of the Sun McCabe score test.}
 \usage{
 sunMC_parBOOT_Cpp(x, B, method)
 }
@@ -14,7 +14,7 @@ sunMC_parBOOT_Cpp(x, B, method)
 \item{method}{unsigned int}
 }
 \description{
-Semiparametric bootstrap version of the Sun McCabe score test.
+Parametric bootstrap version of the Sun McCabe score test.
 }
 \details{
 This is an internal function, it will be excluded in future versions.

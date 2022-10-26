@@ -22,7 +22,7 @@ sunMC_semiparBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_sunMC_semiparBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
 
-#' Semiparametric bootstrap version of the Sun McCabe score test.
+#' Parametric bootstrap version of the Sun McCabe score test.
 #' @param x NumericVector
 #' @param B int
 #' @param method unsigned int
