@@ -11,7 +11,11 @@ using namespace Rcpp;
 // NB. HO INCLUSO ANCHE LO SCRIPT PRESENTE IN statistica_SunMcCabe.cpp
 //
 
-//
+//' Sun McCabe score statistic to test for dependence in an integer autoregressive process
+//' @param x NumericVector
+//' @param method unsigned int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
 NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
@@ -167,7 +171,12 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
 
 
 
-//
+//' Semiparametric bootstrap version of the Sun McCabe score test.
+//' @param x NumericVector
+//' @param B int
+//' @param method unsigned int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
 NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
@@ -214,9 +223,13 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
   return s_temp;
 }
 
-//
-// !!!! DA IMPLEMENTARE !!!!
-//
+//' Semiparametric bootstrap version of the Sun McCabe score test.
+//' @param x NumericVector
+//' @param B int
+//' @param method unsigned int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' !!!!! DA IMPLEMENTARE !!!!!
 //' @export
 // [[Rcpp::export]]
 NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
