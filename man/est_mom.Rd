@@ -9,13 +9,13 @@ est_mom(mX, varX, mINN, varINN, arrival)
 \arguments{
 \item{mX}{mean of the INAR process}
 
+\item{varX}{variance of the INAR process}
+
 \item{mINN}{mean of the innovation process}
 
+\item{varINN}{variance of the innovation process}
+
 \item{arrival}{distribution of the innovation process}
-
-\item{vX}{variance of the INAR process}
-
-\item{vINN}{variance of the innovation process}
 }
 \value{
 A list with parameter estimates

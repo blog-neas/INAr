@@ -12,6 +12,7 @@
 #' @param par vector, parameters related with the model, see the details section.
 #' @param arrival character, arrival distribution. Default value is `"poisson"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
 #' @param burnout integer, number of starting observations to discard, set to 500 by default.
+#' @param ... Additional arguments passed to the functions generating the random numbers.
 #' @details
 #' The function generates `n` observations drawn from an INAR(p) model
 #' \deqn{X_t = \alpha_1 {*} X_{t-1} + \ldots + \alpha_p {*} X_{t-p} + \varepsilon_t}
@@ -38,6 +39,15 @@
 #' @references
 #'   \insertAllCited{}
 #' @return A number.
+#' @importFrom stats rpois
+#' @importFrom stats rnorm
+#' @importFrom stats runif
+#' @importFrom stats rbinom
+#' @importFrom stats rnbinom
+#' @importFrom good rgood
+#' @importFrom gamlss.dist rZIP
+#' @importFrom skellam rskellam
+#' @importFrom RNGforGPD GenUniGpois
 #' @examples
 #' # Generate 500 an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
 #' set.seed(1234)
@@ -85,7 +95,8 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     l_ <- unname(par[1])
     sig_ <- unname(par[2])
 
-    resid_ <- gamlss.dist::rZIP(s, mu = l_, sigma = sig_)
+    # gamlss.dist::rZIP
+    resid_ <- rZIP(s, mu = l_, sigma = sig_)
   }
   else if(arrival=="bimodal_poisson"){
     stopifnot(length(par)==3)
@@ -149,7 +160,8 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     # "Branching" only works when lambda is positive. When theta is less than 10, the "Normal-Approximation" may not be reliable.
 
     # attenzione al metodo utilizzato!
-    resid_ <- RNGforGPD::GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
+    # RNGforGPD::GenUniGpois
+    resid_ <- GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
   }
   else if(arrival=="katz"){
     #
@@ -168,14 +180,16 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     lam1_ <- unname(par[1])
     lam2_ <- unname(par[2])
 
-    vals <- skellam::rskellam(s, lam1_, lam2_)
+    # skellam::rskellam
+    vals <- rskellam(s, lam1_, lam2_)
     resid_ <- ifelse(vals < 0,0,vals)
   }
   else if(arrival=="good"){
     z_ <- unname(par[1])
     s_ <- unname(par[2])
 
-    resid_ <- good::rgood(s, z_, s_)
+    # good::rgood
+    resid_ <- rgood(s, z_, s_)
   }
   else{
     stop("please specify one of the available distributions", call. = FALSE)

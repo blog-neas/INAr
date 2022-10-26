@@ -1,4 +1,6 @@
-# INAr 0.0.75
+# INAr 0.0.8
+
+* Preparing for the first CRAN submission.
 
 * Cleaning and few modifications.
 

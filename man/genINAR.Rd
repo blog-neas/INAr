@@ -16,6 +16,8 @@ genINAR(n, a, par, arrival = "poisson", burnout = 500, ...)
 \item{arrival}{character, arrival distribution. Default value is \code{"poisson"}, alternative values are \code{"negbin"} for Negative Binomial, \code{"genpoi"} for Generalized Poisson and \code{"katz"} for the Katz family.}
 
 \item{burnout}{integer, number of starting observations to discard, set to 500 by default.}
+
+\item{...}{Additional arguments passed to the functions generating the random numbers.}
 }
 \value{
 A number.

@@ -1,7 +1,7 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.0.75
+Version: 0.0.8
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
@@ -17,25 +17,27 @@ Maintainer: Lucio Palazzo <lucio.palazzo@unina.it>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
     Mettere citazioni INAR models Al-Osh 1987, etc...
-License: GPL-3
+License: GPL-3 + file LICENSE
 URL: https://github.com/blog-neas/INAr
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Depends:
-    R (>= 4.2.1)
+    R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), 
-    RcppArmadillo,
-    MASS,
+    stats,
+    NMF,
     gamlss.dist,
     RNGforGPD,
+    good,
     skellam,
     Rdpack
 Suggests: 
     covr,
     knitr,
     rmarkdown,
+    ggplot2,
     tidyverse,
     testthat (>= 3.0.0)
 RdMacros: Rdpack

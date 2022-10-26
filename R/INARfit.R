@@ -8,6 +8,8 @@
 #' @param arrival distribution of the innovation process
 #'
 #' @return The fitted model
+#' @importFrom stats acf
+#' @importFrom NMF fcnnls
 #' @details
 #' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
 #' @export
@@ -39,7 +41,8 @@ INARfit <- function(X,order,arrival="poisson"){
             err <- NULL
         }else{
             warning("Y-W estimation not reliable. Please rely on more consistent estimators.")
-            err <- as.vector(NMF::fcnnls(R,r)$x) # ,pseudo=TRUE per Monroe-Penrose version
+            # NMF::fcnnls
+            err <- as.vector(fcnnls(R,r)$x) # ,pseudo=TRUE per Monroe-Penrose version
             names(err) <- paste0("fcnnls_solve_a",1:order)
         }
     }else{
@@ -69,9 +72,9 @@ INARfit <- function(X,order,arrival="poisson"){
 #' Estimation of the innovation process' parameters
 #'
 #' @param mX mean of the INAR process
-#' @param vX variance of the INAR process
+#' @param varX variance of the INAR process
 #' @param mINN mean of the innovation process
-#' @param vINN variance of the innovation process
+#' @param varINN variance of the innovation process
 #' @param arrival distribution of the innovation process
 #'
 #' @return A list with parameter estimates

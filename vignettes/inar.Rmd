@@ -205,7 +205,7 @@ plot(nbinar5,type = "l", main = "NB-INAR(5)")
 Example of INAr plot
 
 ```{r plot}
-library(ggplot2)
+require(ggplot2)
 data(downloads)
 
 ggplot(downloads,aes(x=date,y=X)) +
