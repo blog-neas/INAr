@@ -10,21 +10,6 @@ using namespace Rcpp;
 // prima riga: // [[Rcpp::depends(RcppArmadillo)]]
 // seconda riga: #include <RcppArmadilloExtensions/sample.h>
 
-
-// [[Rcpp::export]]
-NumericVector INAR1_cpp(NumericVector resid, double a) {
-
-    unsigned int n = resid.length();
-    NumericVector sim(n);
-
-    sim = clone(resid);
-    for (unsigned int i = 1; i < n; i++) {
-        sim[i] = R::rbinom(sim[i-1],a) + resid[i];
-    }
-
-    return sim;
-}
-
 // [[Rcpp::export]]
 NumericVector INARp_cpp(NumericVector resid, DoubleVector a) {
 

@@ -38,10 +38,6 @@ sunMCtest_boot <- function(X, arrival, method, B) {
     .Call('_INAr_sunMCtest_boot', PACKAGE = 'INAr', X, arrival, method, B)
 }
 
-INAR1_cpp <- function(resid, a) {
-    .Call('_INAr_INAR1_cpp', PACKAGE = 'INAr', resid, a)
-}
-
 INARp_cpp <- function(resid, a) {
     .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
@@ -52,9 +48,5 @@ Xresid <- function(X, alphas, mINN, vINN) {
 
 Xmoments <- function(X, alphas) {
     .Call('_INAr_Xmoments', PACKAGE = 'INAr', X, alphas)
-}
-
-rcpp_genINARmarg <- function(a, Xseries, resid) {
-    .Call('_INAr_rcpp_genINARmarg', PACKAGE = 'INAr', a, Xseries, resid)
 }
 
