@@ -24,9 +24,12 @@
 #' @export
 SMC.test <- function(x, order=1, arrival = "poisson") {
 
+
     if(!(is.integer(x))) { stop("Error: Data should be integers"); }
     if(min(x) < 0) { stop("Error: Data should be non-negative"); }
     if(order!=1) { stop("Only INAR(1) process available at the moment"); }
+    disp <- var(x)/mean(x)
+
 
     #Set description of test
     method      <- "Sun McCabe score test for INAR dependence.";
@@ -45,14 +48,13 @@ SMC.test <- function(x, order=1, arrival = "poisson") {
     } else if(tolower(arrival)=="negbin"){
         met <- 2
         data.name   <- paste0("INAR counts from Negative Binomial INAR(",order,") dgp.")
+        stopifnot('Data must be overdispersed when arrival = "negbin"' = disp > 1)
     }
 
     if(met==0) { stop('Wrong arrivals specified. Available options: "poisson", "negbin".'); }
 
+    # Call C++ routine
     tval <- sunMC_Cpp(x, method = met)
-
-    # out[0] = stat/sqrt(n);
-    # out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
 
     # questo non ci serve, qui volendo potremmo restituire gli alpha_hat
     # estimate    <- sum(M)/sum(N);
