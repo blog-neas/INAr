@@ -1,7 +1,7 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.0.10
+Version: 0.0.11
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",

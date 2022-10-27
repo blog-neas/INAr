@@ -16,7 +16,7 @@ SMC.test(x, order = 1, arrival = "poisson")
 \value{
 A list with class "htest" containing the following components:
 \itemize{
-\item statistic the value of the t-statistic.
+\item statistic the value of the Score test statistic.
 \item p.value the p-value for the test.
 \item null.value the specified hypothesized value of the thinning operator under the null hypothesis.
 \item alternative a character string describing the alternative hypothesis.

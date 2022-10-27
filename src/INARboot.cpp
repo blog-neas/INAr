@@ -287,12 +287,12 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 // pcompl_x = 1-p_x = mean_x/var_x;
                 double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
                 double gamma_x = pow(mean_x,2)/diffvarmu;
-                double pcompl_x = 1- diffvarmu/var_x;
+                double pcompl_x = 1 - diffvarmu/var_x;
                 xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
                 id = xb==xb[0];
             }
 
-            s_temp[i] = sunMC_Cpp(xb,method)[0];
+            s_temp[i] = sunMC_Cpp(xb, method)[0];
         }
     }
 

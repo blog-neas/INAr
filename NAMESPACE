@@ -2,6 +2,7 @@
 
 export(INARfit)
 export(SMC.test)
+export(SMCboot.test)
 export(est_mom)
 export(genINAR)
 export(sunMC_Cpp)

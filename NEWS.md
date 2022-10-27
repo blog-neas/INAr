@@ -1,7 +1,14 @@
+# INAr 0.0.11
+
+* Added a new test in `test.R` that follow the same concept of the previous one:
+  * Added the `SMCboot.test` function that computes the semiparametric or parametric bootstrap Sun McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+  * In future the the C++ routines that compute the tests will become internal.
+
+
 # INAr 0.0.10
 
 * Added a new script, namely `test.R`, that will include all the front-end test functions.
-  * Added the `SMC.test` function that computes the Sun McCabe Score test statistics (with Poisson or Negative Ninomial arrivals for the moment). The function returns an object of class `htest`.
+  * Added the `SMC.test` function that computes the Sun McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
   * In future the bootstrapped version of the above tests will be added and the C++ routines that compute the tests will become internal.
 
 
