@@ -8,7 +8,7 @@
 #'
 #' @importFrom stats acf
 #' @importFrom stats var
-#' @importFrom nnls nnls
+#' @importFrom RcppML nnls
 #'
 #' @details
 #' Reference alla procedura (Du and Li)
@@ -35,10 +35,11 @@ estimYW <- function(x, p, ...) {
 
         # versione fast nonnegative factorization
         # RcppML::nnls
-        # alphas <- as.vector(nnls(as.matrix(R),as.matrix(r), ...))
+        alphas <- as.vector(nnls(as.matrix(R),as.matrix(r), ...))
 
         # nnls::nnls
-        alphas <- nnls(R, r)$x
+        # alphas <- nnls(R, r)$x
+
         attr(alphas, "names") <- paste0("a",1:p)
 
         # if(all(alphas > 0)){

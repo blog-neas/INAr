@@ -7,7 +7,7 @@
 #' @param p, number of lags
 #'
 #' @importFrom stats var
-#' @importFrom nnls nnls
+#' @importFrom RcppML nnls
 #'
 #' @details
 #' Reference alla procedura
@@ -23,13 +23,22 @@ estimCLS <- function(x, p) {
     # Xreg <- lagmat(x,p)
 
     Xreg <- lagmat(x,p)
-    mod <- nnls(Xreg, Yreg)
-    alphas <- mod$x[-1]
+
+    ## nnls::nnls
+    # mod <- nnls(Xreg, Yreg)
+    # alphas <- mod$x[-1]
+    # attr(alphas, "names") <- paste0("a",1:p)
+    #
+    # mINN <- mod$x[1]
+    # vINN <- mod$deviance/(n-(p+1))
+
+    ## RcppML::nnls
+    mod <- nnls(crossprod(Xreg), crossprod(Xreg, Yreg))
+    alphas <- mod[-1]
     attr(alphas, "names") <- paste0("a",1:p)
 
-    mINN <- mod$x[1]
-    vINN <- mod$deviance/(n-(p+1))
-
+    mINN <- mod[1]
+    vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
 
     # est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
 

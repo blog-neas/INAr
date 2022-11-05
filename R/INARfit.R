@@ -8,7 +8,7 @@
 #' @param arrival distribution of the innovation process
 #' @param method estimation method
 #'
-#' @return The fitted model, an object of class est.inar
+#' @return The fitted model, an object of class `INAR`
 #' @details
 #' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
 #' @export

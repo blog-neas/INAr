@@ -35,7 +35,7 @@ INAR(X, order, arrival = "poisson", method = "CLS")
 \item{object, }{an \code{INAR} object}
 }
 \value{
-The fitted model, an object of class est.inar
+The fitted model, an object of class \code{INAR}
 }
 \description{
 summary method for class \code{INAR}.

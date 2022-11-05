@@ -1,6 +1,6 @@
 # INAr 0.0.12
 
-* Substituted the `NMF` (function `fcnnls`) library with `nnls` (function `nnls`), now the package Biobase is no more an upstream dependency.
+* Substituted the `NMF` (function `fcnnls`) library with `RcppML` (function `nnls`), now the package Biobase is no more an upstream dependency ([issue 1](https://github.com/blog-neas/INAr/issues/1)).
 
 * Solved a bug in `INARp_cpp`: alphas and lagged values were inverted.
 
