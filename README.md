@@ -17,7 +17,8 @@ Generation, estimation and testing of INteger Autoregressive models
 
 ## Overview
 
-... ... ...
+This package aims to provide a set of tools for the study of time series having a discrete support by using the integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
+INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
 
 ## Roadmap
 
@@ -26,13 +27,14 @@ Generation, estimation and testing of INteger Autoregressive models
 - [ ] Generation
 	- [x] Simulating INAR(p) process with different innovations
 - [ ] Estimation
-	- [x] YW estimation of INAR(p) processes with Poisson innovations
-	- [x] YW estimation of INAR(p) processes with Negative Binomial innovations
+	- [x] YW and CLS estimation of INAR(p) processes with Poisson innovations
+	- [x] YW and CLS estimation of INAR(p) processes with Negative Binomial innovations
 	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Genaralized Poisson, Katz family, ...)
 	- [ ] CML estimation of INAR(p) processes
+	- [ ] Forecasting INAR(p) processes
 - [ ] Test
 	- [x] Semiparametric Bootstrap test
-	- [x] Parametric Bootstrap test - Poisson
+	- [x] Parametric Bootstrap test - Poisson and Negative Binomial
 	- [ ] Parametric Bootstrap test - Other distributions
 - [ ] Visualization
 	- [ ] Summary

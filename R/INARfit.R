@@ -1,73 +1,92 @@
 # INARfit
 # fit INAR(p) model
 
-#' Estimation of the innovation process' parameters
+#' Fitting INAR(p) Models
 #'
 #' @param X data vector
 #' @param order p, the order of the INAR(p) process
 #' @param arrival distribution of the innovation process
+#' @param method estimation method
 #'
-#' @return The fitted model
-#' @importFrom stats acf
-#' @importFrom NMF fcnnls
+#' @return The fitted model, an object of class est.inar
 #' @details
-#' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
+#' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
 #' @export
-INARfit <- function(X,order,arrival="poisson"){
-
+INAR <- function(X, order, arrival="poisson", method = "CLS"){
+    # cl <- match.call()
     n <- length(X)
-    err <- NULL
+    arrival <- trimws(tolower(arrival))
+
+    stopifnot(all(X == as.integer(X)))
     stopifnot(order < n)
+    if(arrival == "negbin" & var(X) <= mean(X)){ stop( "Only overdispersed data allowed for the negbin case" ) }
 
-    # YULE-WALKER ESTIMATION ----------------------------
-    # - secondo Du and Li -------------------------------
+    if(method == "YW"){
+        mom <- estimYW(X, order)
+    }else if(method == "CLS"){
+        mom <- estimCLS(X, order)
+    }else if(method == "CML"){
+        # TO DO
+        stop("CML: TO DO")
+    }else if(method == "SP"){
+        # TO DO
+        stop("SP: TO DO")
+    }else{ stop('Specify a valid method. Available options: "YW", "CLS", "CML", "SP"') }
 
-    # FIT ALPHAS
-    # da teoria
-    # R %*% ALPHAS = r
-    r <- acf(X, plot = FALSE)$acf[2:(order+1)]
-    if(order > 1){
-        R <- diag(order)
-        for(i in 1:(order-1)){
-            for(j in (i+1):order){
-                R[i,j] <- r[abs(i-j)]
-            }
-        }
-        R[lower.tri(R)] <- t(R)[lower.tri(R)]
+    fit_res <- Xresid(X = X, alphas = mom$alphas, mINN = mom$meanINN, vINN = mom$varINN)
 
-        # ALPHAS = R^-1r
-        a <- solve(R, r)
-        if(all(a>0)){
-            err <- NULL
-        }else{
-            warning("Y-W estimation not reliable. Please rely on more consistent estimators.")
-            # NMF::fcnnls
-            err <- as.vector(fcnnls(R,r)$x) # ,pseudo=TRUE per Monroe-Penrose version
-            names(err) <- paste0("fcnnls_solve_a",1:order)
-        }
-    }else{
-        a <- r
-    }
+    # TO DO
+    # - varianza stimatori
+    # - loglik e bic
 
-    # sempre secondo Du and Li
-    # resid <- rep(NA,n-order)
-    # for(t in (order+1):n){
-    #     resid[t - order] <- X[t] - X[(t-1):(t-order)]%*%a
-    # }
+    # Innovation Parameters
+    est <- est_pars(mom$meanX, mom$varX, mom$meanINN, mom$varINN, arrival)
 
-    # mX <- mean(X)
-    # varX <- var(X)
-    # mINN <- (1 - sum(a))*mean(X)
-    # varINN <- (1/(n-order))*sum((resid - mean(resid))^2)
+    alphas <- mom$alphas
+    attr(alphas,"names") <- paste0("a",1:order)
 
-    arr_mom <- Xmoments(X,a)
-    est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
+    pars <- est$pars
+    # attr(moments,"pars") # lo fa già est_mom
 
-    names(a) <- paste0("a",1:order)
-    out <- list("alphas"=a,"par"=est,
-                "moments"=c("mean_X"=arr_mom$meanX,"var_X"=arr_mom$varX,"mean_EPS"=arr_mom$meanINN,"var_EPS"=arr_mom$varINN),"resid"=arr_mom$resid,"stdresid"=arr_mom$stdresid,"err"=err)
-    return(out)
+    momentsINN <- c(mom$meanINN, mom$varINN)
+    attr(momentsINN,"names") <- c("mean", "sigma2")
+
+    coef <- list(
+        "alphas"=alphas,
+        "pars"=pars
+    )
+
+    # TO DO!
+    var.alphas <- matrix(NA,order,order)
+    var.pars <- est$vcov
+
+    var <- list(
+        "alphas"=var.alphas,
+        "pars"=var.pars
+    )
+
+    mask <- list(
+        "alphas"=rep(TRUE,order),
+        "pars"=rep(TRUE,length(pars))
+    )
+
+    resid <- list(
+        "res.raw"=fit_res$resid,
+        "res.std"=fit_res$stdresid
+    )
+
+    OUT <- list(
+        call = match.call(), call0 = paste0("INAR(",order,") model with ",arrival," innovations"), # call = match.call(),
+        data = X, momentsINN = momentsINN, arrival = arrival,
+        coef = coef, var.coef = var, mask = mask,
+        loglik = NA, aic = NA, bic = NA,
+        residuals = resid, SMCtest = NULL,
+        model = paste0(toupper(arrival),"-INAR(",order,")")
+    )
+    class(OUT) <- "INAR" # structure(OUT, class = "INAR")
+    OUT
 }
+
 
 #' Estimation of the innovation process' parameters
 #'
@@ -80,24 +99,33 @@ INARfit <- function(X,order,arrival="poisson"){
 #' @return A list with parameter estimates
 #' @details
 #' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
-#' @export
-est_mom <- function(mX,varX,mINN,varINN,arrival){
+#' @noRd
+est_pars <- function(mX,varX,mINN,varINN,arrival){
     if(arrival == "poisson"){
         lambda <- mINN
-        OUT <- list("lambda"=lambda)
+        pars <- lambda
+        attr(pars,"names") <- "lambda"
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
     }
     if(arrival == "negbin"){
-
-        # trick
-        diffvarmu <- abs(varINN - mINN)
+        diffvarmu <- abs(varINN - mINN) # trick
         gamma <- (mINN^2)/diffvarmu
         # pi <- mINN/varINN # old
         pi <- diffvarmu/varINN
 
-        OUT <- list("gamma"=gamma,"pi"=pi)
+        pars <- c(gamma, pi)
+        attr(pars,"names") <- c("gamma", "pi")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
     }
+
+    OUT <- list("pars"=pars,"vcov"=vcov)
     return(OUT)
 }
+
 
 # TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------

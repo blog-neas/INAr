@@ -66,27 +66,19 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
     double var_x = var(noNA(x));
     double sd_x = sd(noNA(x));
     double diffvarmu = std::fabs(var_x - mu_x); // # trick, uso VAL ASS DIFF
+
+    // check underdispersion
+    if(var_x <= mu_x){
+        out[0] = NAN;
+        out[1] = NAN;
+        return out;
+    }
     // printf("1) %f, %f %f \n",mu_x,var_x,std::abs(var_x-mu_x));
     // printf("2) %f, %f \n",pow(mu_x,2),var_x-mu_x);
 
     // CHECK!
     double r_hat = pow(mu_x,2)/diffvarmu;
     double p_hat = diffvarmu/var_x;
-    // printf("%f, %f \n",r_hat,p_hat);
-
-    // NumericVector ind_val (n-1); // n-1 = xsum.length()
-    // LogicalVector NoZero = xsum > 0;
-    // NumericVector xsumNoZ = xsum[NoZero];
-    // unsigned int n_v = xsumNoZ.length();
-    // printf("%i \n",n_v);
-    // NumericVector r_vec(n_v,r_hat);
-    // NumericVector p_vec(n_v,p_hat);
-    // printf("%f \n",r_vec[4]);
-    // printf("%f \n",p_vec[7]);
-    //
-    // printf("%f, %f \n",r_hat,p_hat);
-    // ind_val[NoZero] = xsumNoZ/((r_vec+xsumNoZ-1)*p_hat);
-    // NumericVector asd = xsumNoZ/((r_hat+xsumNoZ-1)*p_hat);
 
     NumericVector ind_val = ifelse(xsum > 0, xsum/((r_hat+xsum-1)*p_hat), 0);
 
@@ -94,7 +86,6 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
     //   Rprintf("the value of v[%i] : %f | xsum[%i] : %f  | (%f) \n", i, asd[i], i, xsum[i],xsum[i]/((r_hat+xsum[i]-1)*p_hat));
     // }
 
-    //
     NumericVector xsumL = ind_val - 1;
     NumericVector xsumL1 = xsum_1 - mu_x;
     NumericVector NUM = xsumL*xsumL1;
@@ -278,21 +269,60 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
             id = xb==xb[0];
             niter = 0;
 
-            while(Rcpp::all(id).is_true()) {
-                // SOLO CASO NEGBIN
-                // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
-                // gamma_x = mean_x^2/(var_x-mean_x);
-                // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
-                // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
-                // pcompl_x = 1-p_x = mean_x/var_x;
-                double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
-                double gamma_x = pow(mean_x,2)/diffvarmu;
-                double pcompl_x = 1 - diffvarmu/var_x;
-                xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
+            do {
                 id = xb==xb[0];
-            }
 
-            s_temp[i] = sunMC_Cpp(xb, method)[0];
+                while(Rcpp::all(id).is_true()) {
+                    // SOLO CASO NEGBIN
+                    // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
+                    // gamma_x = mean_x^2/(var_x-mean_x);
+                    // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
+                    // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
+                    // pcompl_x = 1-p_x = mean_x/var_x;
+                    double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
+                    double gamma_x = pow(mean_x,2)/diffvarmu;
+                    double pcompl_x = 1 - diffvarmu/var_x;
+                    xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
+                    // // controllo underdispersion
+                    // if(var(xb) <= mean(xb)){
+                    //     xb = rep(0,n);
+                    // }
+                    id = xb==xb[0];
+                }
+
+                // controllo implementato in suMC_Cpp
+                // if(var(xb) <= mean(xb)){
+                // s_temp[i] = nan();
+                // }
+                s_temp[i] = sunMC_Cpp(xb,method)[0];
+
+
+                niter += 1;
+                // con false esce, con true resta
+            } while ( std::isnan(s_temp[i]) & (niter < 10) );
+
+// ... OLD SYSTEM ....................................
+//             while(Rcpp::all(id).is_true()) {
+//                 // SOLO CASO NEGBIN
+//                 // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
+//                 // gamma_x = mean_x^2/(var_x-mean_x);
+//                 // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
+//                 // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
+//                 // pcompl_x = 1-p_x = mean_x/var_x;
+//                 double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
+//                 double gamma_x = pow(mean_x,2)/diffvarmu;
+//                 double pcompl_x = 1 - diffvarmu/var_x;
+//                 xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
+//
+//                 // RIPETERE SIM QUANDO VALORI SONO UNDERDISP!
+//                 if(var(xb) <= mean(xb)){
+//                     xb = rep(0,n);
+//                 }
+//                 id = xb==xb[0];
+//             }
+//
+//             s_temp[i] = sunMC_Cpp(xb, method)[0];
+
         }
     }
 

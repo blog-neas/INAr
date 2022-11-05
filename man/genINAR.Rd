@@ -15,7 +15,7 @@ genINAR(n, a, par, arrival = "poisson", burnout = 500, ...)
 
 \item{arrival}{character, arrival distribution. Default value is \code{"poisson"}, alternative values are \code{"negbin"} for Negative Binomial, \code{"genpoi"} for Generalized Poisson and \code{"katz"} for the Katz family.}
 
-\item{burnout}{integer, number of starting observations to discard, set to 500 by default.}
+\item{burnout}{integer, number of starting observations to discard. Set to 500 by default.}
 
 \item{...}{Additional arguments passed to the functions generating the random numbers.}
 }
@@ -45,12 +45,12 @@ for \eqn{k \in \mathbb{N}}. The positive real number \eqn{\gamma} is the size an
 \item \code{par} = c(\eqn{\gamma,p})
 }
 
-\strong{Generalized Poisson}. Innovations are \eqn{ \varepsilon_t \sim Poi(\lambda)}
+\strong{Generalized Poisson}. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 \itemize{
 \item \code{par} = ...
 }
 
-\strong{Katz}. Innovations are \eqn{ \varepsilon_t \sim Poi(\lambda)}
+\strong{Katz}. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 \itemize{
 \item \code{par} = ...
 }

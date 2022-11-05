@@ -22,7 +22,8 @@ NumericVector INARp_cpp(NumericVector resid, DoubleVector a) {
     for (unsigned int i = lags; i < n; i++) {
         vals = 0;
         for(unsigned int j = 0 ; j < lags; j++) {
-            vals += R::rbinom(sim[i - lags + j],a[j]);
+            // vals += R::rbinom(sim[i - lags + j],a[j]); // c'e' un errore!
+            vals += R::rbinom(sim[i - j - 1],a[j]);
         }
         sim[i] = vals + resid[i];
         // sim[i] = R::rbinom(sim[i-1],a) + resid[i];

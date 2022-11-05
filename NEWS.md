@@ -1,3 +1,21 @@
+# INAr 0.0.12
+
+* Substituted the `NMF` (function `fcnnls`) library with `nnls` (function `nnls`), now the package Biobase is no more an upstream dependency.
+
+* Solved a bug in `INARp_cpp`: alphas and lagged values were inverted.
+
+* Added two new blocks of scripts: `genericfuns.R` and `utils.R` for the upcoming 0.1 update.
+
+* Preparing the main frontend function `INARfit` for the upcoming 0.1 update:
+  * Introduced the new `INAR` class;
+  * Added some generic functions;
+  * YW and CLS estimation are available;
+  * Minor changes and few corrections.
+
+* Added the Negative Binomial SMC parametric bootstrap test.
+  * NOTE: even if they seem to work properly, SMC tests need some cleaning and a thorough check!
+
+
 # INAr 0.0.11
 
 * Added a new test in `test.R` that follow the same concept of the previous one:

@@ -1,0 +1,41 @@
+
+#' Conditional Nonnegative Least Squares for INAR(p) parameter estimation
+#'
+#' Internal function
+#'
+#' @param x, observed series
+#' @param p, number of lags
+#'
+#' @importFrom stats var
+#' @importFrom nnls nnls
+#'
+#' @details
+#' Reference alla procedura
+#' @references
+#'   \insertAllCited{}
+#' @noRd
+estimCLS <- function(x, p) {
+    n <- length(x)
+    mX <- mean(x)
+    vX <- var(x)
+
+    Yreg <- x[(p+1):n]
+    # Xreg <- lagmat(x,p)
+
+    Xreg <- lagmat(x,p)
+    mod <- nnls(Xreg, Yreg)
+    alphas <- mod$x[-1]
+    attr(alphas, "names") <- paste0("a",1:p)
+
+    mINN <- mod$x[1]
+    vINN <- mod$deviance/(n-(p+1))
+
+
+    # est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
+
+    OUT <- list(alphas = alphas,
+                "meanX" = mX, "varX" = vX,
+                "meanINN" = mINN, "varINN" = vINN)
+    return(OUT)
+}
+

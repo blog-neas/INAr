@@ -27,7 +27,7 @@ Depends:
     R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), 
     stats,
-    NMF,
+    nnls,
     gamlss.dist,
     RNGforGPD,
     good,

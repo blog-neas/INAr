@@ -11,7 +11,7 @@
 #' @param a vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
 #' @param par vector, parameters related with the model, see the details section.
 #' @param arrival character, arrival distribution. Default value is `"poisson"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
-#' @param burnout integer, number of starting observations to discard, set to 500 by default.
+#' @param burnout integer, number of starting observations to discard. Set to 500 by default.
 #' @param ... Additional arguments passed to the functions generating the random numbers.
 #' @details
 #' The function generates `n` observations drawn from an INAR(p) model
@@ -29,10 +29,10 @@
 #' for \eqn{k \in \mathbb{N}}. The positive real number \eqn{\gamma} is the size and \eqn{p \in (0,1)} is the probability. The parameter is then equal to:
 #' * `par` = c(\eqn{\gamma,p})
 #'
-#' **Generalized Poisson**. Innovations are \eqn{ \varepsilon_t \sim Poi(\lambda)}
+#' **Generalized Poisson**. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 #' * `par` = ...
 #'
-#' **Katz**. Innovations are \eqn{ \varepsilon_t \sim Poi(\lambda)}
+#' **Katz**. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 #' * `par` = ...
 #'
 #' By the way, gatto gatto miao miao [genINAR()].

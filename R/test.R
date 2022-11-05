@@ -9,6 +9,8 @@
 #' @param order p, the order of the INAR(p) process
 #' @param arrival distribution of the innovation process
 #'
+#' @importFrom stats var
+#'
 #' @returns
 #' A list with class "htest" containing the following components:
 #' * statistic the value of the Score test statistic.
@@ -84,6 +86,8 @@ SMC.test <- function(x, order=1, arrival = "poisson") {
 #' @param procedure the bootstrap procedure to use, either "semiparametric" or "parmetric" .
 #' @param B number of Bootstrap replications.
 #'
+#' @importFrom stats var
+#'
 #' @returns
 #' A list with class "htest" containing the following components:
 #' * statistic the value of the bootstrap Score test statistic.
@@ -109,9 +113,9 @@ SMCboot.test <- function(x, order=1, arrival = "poisson", procedure, B = 499) {
     method      <- paste("Bootstrap Sun McCabe score test for INAR dependence,",tolower(procedure),"procedure. B =",B,"replications.");
 
     #Set null and alternative hypotheses
-    null.value  <- 0;
-    attr(null.value, "names") <- "thinning operator";
-    alternative <- "greater";
+    null.value  <- 0
+    attr(null.value, "names") <- "thinning operator"
+    alternative <- "greater"
 
     #Calculate test statistics
     met <- 0
@@ -130,8 +134,10 @@ SMCboot.test <- function(x, order=1, arrival = "poisson", procedure, B = 499) {
     # Call C++ routine
     tval <- sunMC_Cpp(x, method = met)
     Smc <- tval[1]
-    estimate    <- Smc
-    attr(estimate, "names") <- "obs. Score statistic";
+    statistic   <- Smc
+    attr(statistic, "names") <- "S"
+    # estimate    <- Smc
+    # attr(estimate, "names") <- "obs. Score statistic"
 
     # BOOT Call C++
     if(tolower(procedure) == "parametric"){
@@ -141,17 +147,13 @@ SMCboot.test <- function(x, order=1, arrival = "poisson", procedure, B = 499) {
         SmcB <- sunMC_semiparBOOT_Cpp(x, B, met)
     } else{ stop('Wrong procedure chosen. Available options: "parametric", "semiparametric".') }
 
-    statistic   <- mean(SmcB);
-    attr(statistic, "names") <- "S_boot";
-
     #Calculate p-value
     p.value     <- mean(abs(SmcB) > abs(Smc))
     attr(p.value, "names") <- "bootstrap"
 
     #Create htest object
     TEST        <- list(method = method, data.name = data.name,
-                        null.value = null.value, alternative = alternative,
-                        estimate = estimate,
+                        null.value = null.value, alternative = alternative, # estimate = estimate,
                         statistic = statistic, p.value = p.value)
     class(TEST) <- "htest"
     TEST
