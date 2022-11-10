@@ -101,6 +101,8 @@ INAR <- function(X, order, arrival="poisson", method = "CLS"){
 #' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
 #' @noRd
 est_pars <- function(mX,varX,mINN,varINN,arrival){
+    # parameter estimation for CML and YW methods
+
     if(arrival == "poisson"){
         lambda <- mINN
         pars <- lambda
@@ -108,8 +110,7 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
-    }
-    if(arrival == "negbin"){
+    }else if(arrival == "negbin"){
         diffvarmu <- abs(varINN - mINN) # trick
         gamma <- (mINN^2)/diffvarmu
         # pi <- mINN/varINN # old
@@ -117,6 +118,31 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         pars <- c(gamma, pi)
         attr(pars,"names") <- c("gamma", "pi")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "genpoi"){
+        kappa <- 1 - sqrt(mINN/varINN)
+        lambda <- mINN*sqrt(mINN/varINN)
+
+        pars <- c(lambda, kappa)
+        attr(pars,"names") <- c("lambda", "kappa")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "geom"){
+        pi <- 1/(1 + mINN)
+
+        pars <- c(pi)
+        attr(pars,"names") <- c("pi")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "yule"){
+        rho <- 1/(mINN - 1)
+
+        pars <- c(rho)
+        attr(pars,"names") <- c("rho")
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))

@@ -12,7 +12,7 @@
   * YW and CLS estimation are available;
   * Minor changes and few corrections.
 
-* Added the Negative Binomial SMC parametric bootstrap test.
+* Added the Negative Binomial SMC parametric bootstrap test and the PIT experimental.
   * NOTE: even if they seem to work properly, SMC tests need some cleaning and a thorough check!
 
 

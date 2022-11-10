@@ -130,6 +130,13 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
       p.compl_ <- 1-p_
       resid_ <- rnbinom(s,g_,p.compl_)
 
+  }  else if(arrival=="geom"){
+      stopifnot(length(par)==2)
+
+      pi_ <- unname(par[1])
+      stopifnot(0 < pi_ & pi_ < 1)
+
+      resid_ <- rgeom(s,pi_)
   }
   else if(arrival=="discunif"){
     stopifnot(length(par)==2)
@@ -153,6 +160,8 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
     l_ <- unname(par[1]) # lambda, come in sunmccabe
     k_ <- unname(par[2]) # kappa, come in sunmccabe
+    stopifnot(l_ > 0)
+    stopifnot(k_ < 1)
 
     # methods: five methods including Inversion, Branching, Normal-Approximation, Build-Up, and Chop-Down.
     # All five methods come from Demirtas (2017).
@@ -161,7 +170,10 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
     # attenzione al metodo utilizzato!
     # RNGforGPD::GenUniGpois
-    resid_ <- GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
+    # resid_ <- GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
+
+    # HMMpa::rgenpois
+    resid_ <- rgenpois(s,l_,k_)
   }
   else if(arrival=="katz"){
     #
@@ -184,14 +196,28 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     vals <- rskellam(s, lam1_, lam2_)
     resid_ <- ifelse(vals < 0,0,vals)
   }
-  else if(arrival=="good"){
-    z_ <- unname(par[1])
-    s_ <- unname(par[2])
+    else if(arrival=="good"){
+        z_ <- unname(par[1])
+        s_ <- unname(par[2])
 
-    # good::rgood
-    resid_ <- rgood(s, z_, s_)
-  }
-  else{
+        # good::rgood
+        resid_ <- rgood(s, z_, s_)
+    }
+    else if(arrival=="yule"){
+        rho_ <- unname(par[1])
+        stopifnot(rho_ > 0)
+
+        # VGAM::ryules
+        resid_ <- ryules(s,rho_)
+    }
+    else if(arrival=="zeta"){
+        esse_ <- unname(par[1])
+        stopifnot(esse_ > 0)
+
+        # VGAM::rzeta
+        resid_ <- VGAM::rzeta(s, esse_)
+    }
+    else{
     stop("please specify one of the available distributions", call. = FALSE)
   }
 

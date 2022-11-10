@@ -34,6 +34,18 @@ sunMC_parBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_sunMC_parBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
 
+#' PIT bootstrap version of the Sun McCabe score test.
+#' @param x NumericVector
+#' @param B int
+#' @param method unsigned int
+#' @details
+#' This is an internal function, it will be excluded in future versions.
+#' !!!!! DA IMPLEMENTARE !!!!!
+#' @export
+sunMC_pitBOOT_Cpp <- function(x, B, method) {
+    .Call('_INAr_sunMC_pitBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
+}
+
 sunMCtest_boot <- function(X, arrival, method, B) {
     .Call('_INAr_sunMCtest_boot', PACKAGE = 'INAr', X, arrival, method, B)
 }
