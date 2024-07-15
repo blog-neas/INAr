@@ -216,10 +216,7 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
   return s_temp;
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 //' Parametric bootstrap version of the Sun McCabe score test.
 //' @param x NumericVector
 //' @param B int
@@ -234,11 +231,8 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
     unsigned int niter;
     double mean_x = mean(noNA(x));
     double var_x = var(noNA(x));
-<<<<<<< HEAD
 
     // Function genUniGpois("GenUniGpois");
-=======
->>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 
     // NumericVector out(3);
     // NumericVector MB(B);
@@ -267,7 +261,6 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 niter += 1;
                 // con false esce, con true resta
             } while ( std::isnan(s_temp[i]) & (niter < 10) );
-<<<<<<< HEAD
         }
     }
     if(method==2){
@@ -374,79 +367,8 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 niter += 1;
                 // con false esce, con true resta
             } while ( std::isnan(s_temp[i]) & (niter < 10) );
-=======
->>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
         }
-    }
-    if(method==2){
-        // NEGBIN
-        for(int i = 0; i < B; i++){
-            NumericVector xb(n);
-            // print(xb);
 
-<<<<<<< HEAD
-=======
-            // check!
-            LogicalVector id(n);
-            id = xb==xb[0];
-            niter = 0;
-
-            do {
-                id = xb==xb[0];
-
-                while(Rcpp::all(id).is_true()) {
-                    // SOLO CASO NEGBIN
-                    // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
-                    // gamma_x = mean_x^2/(var_x-mean_x);
-                    // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
-                    // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
-                    // pcompl_x = 1-p_x = mean_x/var_x;
-                    double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
-                    double gamma_x = pow(mean_x,2)/diffvarmu;
-                    double pcompl_x = 1 - diffvarmu/var_x;
-                    xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
-                    // // controllo underdispersion
-                    // if(var(xb) <= mean(xb)){
-                    //     xb = rep(0,n);
-                    // }
-                    id = xb==xb[0];
-                }
-
-                // controllo implementato in suMC_Cpp
-                // if(var(xb) <= mean(xb)){
-                // s_temp[i] = nan();
-                // }
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
-
-
-                niter += 1;
-                // con false esce, con true resta
-            } while ( std::isnan(s_temp[i]) & (niter < 10) );
-
-// ... OLD SYSTEM ....................................
-//             while(Rcpp::all(id).is_true()) {
-//                 // SOLO CASO NEGBIN
-//                 // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
-//                 // gamma_x = mean_x^2/(var_x-mean_x);
-//                 // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
-//                 // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
-//                 // pcompl_x = 1-p_x = mean_x/var_x;
-//                 double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
-//                 double gamma_x = pow(mean_x,2)/diffvarmu;
-//                 double pcompl_x = 1 - diffvarmu/var_x;
-//                 xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
-//
-//                 // RIPETERE SIM QUANDO VALORI SONO UNDERDISP!
-//                 if(var(xb) <= mean(xb)){
-//                     xb = rep(0,n);
-//                 }
-//                 id = xb==xb[0];
-//             }
-//
-//             s_temp[i] = sunMC_Cpp(xb, method)[0];
-
-        }
->>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
     }
 
     return s_temp;
@@ -454,7 +376,6 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 
-<<<<<<< HEAD
 // Function to generate generalized Poisson random variables
 // NumericVector rgenpois(int n, double lambda, double kappa) {
 //     NumericVector result(n);
@@ -478,8 +399,6 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 
-=======
->>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 //' PIT bootstrap version of the Sun McCabe score test.
 //' @param x NumericVector
 //' @param B int
@@ -488,98 +407,6 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 //' This is an internal function, it will be excluded in future versions.
 //' !!!!! DA IMPLEMENTARE !!!!!
 //' @export
-<<<<<<< HEAD
-=======
-// [[Rcpp::export]]
-NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
-    int n = x.length();
-    unsigned int niter;
-    double mean_x = mean(noNA(x));
-    double var_x = var(noNA(x));
-
-    NumericVector s_temp(B);
-    if(method==1){
-        // POISSON
-        for(int i = 0; i < B; i++){
-            NumericVector ub(n);
-            NumericVector xb(n);
-            DoubleVector q(n);
-            DoubleVector u(n);
-            LogicalVector id(n);
-
-            niter = 0;
-            do {
-                id = xb==xb[0];
-
-                while(Rcpp::all(id).is_true()) {
-                    // SOLO CASO POISSON
-                    // lambda_x = mean_x
-                    // xb = Rcpp::rpois(n,mean_x);
-                    // id = xb==xb[0];
-
-                    q = Rcpp::runif(n);
-                    u = q*Rcpp::ppois(x, mean_x) + (1-q)*Rcpp::ppois(x-1, mean_x);
-
-                    ub = RcppArmadillo::sample(u,n,true);
-                    xb = Rcpp::qpois(ub, mean_x);
-                    id = xb==xb[0];
-
-                }
-
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
-
-                niter += 1;
-                // con false esce, con true resta
-            } while ( std::isnan(s_temp[i]) & (niter < 10) );
-        }
-    }
-    if(method==2){
-        // NEGBIN
-        for(int i = 0; i < B; i++){
-            NumericVector ub(n);
-            NumericVector xb(n);
-            DoubleVector q(n);
-            DoubleVector u(n);
-            LogicalVector id(n);
-
-            niter = 0;
-            do {
-                id = xb==xb[0];
-
-                while(Rcpp::all(id).is_true()) {
-                    // SOLO CASO NEGBIN
-                    double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
-                    double gamma_x = pow(mean_x,2)/diffvarmu;
-                    double pcompl_x = 1 - diffvarmu/var_x;
-
-                    q = Rcpp::runif(n);
-                    u = q*Rcpp::pnbinom(x, gamma_x, pcompl_x) + (1-q)*Rcpp::pnbinom(x-1, gamma_x, pcompl_x);
-
-                    ub = RcppArmadillo::sample(u,n,true);
-                    xb = Rcpp::qnbinom(ub, gamma_x, pcompl_x);
-                    id = xb==xb[0];
-                }
-
-                // controllo implementato in suMC_Cpp
-                // if(var(xb) <= mean(xb)){
-                // s_temp[i] = nan();
-                // }
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
-
-
-                niter += 1;
-                // con false esce, con true resta
-            } while ( std::isnan(s_temp[i]) & (niter < 10) );
-
-        }
-    }
-
-    return s_temp;
-}
-
-
-
->>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 // [[Rcpp::export]]
 NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
