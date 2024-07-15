@@ -1,3 +1,62 @@
+# INAr 0.0.2
+
+* Added parametric and semiparametric bootstrap procedures for the Sun McCabe Score test.
+
+# INAr 0.0.12
+
+* Substituted the `NMF` (function `fcnnls`) library with `RcppML` (function `nnls`), now the package Biobase is no more an upstream dependency ([issue 1](https://github.com/blog-neas/INAr/issues/1)).
+
+* Solved a bug in `INARp_cpp`: alphas and lagged values were inverted.
+
+* Added two new blocks of scripts: `genericfuns.R` and `utils.R` for the upcoming 0.1 update.
+
+* Preparing the main frontend function `INARfit` for the upcoming 0.1 update:
+  * Introduced the new `INAR` class;
+  * Added some generic functions;
+  * YW and CLS estimation are available;
+  * Minor changes and few corrections.
+
+* Added the Negative Binomial SMC parametric bootstrap test and the PIT experimental.
+  * NOTE: even if they seem to work properly, SMC tests need some cleaning and a thorough check!
+
+
+# INAr 0.0.11
+
+* Added a new test in `test.R` that follow the same concept of the previous one:
+  * Added the `SMCboot.test` function that computes the semiparametric or parametric bootstrap Sun McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+  * In future the the C++ routines that compute the tests will become internal.
+
+
+# INAr 0.0.10
+
+* Added a new script, namely `test.R`, that will include all the front-end test functions.
+  * Added the `SMC.test` function that computes the Sun McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+  * In future the bootstrapped version of the above tests will be added and the C++ routines that compute the tests will become internal.
+
+
+# INAr 0.0.9
+
+* Preparing for the first CRAN submission:
+  * Minor changes and few modifications;
+  * Script cleaning.
+
+
+# INAr 0.0.8
+
+* Cleaning and few modifications.
+
+* Changed the formula regarding he Negative Binomial parameters' estimation acording with Sun, McCabe (2013).
+
+* Parametric bootstrap of INAR with Negative Binomial innovations is now available, although it needs some testing.
+
+
+# INAr 0.0.7
+
+* Added downloads dataset, source Weiss (2008).
+
+* First build of the package vignette. 
+
+
 # INAr 0.0.6
 
 * Added package sticker.

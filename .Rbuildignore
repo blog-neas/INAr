@@ -3,5 +3,7 @@
 ^ALTRO$
 ^README$
 ^.gitignore$
-
 ^\.github$
+^codecov\.yml$
+^LICENSE\.md$
+

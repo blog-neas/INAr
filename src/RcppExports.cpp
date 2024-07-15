@@ -49,29 +49,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sunMC_pitBOOT_Cpp
+NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method);
+RcppExport SEXP _INAr_sunMC_pitBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(sunMC_pitBOOT_Cpp(x, B, method));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sunMCtest_boot
-List sunMCtest_boot(NumericVector X, unsigned int arrival, unsigned int method, int B);
-RcppExport SEXP _INAr_sunMCtest_boot(SEXP XSEXP, SEXP arrivalSEXP, SEXP methodSEXP, SEXP BSEXP) {
+List sunMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B);
+RcppExport SEXP _INAr_sunMCtest_boot(SEXP XSEXP, SEXP arrivalSEXP, SEXP typeSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type arrival(arrivalSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunMCtest_boot(X, arrival, method, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// INAR1_cpp
-NumericVector INAR1_cpp(NumericVector resid, double a);
-RcppExport SEXP _INAr_INAR1_cpp(SEXP residSEXP, SEXP aSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type resid(residSEXP);
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(INAR1_cpp(resid, a));
+    rcpp_result_gen = Rcpp::wrap(sunMCtest_boot(X, arrival, type, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -88,14 +89,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // Xresid
-NumericVector Xresid(NumericVector X, NumericVector alphas);
-RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP) {
+Rcpp::List Xresid(NumericVector X, NumericVector alphas, double mINN, double vINN);
+RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP, SEXP mINNSEXP, SEXP vINNSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP);
-    rcpp_result_gen = Rcpp::wrap(Xresid(X, alphas));
+    Rcpp::traits::input_parameter< double >::type mINN(mINNSEXP);
+    Rcpp::traits::input_parameter< double >::type vINN(vINNSEXP);
+    rcpp_result_gen = Rcpp::wrap(Xresid(X, alphas, mINN, vINN));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -111,30 +114,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_genINARmarg
-IntegerVector rcpp_genINARmarg(double a, IntegerVector Xseries, IntegerVector resid);
-RcppExport SEXP _INAr_rcpp_genINARmarg(SEXP aSEXP, SEXP XseriesSEXP, SEXP residSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Xseries(XseriesSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type resid(residSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_genINARmarg(a, Xseries, resid));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_INAr_sunMC_Cpp", (DL_FUNC) &_INAr_sunMC_Cpp, 2},
     {"_INAr_sunMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_sunMC_semiparBOOT_Cpp, 3},
     {"_INAr_sunMC_parBOOT_Cpp", (DL_FUNC) &_INAr_sunMC_parBOOT_Cpp, 3},
+    {"_INAr_sunMC_pitBOOT_Cpp", (DL_FUNC) &_INAr_sunMC_pitBOOT_Cpp, 3},
     {"_INAr_sunMCtest_boot", (DL_FUNC) &_INAr_sunMCtest_boot, 4},
-    {"_INAr_INAR1_cpp", (DL_FUNC) &_INAr_INAR1_cpp, 2},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
-    {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 2},
+    {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
-    {"_INAr_rcpp_genINARmarg", (DL_FUNC) &_INAr_rcpp_genINARmarg, 3},
     {NULL, NULL, 0}
 };
 

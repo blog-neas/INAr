@@ -1,36 +1,49 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.0.6
+Version: 0.0.2
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
            role = c("aut", "cre"),
            email = "lucio.palazzo@unina.it",
-           comment = c(ORCID = "0000-0001-0000-0000")), 
+           comment = c(ORCID = "0000-0001-7529-4689")), 
            person(given = "Riccardo",
            family = "Ievoli",
            role = c("aut"),
            email = "riccardo.ievoli@unife.it",
-           comment = c(ORCID = "0000-0001-0000-0000")))
+           comment = c(ORCID = "0000-0001-9489-3564")))
 Maintainer: Lucio Palazzo <lucio.palazzo@unina.it>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
     Mettere citazioni INAR models Al-Osh 1987, etc...
-License: GPL-3
+License: GPL-3 + file LICENSE
 URL: https://github.com/blog-neas/INAr
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Depends:
-    R (>= 4.2.1)
+    R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.0), 
-    RcppArmadillo,
-    MASS,
+    stats,
+    RcppML,
     gamlss.dist,
-    RNGforGPD,
+    HMMpa,
+    VGAM,
+    tolerance,
+    good,
     skellam,
-    Rdpack
+    Rdpack,
+    PoissonBinomial
+Suggests: 
+    covr,
+    knitr,
+    rmarkdown,
+    tidyverse,
+    ggplot2,
+    testthat (>= 3.0.0)
 RdMacros: Rdpack
-LinkingTo: Rcpp, RcppArmadillo
-RoxygenNote: 7.2.1
+LinkingTo: Rcpp, RcppArmadillo, PoissonBinomial
+RoxygenNote: 7.3.2
+Config/testthat/edition: 3

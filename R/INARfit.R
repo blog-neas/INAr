@@ -1,76 +1,178 @@
 # INARfit
 # fit INAR(p) model
 
+#' Fitting INAR(p) Models
 #'
+#' @param X data vector
+#' @param order p, the order of the INAR(p) process
+#' @param arrival distribution of the innovation process
+#' @param method estimation method
+#'
+#' @return The fitted model, an object of class `INAR`
+#' @details
+#' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
 #' @export
-INARfit <- function(X,order,arrival="poisson"){
-
+INAR <- function(X, order, arrival="poisson", method = "CLS"){
+    # cl <- match.call()
     n <- length(X)
-    err <- NULL
+    arrival <- trimws(tolower(arrival))
 
-    # YULE-WALKER ESTIMATION ----------------------------
-    # - secondo Du and Li -------------------------------
+    stopifnot(all(X == as.integer(X)))
+    stopifnot(order < n)
+    if(arrival == "negbin" & var(X) <= mean(X)){ stop( "Only overdispersed data allowed for the negbin case" ) }
 
-    # FIT ALPHAS
-    # da teoria
-    # R %*% ALPHAS = r
-    r <- acf(X, plot = FALSE)$acf[2:(order+1)]
-    if(order > 1){
-        R <- diag(order)
-        for(i in 1:(order-1)){
-            for(j in (i+1):order){
-                R[i,j] <- r[abs(i-j)]
-            }
-        }
-        R[lower.tri(R)] <- t(R)[lower.tri(R)]
+    if(method == "YW"){
+        mom <- estimYW(X, order)
+    }else if(method == "CLS"){
+        mom <- estimCLS(X, order)
+    }else if(method == "CML"){
+        # TO DO
+        stop("CML: TO DO")
+    }else if(method == "SP"){
+        # TO DO
+        stop("SP: TO DO")
+    }else{ stop('Specify a valid method. Available options: "YW", "CLS", "CML", "SP"') }
 
-        # ALPHAS = R^-1r
-        a <- solve(R, r)
-        if(all(a>0)){
-            err <- NULL
-        }else{
-            warning("Y-W estimation not reliable. Please rely on more consistent estimators.")
-            err <- as.vector(NMF::fcnnls(R,r)$x) # ,pseudo=TRUE per Monroe-Penrose version
-            names(err) <- paste0("fcnnls_solve_",1:order)
-        }
-    }else{
-        a <- r
-    }
+    fit_res <- Xresid(X = X, alphas = mom$alphas, mINN = mom$meanINN, vINN = mom$varINN)
 
-    # sempre secondo Du and Li
-    resid <- rep(NA,n-order)
-    for(t in (order+1):n){
-        resid[t - order] <- X[t] - X[(t-1):(t-order)]%*%a
-    }
+    # TO DO
+    # - varianza stimatori
+    # - loglik e bic
 
-    # mX <- mean(X)
-    # varX <- var(X)
-    # mINN <- (1 - sum(a))*mean(X)
-    # varINN <- (1/(n-order))*sum((resid - mean(resid))^2)
+    # Innovation Parameters
+    est <- est_pars(mom$meanX, mom$varX, mom$meanINN, mom$varINN, arrival)
 
-    arr_mom <- Xmoments(X,a)
-    est <- est_mom(arr_mom$meanX, arr_mom$varX,arr_mom$meanINN,arr_mom$varINN,arrival)
+    alphas <- mom$alphas
+    attr(alphas,"names") <- paste0("a",1:order)
 
-    names(a) <- paste0("a",1:order)
-    out <- list("alphas"=a,"par"=est,
-                "moments"=c("mean_X"=arr_mom$meanX,"var_X"=arr_mom$varX,"mean_EPS"=arr_mom$meanINN,"var_EPS"=arr_mom$varINN),"resid"=arr_mom$resid,"err"=err)
-    return(out)
+    pars <- est$pars
+    # attr(moments,"pars") # lo fa già est_mom
+
+    momentsINN <- c(mom$meanINN, mom$varINN)
+    attr(momentsINN,"names") <- c("mean", "sigma2")
+
+    coef <- list(
+        "alphas"=alphas,
+        "pars"=pars
+    )
+
+    # TO DO! --------------------------------
+    var.alphas <- matrix(NA,order,order)
+    var.pars <- est$vcov
+
+    var <- list(
+        "alphas"=var.alphas,
+        "pars"=var.pars
+    )
+
+    mask <- list(
+        "alphas"=rep(TRUE,order),
+        "pars"=rep(TRUE,length(pars))
+    )
+
+    resid <- list(
+        "res.raw"=fit_res$resid,
+        "res.std"=fit_res$stdresid
+    )
+
+    OUT <- list(
+        call = match.call(), call0 = paste0("INAR(",order,") model with ",arrival," innovations"),
+        data = X, momentsINN = momentsINN, arrival = arrival,
+        coef = coef, var.coef = var, mask = mask,
+        loglik = NA, aic = NA, bic = NA,
+        residuals = resid, SMCtest = NULL,
+        model = paste0(toupper(arrival),"-INAR(",order,")")
+    )
+    class(OUT) <- "INAR" # structure(OUT, class = "INAR")
+    OUT
 }
 
+
+#' Estimation of the innovation process' parameters
 #'
-#' @export
-est_mom <- function(mX,varX,mINN,varINN,arrival){
-    if(arrival=="poisson"){
+#' @param mX mean of the INAR process
+#' @param varX variance of the INAR process
+#' @param mINN mean of the innovation process
+#' @param varINN variance of the innovation process
+#' @param arrival distribution of the innovation process
+#'
+#' @return A list with parameter estimates
+#' @details
+#' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
+#' @noRd
+est_pars <- function(mX,varX,mINN,varINN,arrival){
+    # parameter estimation for CML and YW methods
+
+    if(arrival == "poisson"){
         lambda <- mINN
-        OUT <- list("lambda"=lambda)
+        pars <- lambda
+        attr(pars,"names") <- "lambda"
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "negbin"){
+        diffvarmu <- abs(varINN - mINN) # trick
+        gamma <- (mINN^2)/diffvarmu
+        # pi <- mINN/varINN # old
+        pi <- diffvarmu/varINN
+
+        pars <- c(gamma, pi)
+        attr(pars,"names") <- c("gamma", "pi")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "genpoi"){
+        kappa <- 1 - sqrt(mINN/varINN)
+        lambda <- mINN*sqrt(mINN/varINN)
+
+        pars <- c(lambda, kappa)
+        attr(pars,"names") <- c("lambda", "kappa")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "geom"){
+        pi <- 1/(1 + mINN)
+
+        pars <- c(pi)
+        attr(pars,"names") <- c("pi")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "yule"){
+        rho <- 1/(mINN - 1)
+
+        pars <- c(rho)
+        attr(pars,"names") <- c("rho")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
+    }else if(arrival == "poislind"){
+        # Lívio, T., Khan, N. M., Bourguignon, M., & Bakouch, H. S. (2018).
+        # - An INAR (1) model with Poisson–Lindley innovations. Econ. Bull, 38(3), 1505-1513.
+        mINN_1 <- 1/mINN
+        theta <- (mINN_1 - 1 + sqrt(mINN_1^2 + 6*mINN_1 + 1))/2
+
+
+        pars <- c(theta)
+        attr(pars,"names") <- c("theta")
+
+        # TO DO
+        vcov <- matrix(NA,length(pars),length(pars))
     }
+
+    OUT <- list("pars"=pars,"vcov"=vcov)
     return(OUT)
 }
+
 
 # TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------
 # N <- 500
-# y <- genINAR(N,0.1,1.2,arrival="poisson")$X
-# INARfit(y,order=1)
-# y <- genINAR(N,c(0.9,0.01),2,arrival="poisson")$X
-# INARfit(y,order=2)
+# y <- genINAR(N,0.1,par=1.2,arrival="poisson")$X
+# INARfit(y, order=1)
+# y <- genINAR(N,c(0.9,0.01),par=2,arrival="poisson")$X
+# INARfit(y, order=2)
+# y <- genINAR(N,0.1,par=c(1,0.5),arrival="negbin")$X
+# INARfit(y, order=1, arrival="negbin)
+# y <- genINAR(N,c(0.9,0.01),par=c(2,0.66),arrival="poisson")$X
+# INARfit(y, order=2, arrival="negbin)

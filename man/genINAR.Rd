@@ -2,49 +2,55 @@
 % Please edit documentation in R/INAR1_different_innovations.R
 \name{genINAR}
 \alias{genINAR}
-\title{Generate INAR(1) models with different innovations}
+\title{Generate INAR(p) models with different innovations}
 \usage{
-genINAR(n, a, par, arrival = "poisson", burnout = 500)
+genINAR(n, a, par, arrival = "poisson", burnout = 500, ...)
 }
 \arguments{
 \item{n}{integer, number of observations, length of the series.}
+
+\item{a}{vector, thinning parameters. The lenght of this vector defines the number of lags \code{p} of the INAR(p) process.}
 
 \item{par}{vector, parameters related with the model, see the details section.}
 
 \item{arrival}{character, arrival distribution. Default value is \code{"poisson"}, alternative values are \code{"negbin"} for Negative Binomial, \code{"genpoi"} for Generalized Poisson and \code{"katz"} for the Katz family.}
 
-\item{burnout}{integer, number of starting observations to discard, set to 500 by default.}
+\item{burnout}{integer, number of starting observations to discard. Set to 500 by default.}
+
+\item{...}{Additional arguments passed to the functions generating the random numbers.}
 }
 \value{
 A number.
 }
 \description{
-Generate INAR(1) models with different innovations
+Generate INAR(p) models with different innovations
 }
 \details{
-The function generates observations drawn from an INAR(1) model
-\deqn{X_t = \alpha {*} X_{t-1} + \varepsilon_t}
-where \eqn{*} is the binomial thinning operator and \eqn{\alpha} is the thinning parameter \insertCite{Steutel1979,al1987first}{INAr}.
-The first value of the \code{par} vector is the thinning operator \eqn{\alpha}, while the remaining depend mainly on the type of arrival distribution. The arrivals already implemented are listed below.
+The function generates \code{n} observations drawn from an INAR(p) model
+\deqn{X_t = \alpha_1 {*} X_{t-1} + \ldots + \alpha_p {*} X_{t-p} + \varepsilon_t}
+where \eqn{*} is the binomial thinning operator and \eqn{\alpha_p} are the thinning parameters \insertCite{Steutel1979,al1987first}{INAr}.
+The values of the thinning parameters \eqn{\alpha_i} are the elements of the \code{a} vector, for \eqn{i=1, \ldots, p}, while in \code{par} vector are specified the parameters related with the arrival distribution \verb{\\varepsilon}. The available processes for the arrivals are listed below.
 
 \strong{Poisson}. Innovations are drawn from a Poisson distribution \eqn{Poi(\lambda)}
 \deqn{P(\varepsilon_t = k)= \dfrac{\lambda^k e^{-\lambda}}{k!},}
-The positive real number \eqn{\lambda} is equal to the expected value and also to the variance.The parameter is then equal to:
+for \eqn{k \in \mathbb{N}}. The positive real number \eqn{\lambda} is equal to the expected value and also to the variance. The parameter is then equal to:
 \itemize{
-\item \code{par} = c(\eqn{\alpha},\eqn{\lambda})
+\item \code{par} = c(\eqn{\lambda})
 }
 
-\strong{Negative Binomial}. Innovations are drawn from a Poisson distribution \eqn{Poi(\lambda)}
+\strong{Negative Binomial}. Innovations are drawn from a Negative Binomial distribution \eqn{Poi(\lambda)}
+\deqn{P(\varepsilon_t = k) = \dfrac{\Gamma(k+\gamma)}{\Gamma(\gamma)k!}p^k (1-p)^\gamma ,}
+for \eqn{k \in \mathbb{N}}. The positive real number \eqn{\gamma} is the size and \eqn{p \in (0,1)} is the probability. The parameter is then equal to:
+\itemize{
+\item \code{par} = c(\eqn{\gamma,p})
+}
+
+\strong{Generalized Poisson}. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 \itemize{
 \item \code{par} = ...
 }
 
-\strong{Generalized Poisson}. Innovations are \eqn{ \varepsilon_t \sim Poi(\lambda)}
-\itemize{
-\item \code{par} = ...
-}
-
-\strong{Katz}. Innovations are \eqn{ \varepsilon_t \sim Poi(\lambda)}
+\strong{Katz}. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 \itemize{
 \item \code{par} = ...
 }
@@ -52,10 +58,10 @@ The positive real number \eqn{\lambda} is equal to the expected value and also t
 By the way, gatto gatto miao miao \code{\link[=genINAR]{genINAR()}}.
 }
 \examples{
-# Generate 500 an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
+# Generate 500 observations from an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
 set.seed(1234)
-pars <- c(0.5,2)
-genINAR(500, pars, arrival = "poisson")
+lam <- 2
+genINAR(500, a = 0.5, par = lam, arrival = "poisson")
 
 }
 \references{
