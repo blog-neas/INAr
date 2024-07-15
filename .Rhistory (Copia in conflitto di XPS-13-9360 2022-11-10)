@@ -1,0 +1,512 @@
+mutate(
+pval_MC = as.numeric(pval_spMC),
+pval_spB = as.numeric(pval_spB),
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+power_plot <- power_sp %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_spMC,PVAL_spB)
+# Semiparemetric BOOT
+power_plot <- power_sp %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_spMC,PVAL_spB) %>%
+mutate(
+pval_MC = as.numeric(pval_spMC),
+pval_spB = as.numeric(pval_spB),
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+# Semiparemetric BOOT
+power_plot <- power_sp %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_spMC,PVAL_spB) %>%
+mutate(
+pval_MC = as.numeric(PVAL_spMC),
+pval_spB = as.numeric(PVAL_spB),
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+# Semiparemetric BOOT
+power_plot_sp <- power_sp %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_spMC,PVAL_spB) %>%
+mutate(
+pval_MC = as.numeric(PVAL_spMC),
+pval_spB = as.numeric(PVAL_spB),
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+# Parametric BOOT
+power_plot_p <- power_p %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_pMC,PVAL_pB) %>%
+mutate(
+pval_MC = PVAL_pMC,
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+select(-PVAL_pMC) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(
+ALPHA = as.double(ALPHA),
+rejfreq = as.double(rejfreq),
+disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+# Parametric BOOT
+power_plot_p <- power_p %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_pMC,PVAL_pB) %>%
+mutate(
+pval_MC = PVAL_pMC,
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+select(-PVAL_pMC) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(
+ALPHA = as.double(ALPHA),
+rejfreq = as.double(rejfreq),
+disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+str(power_p)
+str(power_plot_p)
+ggplot(subset(power_plot_p,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_p,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+library(latex2exp)
+ggplot(subset(power_plot_p,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_p,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+power_plot_sp
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+# Semiparemetric BOOT
+power_plot_sp <- power_sp %>%
+dplyr::select(DGP,METHOD,N,ALPHA,PVAL_spMC,PVAL_spB) %>%
+mutate(
+pval_MC = PVAL_spMC,
+DGP = recode_factor(DGP,"poisson_0_2"="Poi(2)", "poisson_0_5"="Poi(5)", "poisson_0_10"="Poi(10)",
+"overdisp_poisson_0_2_1.2"= "NB(2,1.2)", "overdisp_poisson_0_2_1.5"= "NB(2,1.5)", "overdisp_poisson_0_2_3"= "NB(2,3)",
+"binomial_0_2_0.1"= "Bin(2,0.1)", "binomial_0_2_0.5"= "Bin(2,0.5)", "binomial_0_2_0.7"= "Bin(2,0.7)",
+"good_0_0.2_-5"="G(0.2,-5)", "good_0_0.2_-10"="G(0.2,-10)","good_0_0.2_-50"="G(0.2,-50)"
+),
+METHOD = recode_factor(METHOD,"1"="SunMC_Poi","2"="SunMC_NegBin")
+) %>%
+select(-PVAL_spMC) %>%
+gather(key="type",value="rejfreq",-N,-ALPHA,-DGP,-METHOD) %>%
+mutate(
+ALPHA = as.double(ALPHA),
+rejfreq = as.double(rejfreq),
+disp=recode(DGP,"Poi(2)"="equidispersion","Poi(5)"="equidispersion", "Poi(10)"="equidispersion",
+"NB(2,1.2)"="overdispersion", "NB(2,1.5)"="overdispersion","NB(2,3)"="overdispersion",
+"Bin(2,0.1)"="underdispersion", "Bin(2,0.5)"="underdispersion", "Bin(2,0.7)"="underdispersion",
+"G(0.2,-5)"="underdispersion","G(0.2,-10)"="underdispersion","G(0.2,-50)"="underdispersion"
+)
+)
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N + METHOD) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_wrap(DGP~N + METHOD) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N + METHOD) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_p,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_p,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+ggtitle("Parametric") +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N + METHOD) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+ggtitle("Semiparametric") +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP ~ N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+ggtitle("Semiparametric") +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC",colour=METHOD),lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP ~ N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+ggtitle("Semiparametric") +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_p,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+# geom_line(data=subset(power_plot_p,type=="pval_MC"),color="gray50",lty=2) +
+geom_line(data=subset(power_plot_p,type=="pval_MC",colour=METHOD),lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP~N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+ggtitle("Parametric") +
+theme_bw() +
+theme(legend.position="bottom")
+ggplot(subset(power_plot_sp,type!="pval_MC"),aes(x=ALPHA,y=rejfreq,colour=METHOD,group=METHOD)) +
+# geom_line(data=subset(power_plot_sp,type=="pval_MC"),color="gray50",lty=2) +
+geom_line(data=subset(power_plot_sp,type=="pval_MC",colour=METHOD),lty=2) +
+geom_line() +
+geom_hline(yintercept = 0.05,lty=2,color="red") +
+facet_grid(DGP ~ N) +
+scale_x_continuous(name=TeX("$\\alpha$"), limits=c(0, 0.8), n.breaks = 5) +
+ylim(0.0,1.0) +
+ggtitle("Semiparametric") +
+theme_bw() +
+theme(legend.position="bottom")
+roxygen2::roxygenize();
+roxygen2::roxygenize();
+Rcpp::compileAttributes();
+devtools::install();
+library(INAr)
+.Last.error
+library(INAr)
+sunMC_pitBOOT_Cpp(rpois(1000,1),B = 999,1)
+sunMC_pitBOOT_Cpp(rpois(1000,1),B = 999,2)
+sunMC_pitBOOT_Cpp(rpois(1000,5),B = 999,2)
+library(progress)
+source("ALTRO/utils.R")
+outfilename <- paste0("ALTRO/results/","POWERpitBOOT_",format(Sys.time(), format="%B_%d_%Y"),".txt",sep="")
+cat("# Sim started at",as.character(Sys.time())," \n",file=outfilename, append = TRUE)
+# cat("# M=",M," B=",B," parametric=",parametric," \n",file=outfilename, append = TRUE)
+cat("MC;B;N;ALPHA;METHOD;DGP;SunMc_MC;pval_MC;m_MC;v_MC;disp_MC;SunMc_B;pval_B;NAs_sim;NAs_boot\n",file=outfilename, append = TRUE)
+MC <- 100
+B <- c(999)
+N <- c(50, 75, 100, 250, 500)
+ALPHA <- seq(0,1,by=0.05)
+PAR <- list(
+"poisson1"=c(arrival="poisson","a"=0,"lambda"=2),
+"poisson2"=c(arrival="poisson","a"=0,"lambda"=5),
+"poisson3"=c(arrival="poisson","a"=0,"lambda"=10),
+"OD_poisson1"=c(arrival="overdisp_poisson","a"=0,"lambda"=2,"disp"=1.2),
+"OD_poisson2"=c(arrival="overdisp_poisson","a"=0,"lambda"=2,"disp"=1.5),
+"OD_poisson3"=c(arrival="overdisp_poisson","a"=0,"lambda"=2,"disp"=3)
+# "UD_poisson1"=c(arrival="binomial","a"=0,"n"=2,"p"=0.1), # STRUTTURALMENTE UNDERDISPERSED, NON USARE CON met = 2
+# "UD_poisson2"=c(arrival="binomial","a"=0,"n"=2,"p"=0.5), # STRUTTURALMENTE UNDERDISPERSED, NON USARE CON met = 2
+# "UD_poisson3"=c(arrival="binomial","a"=0,"n"=2,"p"=0.7), # STRUTTURALMENTE UNDERDISPERSED, NON USARE CON met = 2
+# "GD_poisson1"=c(arrival="good","a"=0,"z"=0.2,"s"=-5),
+# "GD_poisson2"=c(arrival="good","a"=0,"z"=0.2,"s"=-10),
+# "GD_poisson3"=c(arrival="good","a"=0,"z"=0.2,"s"=-50)
+)
+METLIST <- c(1,2) # 1 = POI, 2 = NEGBIN
+set.seed(1423)
+for(bb_i in 1:length(B)){
+for(nn_i in 1:length(N)){
+for(par_i in 1:length(PAR)){
+REJFREQ <- 0.00001
+REJFREQ_MC <- 0.00001
+for(aa in ALPHA){
+nn <- N[nn_i]
+bb <- B[bb_i]
+arriv <- PAR[[par_i]][1]
+par <- as.numeric(PAR[[par_i]][-1])
+par[1] <- aa
+for(met in METLIST){
+#
+# !!!! IMPORTANTE !!!!
+#
+#
+if((REJFREQ>=0.95 & REJFREQ_MC >= 0.95) | aa >=0.8){
+cat(mc,";",bb,";",nn,";",aa,";",met,";",dgp_name,";",NA,";",1.00,";",NA,";",NA,";",NA,";",NA,";",1.00,";",NA,";",NA,"\n",sep = "",file=outfilename, append = TRUE)
+cat(" *skipping alpha =",aa,"\n\n")
+next
+}
+#
+#
+# !!!! IMPORTANTE !!!!
+#
+MC_mean <- rep(NA,MC)
+MC_var <- rep(NA,MC)
+MC_stat <- rep(NA,MC)
+MC_pval <- rep(NA,MC)
+B_stat <- rep(NA,MC)
+B_pval <- rep(NA,MC)
+err <- 0
+pb <- progress_bar$new(
+format = " [:bar] :percent elapsed: :elapsed ~ :eta",
+total = MC, clear = FALSE, width= 60
+)
+cat(" MC LOOP START,  method:",met,"\n")
+cat("  - n =",nn,"  b =",bb," alpha = ",aa,"\n")
+cat("  - dgp:",arriv,"  pars:",par,"\n")
+for(mc in 1:MC){
+pb$tick()
+S_mc <- startMCsim(nn=nn,aa = par[1],pp=par[-1],arriv=arriv,met=met)
+sim <- S_mc$data
+MC_stat[mc] <- S_mc$vals[1] # stat
+MC_pval[mc] <- S_mc$vals[2] # pval
+# per test
+if(is.na(MC_stat[mc])) stop()
+# parte BOOTSTRAP
+S_B <- NA
+# S_B <- sunMC_semiparBOOT_Cpp(sim,bb,met)
+S_B <- sunMC_pitBOOT_Cpp(sim,bb,met)
+sononan <- is.nan(S_B) | is.na(S_B)
+if(sum(sononan) > 0){err <- err +  1}
+while(sum(sononan) > 0){
+# cat("!")
+# s_temp <- sunMC_semiparBOOT_Cpp(sim,sum(sononan),met)
+s_temp <- sunMC_pitBOOT_Cpp(sim,sum(sononan),met)
+S_B[sononan] <- s_temp
+sononan <- is.nan(S_B) | is.na(S_B)
+}
+B_stat[mc] <- mean(S_B)
+B_pval[mc] <- mean(abs(S_B) > abs(MC_stat[mc]))
+}
+# per test
+# cat(mc,";",bb,";",met,";",mean(MC_stat),";",mean(MC_pval < 0.05),";",mean(MC_mean),";",mean(MC_var),";",mean(MC_var)/mean(MC_mean),";",mean(B_stat,na.rm = TRUE),";",mean(B_pval < 0.05, na.rm = TRUE),"\n",sep = "")
+NAsim <- sum(is.na(MC_stat))
+NAboot <- sum(is.na(B_stat))
+dgp_name <- as.character(paste(PAR[[par_i]],collapse = "_"))
+cat(" *NAs produced (sim, boot) :",NAsim,NAboot)
+if(err==0){
+cat("\n\n\n")
+}else{
+cat("! =",err,"\n\n\n")
+}
+cat(mc,";",bb,";",nn,";",aa,";",met,";",dgp_name,";",mean(MC_stat),";",mean(MC_pval < 0.05),";",mean(MC_mean),";",mean(MC_var),";",mean(MC_var)/mean(MC_mean),";",mean(B_stat,na.rm = TRUE),";",mean(B_pval < 0.05, na.rm = TRUE),";",NAsim,";",NAboot,"\n",sep = "",file=outfilename, append = TRUE)
+}
+# controllo per non fare troppi loop con alpha grandi
+REJFREQ <- mean(B_pval < 0.05)
+REJFREQ_MC <- mean(MC_pval < 0.05)
+}
+}
+}
+}
+MC <- 10
+B <- c(999)
+N <- c(50, 75, 100, 250, 500)
+ALPHA <- seq(0,1,by=0.05)
+MC <- 10
+B <- c(99)
+N <- c(50, 75, 100, 250, 500)
+ALPHA <- seq(0,1,by=0.05)
+PAR <- list(
+"poisson1"=c(arrival="poisson","a"=0,"lambda"=2),
+"poisson2"=c(arrival="poisson","a"=0,"lambda"=5),
+"poisson3"=c(arrival="poisson","a"=0,"lambda"=10),
+"OD_poisson1"=c(arrival="overdisp_poisson","a"=0,"lambda"=2,"disp"=1.2),
+"OD_poisson2"=c(arrival="overdisp_poisson","a"=0,"lambda"=2,"disp"=1.5),
+"OD_poisson3"=c(arrival="overdisp_poisson","a"=0,"lambda"=2,"disp"=3)
+# "UD_poisson1"=c(arrival="binomial","a"=0,"n"=2,"p"=0.1), # STRUTTURALMENTE UNDERDISPERSED, NON USARE CON met = 2
+# "UD_poisson2"=c(arrival="binomial","a"=0,"n"=2,"p"=0.5), # STRUTTURALMENTE UNDERDISPERSED, NON USARE CON met = 2
+# "UD_poisson3"=c(arrival="binomial","a"=0,"n"=2,"p"=0.7), # STRUTTURALMENTE UNDERDISPERSED, NON USARE CON met = 2
+# "GD_poisson1"=c(arrival="good","a"=0,"z"=0.2,"s"=-5),
+# "GD_poisson2"=c(arrival="good","a"=0,"z"=0.2,"s"=-10),
+# "GD_poisson3"=c(arrival="good","a"=0,"z"=0.2,"s"=-50)
+)
+METLIST <- c(1,2) # 1 = POI, 2 = NEGBIN
+set.seed(1423)
+for(bb_i in 1:length(B)){
+for(nn_i in 1:length(N)){
+for(par_i in 1:length(PAR)){
+REJFREQ <- 0.00001
+REJFREQ_MC <- 0.00001
+for(aa in ALPHA){
+nn <- N[nn_i]
+bb <- B[bb_i]
+arriv <- PAR[[par_i]][1]
+par <- as.numeric(PAR[[par_i]][-1])
+par[1] <- aa
+for(met in METLIST){
+#
+# !!!! IMPORTANTE !!!!
+#
+#
+if((REJFREQ>=0.95 & REJFREQ_MC >= 0.95) | aa >=0.8){
+cat(mc,";",bb,";",nn,";",aa,";",met,";",dgp_name,";",NA,";",1.00,";",NA,";",NA,";",NA,";",NA,";",1.00,";",NA,";",NA,"\n",sep = "",file=outfilename, append = TRUE)
+cat(" *skipping alpha =",aa,"\n\n")
+next
+}
+#
+#
+# !!!! IMPORTANTE !!!!
+#
+MC_mean <- rep(NA,MC)
+MC_var <- rep(NA,MC)
+MC_stat <- rep(NA,MC)
+MC_pval <- rep(NA,MC)
+B_stat <- rep(NA,MC)
+B_pval <- rep(NA,MC)
+err <- 0
+pb <- progress_bar$new(
+format = " [:bar] :percent elapsed: :elapsed ~ :eta",
+total = MC, clear = FALSE, width= 60
+)
+cat(" MC LOOP START,  method:",met,"\n")
+cat("  - n =",nn,"  b =",bb," alpha = ",aa,"\n")
+cat("  - dgp:",arriv,"  pars:",par,"\n")
+for(mc in 1:MC){
+pb$tick()
+S_mc <- startMCsim(nn=nn,aa = par[1],pp=par[-1],arriv=arriv,met=met)
+sim <- S_mc$data
+MC_stat[mc] <- S_mc$vals[1] # stat
+MC_pval[mc] <- S_mc$vals[2] # pval
+# per test
+if(is.na(MC_stat[mc])) stop()
+# parte BOOTSTRAP
+S_B <- NA
+# S_B <- sunMC_semiparBOOT_Cpp(sim,bb,met)
+S_B <- sunMC_pitBOOT_Cpp(sim,bb,met)
+sononan <- is.nan(S_B) | is.na(S_B)
+if(sum(sononan) > 0){err <- err +  1}
+while(sum(sononan) > 0){
+# cat("!")
+# s_temp <- sunMC_semiparBOOT_Cpp(sim,sum(sononan),met)
+s_temp <- sunMC_pitBOOT_Cpp(sim,sum(sononan),met)
+S_B[sononan] <- s_temp
+sononan <- is.nan(S_B) | is.na(S_B)
+}
+B_stat[mc] <- mean(S_B)
+B_pval[mc] <- mean(abs(S_B) > abs(MC_stat[mc]))
+}
+# per test
+# cat(mc,";",bb,";",met,";",mean(MC_stat),";",mean(MC_pval < 0.05),";",mean(MC_mean),";",mean(MC_var),";",mean(MC_var)/mean(MC_mean),";",mean(B_stat,na.rm = TRUE),";",mean(B_pval < 0.05, na.rm = TRUE),"\n",sep = "")
+NAsim <- sum(is.na(MC_stat))
+NAboot <- sum(is.na(B_stat))
+dgp_name <- as.character(paste(PAR[[par_i]],collapse = "_"))
+cat(" *NAs produced (sim, boot) :",NAsim,NAboot)
+if(err==0){
+cat("\n\n\n")
+}else{
+cat("! =",err,"\n\n\n")
+}
+cat(mc,";",bb,";",nn,";",aa,";",met,";",dgp_name,";",mean(MC_stat),";",mean(MC_pval < 0.05),";",mean(MC_mean),";",mean(MC_var),";",mean(MC_var)/mean(MC_mean),";",mean(B_stat,na.rm = TRUE),";",mean(B_pval < 0.05, na.rm = TRUE),";",NAsim,";",NAboot,"\n",sep = "",file=outfilename, append = TRUE)
+}
+# controllo per non fare troppi loop con alpha grandi
+REJFREQ <- mean(B_pval < 0.05)
+REJFREQ_MC <- mean(MC_pval < 0.05)
+}
+}
+}
+}

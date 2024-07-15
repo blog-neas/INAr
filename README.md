@@ -17,7 +17,11 @@ Generation, estimation and testing of INteger Autoregressive models
 
 ## Overview
 
+<<<<<<< HEAD
 The INAr Project aims to provide a set of tools for the study of time series having a discrete support by using the integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
+=======
+This package aims to provide a set of tools for the study of time series having a discrete support by using the integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
 
 ## Roadmap
@@ -39,10 +43,22 @@ The project considers to distribute a set of packages for the study of INAR(p) p
 - [ ] Generation
 	- [x] Simulating INAR(p) process with different innovations
 - [ ] Estimation
+<<<<<<< HEAD
 	- [x] YW and CLS estimation of INAR(p) processes with Poisson and Negative Binomial innovations
 	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Generalized Poisson, Katz family, ...)
 	- [ ] CML estimation of INAR(p) processes
 	- [ ] Forecasting INAR(p) processes
+=======
+	- [x] YW and CLS estimation of INAR(p) processes with Poisson innovations
+	- [x] YW and CLS estimation of INAR(p) processes with Negative Binomial innovations
+	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Genaralized Poisson, Katz family, ...)
+	- [ ] CML estimation of INAR(p) processes
+	- [ ] Forecasting INAR(p) processes
+- [ ] Test
+	- [x] Semiparametric Bootstrap test
+	- [x] Parametric Bootstrap test - Poisson and Negative Binomial
+	- [ ] Parametric Bootstrap test - Other distributions
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 - [ ] Visualization
 	- [ ] Summary
 	- [ ] Plotting

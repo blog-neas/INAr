@@ -72,7 +72,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type arrival(arrivalSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
+<<<<<<< HEAD
     rcpp_result_gen = Rcpp::wrap(sunMCtest_boot(X, arrival, type, B));
+=======
+    rcpp_result_gen = Rcpp::wrap(sunMCtest_boot(X, arrival, method, B));
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
     return rcpp_result_gen;
 END_RCPP
 }

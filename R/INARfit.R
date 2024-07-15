@@ -56,7 +56,11 @@ INAR <- function(X, order, arrival="poisson", method = "CLS"){
         "pars"=pars
     )
 
+<<<<<<< HEAD
     # TO DO! --------------------------------
+=======
+    # TO DO!
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
     var.alphas <- matrix(NA,order,order)
     var.pars <- est$vcov
 
@@ -76,7 +80,11 @@ INAR <- function(X, order, arrival="poisson", method = "CLS"){
     )
 
     OUT <- list(
+<<<<<<< HEAD
         call = match.call(), call0 = paste0("INAR(",order,") model with ",arrival," innovations"),
+=======
+        call = match.call(), call0 = paste0("INAR(",order,") model with ",arrival," innovations"), # call = match.call(),
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
         data = X, momentsINN = momentsINN, arrival = arrival,
         coef = coef, var.coef = var, mask = mask,
         loglik = NA, aic = NA, bic = NA,
@@ -146,6 +154,7 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
+<<<<<<< HEAD
     }else if(arrival == "poislind"){
         # Lívio, T., Khan, N. M., Bourguignon, M., & Bakouch, H. S. (2018).
         # - An INAR (1) model with Poisson–Lindley innovations. Econ. Bull, 38(3), 1505-1513.
@@ -158,6 +167,8 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
     }
 
     OUT <- list("pars"=pars,"vcov"=vcov)

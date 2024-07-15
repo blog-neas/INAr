@@ -10,22 +10,34 @@ export(sunMC_Cpp)
 export(sunMC_parBOOT_Cpp)
 export(sunMC_pitBOOT_Cpp)
 export(sunMC_semiparBOOT_Cpp)
+<<<<<<< HEAD
 importFrom(HMMpa,rgenpois)
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 importFrom(RNGforGPD,GenUniGpois)
 importFrom(Rcpp,sourceCpp)
 importFrom(RcppML,nnls)
 importFrom(Rdpack,reprompt)
+<<<<<<< HEAD
 importFrom(VGAM,ryules)
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 importFrom(gamlss.dist,rZIP)
 importFrom(good,rgood)
 importFrom(skellam,rskellam)
 importFrom(stats,acf)
 importFrom(stats,rbinom)
+<<<<<<< HEAD
 importFrom(stats,rgeom)
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 importFrom(stats,rnbinom)
 importFrom(stats,rnorm)
 importFrom(stats,rpois)
 importFrom(stats,runif)
 importFrom(stats,var)
+<<<<<<< HEAD
 importFrom(tolerance,rpoislind)
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 useDynLib(INAr)

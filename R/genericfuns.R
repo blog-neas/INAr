@@ -12,11 +12,14 @@
 #' @param ..., additional options
 #' @export
 print.INAR <- function (x, digits = max(3L, getOption("digits") - 3L), se = TRUE, ...) {
+<<<<<<< HEAD
     #
     #
     # TO DO:
     # - add the mean ( = intercept) into the parameter estimates
 
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
     cat(x$call0,"\nCall:", deparse(x$call, width.cutoff = 75L),"", sep = "\n")
     if (length(x$coef)) {
         cat("Thinning Parameters:\n")
@@ -60,11 +63,14 @@ print.INAR <- function (x, digits = max(3L, getOption("digits") - 3L), se = TRUE
 #' @param object, an `INAR` object
 #' @export
 summary.INAR <- function (object, ...){
+<<<<<<< HEAD
     #
     #
     # TO DO:
     # - add the mean ( = intercept) into the parameter estimates
 
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
     # PRESA DA SUMMARY.LM
     #
     # z <- object

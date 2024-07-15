@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 # INAr 0.0.2
 
 * Added parametric and semiparametric bootstrap procedures for the Sun McCabe Score test.
 
+=======
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 # INAr 0.0.12
 
 * Substituted the `NMF` (function `fcnnls`) library with `RcppML` (function `nnls`), now the package Biobase is no more an upstream dependency ([issue 1](https://github.com/blog-neas/INAr/issues/1)).

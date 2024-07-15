@@ -44,12 +44,21 @@ sunMC_parBOOT_Cpp <- function(x, B, method) {
 #' @export
 sunMC_pitBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_sunMC_pitBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
+<<<<<<< HEAD
 }
 
 sunMCtest_boot <- function(X, arrival, type, B) {
     .Call('_INAr_sunMCtest_boot', PACKAGE = 'INAr', X, arrival, type, B)
 }
 
+=======
+}
+
+sunMCtest_boot <- function(X, arrival, method, B) {
+    .Call('_INAr_sunMCtest_boot', PACKAGE = 'INAr', X, arrival, method, B)
+}
+
+>>>>>>> 7cbc1bae0ff6b55c8a841ac4ffb6f2672aef3018
 INARp_cpp <- function(resid, a) {
     .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
