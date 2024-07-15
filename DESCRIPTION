@@ -35,7 +35,8 @@ Imports: Rcpp (>= 1.0.0),
     good,
     skellam,
     Rdpack,
-    PoissonBinomial
+    PoissonBinomial,
+    RNGforGPD
 Suggests: 
     covr,
     knitr,

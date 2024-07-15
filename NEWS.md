@@ -1,6 +1,6 @@
 # INAr 0.0.2
 
-* Added parametric and semiparametric bootstrap procedures for the Sun McCabe Score test.
+* Added parametric and semiparametric bootstrap procedures for the Sun McCabe Score test in case of Generalized Poisson innovations.
 
 # INAr 0.0.12
 
