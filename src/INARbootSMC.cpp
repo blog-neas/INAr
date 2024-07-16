@@ -137,6 +137,7 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
   }
   if(method == 4){
     // katz case
+    // in development
 
     double mu_x = mean(noNA(x));
     double var_x = var(noNA(x));

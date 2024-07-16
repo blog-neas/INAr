@@ -28,9 +28,13 @@ The project considers to distribute a set of packages for the study of INAR(p) p
 
 1. **Score Tests** 
 
-- [ ] Test
+- [ ] Sun & McCabe Test
 	- [x] Semiparametric Bootstrap test
 	- [x] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
+	- [ ] Parametric Bootstrap test - Other distributions
+- [ ] Harris & McCabe Test
+	- [ ] Semiparametric Bootstrap test
+	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other distributions
 
 

@@ -1,6 +1,12 @@
-# INAr 0.0.2
+# INAr 0.1.1
+
+* Preparing the support of the Harris-McCabe test statistics for the upcoming 0.2 update:
+
+
+# INAr 0.1.0
 
 * Added parametric and semiparametric bootstrap procedures for the Sun McCabe Score test in case of Generalized Poisson innovations.
+
 
 # INAr 0.0.12
 

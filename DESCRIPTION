@@ -1,7 +1,7 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.0.2
+Version: 0.1.1
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
@@ -14,9 +14,10 @@ Authors@R:
            email = "riccardo.ievoli@unife.it",
            comment = c(ORCID = "0000-0001-9489-3564")))
 Maintainer: Lucio Palazzo <lucio.palazzo@unina.it>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-    Mettere citazioni INAR models Al-Osh 1987, etc...
+Description: Generation, estimation and testing of INAR models. The package 
+    provides functions for the generation of Integer Autoregressive models with
+    different innovations distributions, the estimation of the parameters of the
+    models and tests to check for the goodness of fit.
 License: GPL-3 + file LICENSE
 URL: https://github.com/blog-neas/INAr
 Encoding: UTF-8
