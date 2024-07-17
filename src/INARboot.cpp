@@ -4,13 +4,14 @@
 #include <RcppArmadilloExtensions/sample.h>
 #include <Rcpp.h>
 #include <PoissonBinomial.h>
+// #include "INAr.h"
 
 using namespace R;
 using namespace Rcpp;
 using namespace PoissonBinomial;
 
 //
-// NB. HO INCLUSO ANCHE LO SCRIPT PRESENTE IN statistica_SunMcCabe.cpp
+// PARTE Script Sun-McCabe, prima era in INARbootSMC.cpp -----
 //
 
 //' Sun-McCabe score statistic to test for dependence in an integer autoregressive process
@@ -29,22 +30,6 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
 
   NumericVector  xsum = x[idx];
   NumericVector  xsum_1 = x[idx_1];
-
-  // double var_x = var(noNA(x));
-
-  // lambda_hat <- mean(x)
-  //
-  //   mu_g <- NA # nun ce serv
-  //   sd_g <- NA # nun ce serv
-  //
-  //   xsumL <- xsum-lambda_hat;
-  // xsumL_1 <- xsum_1-lambda_hat;
-  // NUM <- xsumL%*%xsumL_1
-  //
-  //   stat <- NUM/lambda_hat
-  //   stat <- (n^(-1/2))*stat
-  //
-  //   pval <- 1-pnorm(stat)
 
   if(method == 1){
     // poisson case
@@ -176,45 +161,34 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
 NumericVector SMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
     unsigned int niter;
+    NumericVector s_temp(B);
 
-  // NumericVector out(3);
-  // NumericVector MB(B);
-  // NumericVector VB(B);
+    for(int i = 0; i < B; i++){
 
-  NumericVector s_temp(B);
-  for(int i = 0; i < B; i++){
+        NumericVector xb(n);
+        niter = 0;
+        // print(xb);
 
-    NumericVector xb(n);
-    niter = 0;
-    // print(xb);
-
-    // check!
-    LogicalVector id(n);
-    do {
-        id = xb==xb[0];
-
-        while(Rcpp::all(id).is_true()) {
-            xb = RcppArmadillo::sample(x,n,true);
+        // check!
+        LogicalVector id(n);
+        do {
             id = xb==xb[0];
-        }
 
-        s_temp[i] = SMC_Cpp(xb,method)[0];
+            while(Rcpp::all(id).is_true()) {
+                xb = RcppArmadillo::sample(x,n,true);
+                id = xb==xb[0];
+            }
 
-        // asd = std::isnan(s_temp[i]);
-        // if(asd){
-        //     std::cout << std::isnan(s_temp[i]) << std::endl;
-        //     // Rprintf("condition is: %d \n", asd);
-        //     // Rprintf("s_temp is: %f \n", s_temp[i]);
-        // }
+            s_temp[i] = SMC_Cpp(xb,method)[0];
 
-        niter += 1;
+            niter += 1;
 
-        // con false esce, con true resta
-    } while ( std::isnan(s_temp[i]) & (niter < 10) );
+            // con false esce, con true resta
+        } while ( std::isnan(s_temp[i]) & (niter < 10) );
 
-  }
+    }
 
-  return s_temp;
+    return s_temp;
 }
 
 
@@ -305,29 +279,6 @@ NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 niter += 1;
                 // con false esce, con true resta
             } while ( std::isnan(s_temp[i]) & (niter < 10) );
-
-// ... OLD SYSTEM ....................................
-//             while(Rcpp::all(id).is_true()) {
-//                 // SOLO CASO NEGBIN
-//                 // secondo formula (22) Sun-McCabe, Katz applicata a NegBin:
-//                 // gamma_x = mean_x^2/(var_x-mean_x);
-//                 // p_x = 1 - mean_x/var_x = (var_x - mean_x)/var_x;
-//                 // p_x = abs(var_x - mean_x)/var_x ; // TRICK!
-//                 // pcompl_x = 1-p_x = mean_x/var_x;
-//                 double diffvarmu = std::fabs(var_x - mean_x); // # trick, uso VAL ASS DIFF
-//                 double gamma_x = pow(mean_x,2)/diffvarmu;
-//                 double pcompl_x = 1 - diffvarmu/var_x;
-//                 xb = Rcpp::rnbinom(n, gamma_x, pcompl_x);
-//
-//                 // RIPETERE SIM QUANDO VALORI SONO UNDERDISP!
-//                 if(var(xb) <= mean(xb)){
-//                     xb = rep(0,n);
-//                 }
-//                 id = xb==xb[0];
-//             }
-//
-//             s_temp[i] = SMC_Cpp(xb, method)[0];
-
         }
     }
     if(method==3){
@@ -375,27 +326,32 @@ NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 }
 
 
-
-// Function to generate generalized Poisson random variables
-// NumericVector rgenpois(int n, double lambda, double kappa) {
+// //' Function to generate generalized Poisson random variables
+//  //' @param n int
+//  //' @param lambda double
+//  //' @param kappa double
+//  //' @details
+//  //' This is an internal function, it will be excluded in future versions.
+//  //' @export
+//  // [[Rcpp::export]]
+// NumericVector rgenpois(int n, double lambda, double kappa){
 //     NumericVector result(n);
-//     for (int i = 0; i < n; i++) {
-//         double w = exp(-lambda);
-//         double mys = exp(-kappa);
+//     double w = exp(-kappa);
+//     for(int j = 0; j < n; j++){
+//         double mys = exp(-lambda);
 //         double myp = mys;
-//         int x = 0;
-//         double u = R::runif(0, 1);
-//         while (u > mys) {
-//             x++;
-//             double myc = kappa + lambda * x;
-//             myp *= myc / x;
-//             mys += myp;
+//         int xx = 0;
+//         double u = R::runif(0,1);
+//         while(u > mys){
+//             xx++;
+//             double myc = lambda + kappa * (xx - 1);
+//             myp = w * myc * pow(1 + kappa/myc, xx - 1) * myp * pow(xx,-1);
+//             mys = mys + myp;
 //         }
-//         result[i] = x;
+//         result[j] = xx;
 //     }
 //     return result;
 // }
-
 
 
 
@@ -544,3 +500,277 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
 # x <- rpois(100,3)
 # Pb <- SMC_parBOOT_Cpp(x,99,3)
 */
+
+
+
+//
+// PARTE Script Harris-McCabe, prima era in INARbootHMC.cpp -----
+//
+
+
+
+//' Sort and remove duplicates from a numeric vector
+ //' @param v NumericVector
+ //' @details
+ //' This is an internal function, it will be excluded in future versions.
+ //' @export
+ //[[Rcpp::export]]
+ NumericVector sortunique(NumericVector v) {
+     NumericVector sv = Rcpp::unique(v);
+     std::sort(sv.begin(), sv.end());
+     return sv;
+ }
+
+//' Compute the empirical cumulative distribution function of a numeric vector
+ //' @param eval NumericVector
+ //' @param x NumericVector
+ //' @details
+ //' This is an internal function, it will be excluded in future versions.
+ //' @export
+ //[[Rcpp::export]]
+ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
+     // Valori unici ordinati in eval
+     NumericVector samp = sortunique(eval);
+
+     int n = samp.size();
+     int m = x.size();
+     int count = 0;
+
+     // Vettore per le frequenze cumulate
+     IntegerVector abs(n);
+     // Vettore per le probabilità puntuali
+     NumericVector probs(n);
+     // Vettore per le frequenze cumulate relative
+     NumericVector relcum(n);
+     // Vettore per la probabilità di fallback
+     NumericVector fallback_probs(n);
+
+     // Calcola la probabilità relativa cumulata e la probabilità di fallback
+     double min_prob = probs[0];
+     relcum[0] = probs[0];
+
+     for (int i = 0; i < n; ++i){
+         // frequenze assolute cumulate step
+         abs[i] = std::lower_bound(x.begin(), x.end(), samp[i]) - x.begin();
+         count = 0;
+         for (int j = 0; j < m; ++j){
+             if (x[j] == samp[i]) {
+                 count++;
+             }
+         }
+
+         // frequenze relative cumulate step
+         probs[i] = (double)count / m;
+
+         // relcum step
+         relcum[i] = relcum[i - 1] + probs[i];
+         // fallback step
+         if (probs[i] == 0) {
+             fallback_probs[i] = min_prob;
+         } else {
+             fallback_probs[i] = probs[i];
+         }
+         if (probs[i] > 0) {
+             min_prob = probs[i];
+         }
+     }
+
+     return DataFrame::create(
+         Named("value") = samp,
+         Named("abscum") = abs,
+         Named("relcum") = relcum,
+         Named("probability") = probs,
+         Named("fallback") = fallback_probs
+     );
+ }
+
+
+//' Harris-McCabe score statistic to test for dependence in an integer autoregressive process
+ //' @param x NumericVector
+ //' @details
+ //' This is an internal function, it will be excluded in future versions.
+ //' @export
+ // [[Rcpp::export]]
+ NumericVector HMC_Cpp(NumericVector x){
+     int n = x.length();
+     double mean_x = mean(noNA(x));
+     double sd_x = sd(noNA(x));
+     LogicalVector id(n);
+     LogicalVector id_1(n);
+
+     NumericVector out(2);
+     Range idx = seq(1,n-1);
+     Range idx_1 = seq(0,n-2);
+
+     NumericVector  xsum = x[idx];
+     NumericVector  xsum_1 = x[idx_1];
+
+     NumericVector x2 = x-1;
+
+     NumericVector x_full(x.size() + x2.size());
+
+     // Merge the vectors using the merge function
+     std::merge(x.begin(), x.end(), x2.begin(), x2.end(),
+                x_full.begin());
+     std::cout << x_full << std::endl;
+
+     NumericVector eval = sortunique(x_full);
+     DataFrame TAB = ecdfcpp(eval, x);
+     NumericVector values = TAB["value"];
+     NumericVector relfreq = TAB["fallback"];
+
+     NumericVector pi_hat(n-1);
+     NumericVector pi_hat_L1(n-1);
+
+     for (int j = 0; j < n-1; j++){
+
+         id = values==x[j];
+         id_1 = values==x[j]-1;
+         // std::cout << id << std::endl;
+
+         NumericVector tmp = relfreq[id];
+         // std::cout << tmp << std::endl;
+
+         pi_hat[j] = as<double>(relfreq[id]);
+         pi_hat_L1[j] = as<double>(relfreq[id_1]);
+         // Rprintf("x[j] is: %f, pi_hat[j] is: %f, pi_hat_L1[j] is: %f and the ratio is %f \n", x[j], pi_hat[j], pi_hat_L1[j], pi_hat_L1[j]/pi_hat[j]);
+     }
+
+     NumericVector g_t = pi_hat_L1/pi_hat;
+     // std::cout << x << std::endl;
+     // std::cout << pi_hat_L1 << std::endl;
+     // std::cout << pi_hat << std::endl;
+     // std::cout << g_t << std::endl;
+
+     double sd_g = sd(g_t);
+
+     NumericVector xsumL = xsum_1 - mean_x;
+
+     double NUM = sum(xsumL*(g_t-1));
+
+     double stat = NUM/(sd_x*sd_g);
+
+     out[0] = stat/sqrt(n);
+     out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
+     // std::cout << out[0] << std::endl;
+
+     return out;
+ }
+
+
+
+//' Semiparametric bootstrap version of the Harris-McCabe score test.
+ //' @param x NumericVector
+ //' @param B int
+ //' @details
+ //' This is an internal function, it will be excluded in future versions.
+ //' @export
+ // [[Rcpp::export]]
+ NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B){
+     int n = x.length();
+     unsigned int niter;
+
+     NumericVector s_temp(B);
+     for(int i = 0; i < B; i++){
+
+         NumericVector xb(n);
+         niter = 0;
+         // print(xb);
+
+         // check!
+         LogicalVector id(n);
+         do {
+             id = xb==xb[0];
+
+             while(Rcpp::all(id).is_true()) {
+                 xb = RcppArmadillo::sample(x,n,true);
+                 id = xb==xb[0];
+             }
+
+             s_temp[i] = HMC_Cpp(xb)[0];
+
+             if(!arma::is_finite(s_temp[i])){
+                 s_temp[i] = sign(s_temp[i])*pow(n,10);
+             };
+
+             // asd = std::isnan(s_temp[i]);
+             // if(asd){
+             //     std::cout << std::isnan(s_temp[i]) << std::endl;
+             //     // Rprintf("condition is: %d \n", asd);
+             //     // Rprintf("s_temp is: %f \n", s_temp[i]);
+             // }
+
+             niter += 1;
+             // con false esce, con true resta
+             // check for whether a value is finite, e.g. not NaN,Inf, or -Inf, by using arma::is_finite()
+         } while (!arma::is_finite(s_temp[i]) & (niter < 10) );
+
+     }
+     // std::cout << s_temp << std::endl;
+     return s_temp;
+ }
+
+// [[Rcpp::export]]
+List HMCtest_boot(NumericVector X, int B){
+    // old input: unsigned int type
+    // int n = X.length();
+
+    double Smc = HMC_Cpp(X)[0];
+    double B_stat;
+    double B_pval;
+    NumericVector SmcB(B);
+
+    unsigned int type = 1;
+    if(type == 1){
+        // SEMIPARAMETRIC
+        SmcB = HMC_semiparBOOT_Cpp(X,B);
+    }
+    // else if(type == 2){
+    //     // PARAMETRIC
+    //     SmcB = HMC_parBOOT_Cpp(X,B,arrival);
+    // }
+    // else if(type == 3){
+    //     // PIT
+    //     SmcB = HMC_pitBOOT_Cpp(X,B,arrival);
+    // }
+
+    B_stat = mean(SmcB);
+    B_pval = mean(abs(SmcB) > std::fabs(Smc));
+
+
+    return List::create(
+        _["stat"]  = B_stat,
+        _["pval"]  = B_pval
+    );
+}
+
+
+/*** R
+# # x <- rpois(15,2)
+# x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
+# B <- 999
+# # test 1:
+# S <- HMC_Cpp(x)
+# set.seed(1432)
+# Sb <- HMC_semiparBOOT_Cpp(x,B)
+# mean(S[1] > Sb) # pval boot
+# S[2] # pval normale
+# # test 2: FUNZIONE FINALE WRAPPED
+# set.seed(1432)
+# HMCtest_boot(x,B)
+# ecdf_cpp(1,x);x
+# cpplb(0,x);x
+# ecdf_cpp(-3,x);sum(x <= -3)
+# ecdf_cpp(5,x)/length(x);sum(x <= 5)/length(x)
+# ecdf_cpp(5,x) - ecdf_cpp(4,x)
+# cpplb(unique(sort(seq(-1,20))),x)
+# ecdfcpp(seq(-1,16),x)
+# ecdfcpp(unique(x),x)
+#
+# x <- c(1.1, 2.2, 3.3, 2.2, 1.1, 4.4, 3.3, 2.2)
+# eval <- c(1.1, 2.2, 3.3, 5.5)
+#
+# # Utilizzo della funzione ecdfcpp
+# ecdfcpp(eval, x)
+*/
+
