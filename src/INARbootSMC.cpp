@@ -13,14 +13,14 @@ using namespace PoissonBinomial;
 // NB. HO INCLUSO ANCHE LO SCRIPT PRESENTE IN statistica_SunMcCabe.cpp
 //
 
-//' Sun McCabe score statistic to test for dependence in an integer autoregressive process
+//' Sun-McCabe score statistic to test for dependence in an integer autoregressive process
 //' @param x NumericVector
 //' @param method unsigned int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
-NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
+NumericVector SMC_Cpp(NumericVector x, unsigned int method){
   int n = x.length();
 
   NumericVector out(2);
@@ -165,7 +165,7 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
 
 
 
-//' Semiparametric bootstrap version of the Sun McCabe score test.
+//' Semiparametric bootstrap version of the Sun-McCabe score test.
 //' @param x NumericVector
 //' @param B int
 //' @param method unsigned int
@@ -173,7 +173,7 @@ NumericVector sunMC_Cpp(NumericVector x, unsigned int method){
 //' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
-NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
+NumericVector SMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
     unsigned int niter;
 
@@ -198,7 +198,7 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
             id = xb==xb[0];
         }
 
-        s_temp[i] = sunMC_Cpp(xb,method)[0];
+        s_temp[i] = SMC_Cpp(xb,method)[0];
 
         // asd = std::isnan(s_temp[i]);
         // if(asd){
@@ -218,16 +218,15 @@ NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method)
 }
 
 
-//' Parametric bootstrap version of the Sun McCabe score test.
+//' Parametric bootstrap version of the Sun-McCabe score test.
 //' @param x NumericVector
 //' @param B int
 //' @param method unsigned int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' !!!!! DA IMPLEMENTARE !!!!!
 //' @export
 // [[Rcpp::export]]
-NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
+NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
     unsigned int niter;
     double mean_x = mean(noNA(x));
@@ -257,7 +256,7 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                     id = xb==xb[0];
                 }
 
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
+                s_temp[i] = SMC_Cpp(xb,method)[0];
 
                 niter += 1;
                 // con false esce, con true resta
@@ -300,7 +299,7 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 // if(var(xb) <= mean(xb)){
                 // s_temp[i] = nan();
                 // }
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
+                s_temp[i] = SMC_Cpp(xb,method)[0];
 
 
                 niter += 1;
@@ -327,7 +326,7 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 //                 id = xb==xb[0];
 //             }
 //
-//             s_temp[i] = sunMC_Cpp(xb, method)[0];
+//             s_temp[i] = SMC_Cpp(xb, method)[0];
 
         }
     }
@@ -363,7 +362,7 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                     id = xb==xb[0];
                 }
 
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
+                s_temp[i] = SMC_Cpp(xb,method)[0];
 
                 niter += 1;
                 // con false esce, con true resta
@@ -400,7 +399,7 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 
-//' PIT bootstrap version of the Sun McCabe score test.
+//' PIT bootstrap version of the Sun-McCabe score test.
 //' @param x NumericVector
 //' @param B int
 //' @param method unsigned int
@@ -409,7 +408,7 @@ NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 //' !!!!! DA IMPLEMENTARE !!!!!
 //' @export
 // [[Rcpp::export]]
-NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
+NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
     unsigned int niter;
     double mean_x = mean(noNA(x));
@@ -444,7 +443,7 @@ NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
                 }
 
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
+                s_temp[i] = SMC_Cpp(xb,method)[0];
 
                 niter += 1;
                 // con false esce, con true resta
@@ -482,7 +481,7 @@ NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 // if(var(xb) <= mean(xb)){
                 // s_temp[i] = nan();
                 // }
-                s_temp[i] = sunMC_Cpp(xb,method)[0];
+                s_temp[i] = SMC_Cpp(xb,method)[0];
 
 
                 niter += 1;
@@ -498,25 +497,25 @@ NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 // [[Rcpp::export]]
-List sunMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B){
+List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B){
     // int n = X.length();
 
-    double Smc = sunMC_Cpp(X,arrival)[0];
+    double Smc = SMC_Cpp(X,arrival)[0];
     double B_stat;
     double B_pval;
     NumericVector SmcB(B);
 
     if(type == 1){
         // SEMIPARAMETRIC
-        SmcB = sunMC_semiparBOOT_Cpp(X,B,arrival);
+        SmcB = SMC_semiparBOOT_Cpp(X,B,arrival);
     }
     else if(type == 2){
         // PARAMETRIC
-        SmcB = sunMC_parBOOT_Cpp(X,B,arrival);
+        SmcB = SMC_parBOOT_Cpp(X,B,arrival);
     }
     else if(type == 3){
         // PIT
-        SmcB = sunMC_pitBOOT_Cpp(X,B,arrival);
+        SmcB = SMC_pitBOOT_Cpp(X,B,arrival);
     }
 
     B_stat = mean(SmcB);
@@ -534,14 +533,14 @@ List sunMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, in
 # B <- 1000
 # method <- 1
 # # test 1:
-# S <- sunMC_Cpp(x,method)
-# Sb <- sunMC_semiparBOOT_Cpp(x,B,method)
+# S <- SMC_Cpp(x,method)
+# Sb <- SMC_semiparBOOT_Cpp(x,B,method)
 # mean(S[1] > Sb) # pval boot
 # S[2] # pval normale
 # # test 2: FUNZIONE FINALE WRAPPED
 # arrival <- 1
-# sunMCtest_boot(x,arrival,method,B)
+# SMCtest_boot(x,arrival,method,B)
 #
 # x <- rpois(100,3)
-# Pb <- sunMC_parBOOT_Cpp(x,99,3)
+# Pb <- SMC_parBOOT_Cpp(x,99,3)
 */

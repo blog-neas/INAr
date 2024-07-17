@@ -11,60 +11,118 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// sunMC_Cpp
-NumericVector sunMC_Cpp(NumericVector x, unsigned int method);
-RcppExport SEXP _INAr_sunMC_Cpp(SEXP xSEXP, SEXP methodSEXP) {
+// sortunique
+NumericVector sortunique(NumericVector v);
+RcppExport SEXP _INAr_sortunique(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(sortunique(v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ecdfcpp
+DataFrame ecdfcpp(NumericVector eval, NumericVector x);
+RcppExport SEXP _INAr_ecdfcpp(SEXP evalSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type eval(evalSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(ecdfcpp(eval, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HMC_Cpp
+NumericVector HMC_Cpp(NumericVector x);
+RcppExport SEXP _INAr_HMC_Cpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(HMC_Cpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HMC_semiparBOOT_Cpp
+NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B);
+RcppExport SEXP _INAr_HMC_semiparBOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(HMC_semiparBOOT_Cpp(x, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HMCtest_boot
+List HMCtest_boot(NumericVector X, int B);
+RcppExport SEXP _INAr_HMCtest_boot(SEXP XSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(HMCtest_boot(X, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SMC_Cpp
+NumericVector SMC_Cpp(NumericVector x, unsigned int method);
+RcppExport SEXP _INAr_SMC_Cpp(SEXP xSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunMC_Cpp(x, method));
+    rcpp_result_gen = Rcpp::wrap(SMC_Cpp(x, method));
     return rcpp_result_gen;
 END_RCPP
 }
-// sunMC_semiparBOOT_Cpp
-NumericVector sunMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method);
-RcppExport SEXP _INAr_sunMC_semiparBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
+// SMC_semiparBOOT_Cpp
+NumericVector SMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method);
+RcppExport SEXP _INAr_SMC_semiparBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunMC_semiparBOOT_Cpp(x, B, method));
+    rcpp_result_gen = Rcpp::wrap(SMC_semiparBOOT_Cpp(x, B, method));
     return rcpp_result_gen;
 END_RCPP
 }
-// sunMC_parBOOT_Cpp
-NumericVector sunMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method);
-RcppExport SEXP _INAr_sunMC_parBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
+// SMC_parBOOT_Cpp
+NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method);
+RcppExport SEXP _INAr_SMC_parBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunMC_parBOOT_Cpp(x, B, method));
+    rcpp_result_gen = Rcpp::wrap(SMC_parBOOT_Cpp(x, B, method));
     return rcpp_result_gen;
 END_RCPP
 }
-// sunMC_pitBOOT_Cpp
-NumericVector sunMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method);
-RcppExport SEXP _INAr_sunMC_pitBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
+// SMC_pitBOOT_Cpp
+NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method);
+RcppExport SEXP _INAr_SMC_pitBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunMC_pitBOOT_Cpp(x, B, method));
+    rcpp_result_gen = Rcpp::wrap(SMC_pitBOOT_Cpp(x, B, method));
     return rcpp_result_gen;
 END_RCPP
 }
-// sunMCtest_boot
-List sunMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B);
-RcppExport SEXP _INAr_sunMCtest_boot(SEXP XSEXP, SEXP arrivalSEXP, SEXP typeSEXP, SEXP BSEXP) {
+// SMCtest_boot
+List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B);
+RcppExport SEXP _INAr_SMCtest_boot(SEXP XSEXP, SEXP arrivalSEXP, SEXP typeSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -72,7 +130,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type arrival(arrivalSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunMCtest_boot(X, arrival, type, B));
+    rcpp_result_gen = Rcpp::wrap(SMCtest_boot(X, arrival, type, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -116,11 +174,16 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_INAr_sunMC_Cpp", (DL_FUNC) &_INAr_sunMC_Cpp, 2},
-    {"_INAr_sunMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_sunMC_semiparBOOT_Cpp, 3},
-    {"_INAr_sunMC_parBOOT_Cpp", (DL_FUNC) &_INAr_sunMC_parBOOT_Cpp, 3},
-    {"_INAr_sunMC_pitBOOT_Cpp", (DL_FUNC) &_INAr_sunMC_pitBOOT_Cpp, 3},
-    {"_INAr_sunMCtest_boot", (DL_FUNC) &_INAr_sunMCtest_boot, 4},
+    {"_INAr_sortunique", (DL_FUNC) &_INAr_sortunique, 1},
+    {"_INAr_ecdfcpp", (DL_FUNC) &_INAr_ecdfcpp, 2},
+    {"_INAr_HMC_Cpp", (DL_FUNC) &_INAr_HMC_Cpp, 1},
+    {"_INAr_HMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_HMC_semiparBOOT_Cpp, 2},
+    {"_INAr_HMCtest_boot", (DL_FUNC) &_INAr_HMCtest_boot, 2},
+    {"_INAr_SMC_Cpp", (DL_FUNC) &_INAr_SMC_Cpp, 2},
+    {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
+    {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
+    {"_INAr_SMC_pitBOOT_Cpp", (DL_FUNC) &_INAr_SMC_pitBOOT_Cpp, 3},
+    {"_INAr_SMCtest_boot", (DL_FUNC) &_INAr_SMCtest_boot, 4},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
