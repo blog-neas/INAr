@@ -452,6 +452,12 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 
+//' Wrapper function for compution the Sun-McCabe bootstrap score test.
+//' @param x NumericVector
+//' @param B int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
 // [[Rcpp::export]]
 List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B){
     // int n = X.length();
@@ -510,25 +516,25 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
 
 
 //' Sort and remove duplicates from a numeric vector
- //' @param v NumericVector
- //' @details
- //' This is an internal function, it will be excluded in future versions.
- //' @export
- //[[Rcpp::export]]
- NumericVector sortunique(NumericVector v) {
+//' @param v NumericVector
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
+//[[Rcpp::export]]
+NumericVector sortunique(NumericVector v) {
      NumericVector sv = Rcpp::unique(v);
      std::sort(sv.begin(), sv.end());
      return sv;
- }
+}
 
 //' Compute the empirical cumulative distribution function of a numeric vector
- //' @param eval NumericVector
- //' @param x NumericVector
- //' @details
- //' This is an internal function, it will be excluded in future versions.
- //' @export
- //[[Rcpp::export]]
- DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
+//' @param eval NumericVector
+//' @param x NumericVector
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
+//[[Rcpp::export]]
+DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
      // Valori unici ordinati in eval
      NumericVector samp = sortunique(eval);
 
@@ -582,16 +588,16 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
          Named("probability") = probs,
          Named("fallback") = fallback_probs
      );
- }
+}
 
 
 //' Harris-McCabe score statistic to test for dependence in an integer autoregressive process
- //' @param x NumericVector
- //' @details
- //' This is an internal function, it will be excluded in future versions.
- //' @export
- // [[Rcpp::export]]
- NumericVector HMC_Cpp(NumericVector x){
+//' @param x NumericVector
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
+// [[Rcpp::export]]
+NumericVector HMC_Cpp(NumericVector x){
      int n = x.length();
      double mean_x = mean(noNA(x));
      double sd_x = sd(noNA(x));
@@ -612,7 +618,7 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
      // Merge the vectors using the merge function
      std::merge(x.begin(), x.end(), x2.begin(), x2.end(),
                 x_full.begin());
-     std::cout << x_full << std::endl;
+     // std::cout << x_full << std::endl;
 
      NumericVector eval = sortunique(x_full);
      DataFrame TAB = ecdfcpp(eval, x);
@@ -655,18 +661,18 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
      // std::cout << out[0] << std::endl;
 
      return out;
- }
+}
 
 
 
 //' Semiparametric bootstrap version of the Harris-McCabe score test.
- //' @param x NumericVector
- //' @param B int
- //' @details
- //' This is an internal function, it will be excluded in future versions.
- //' @export
- // [[Rcpp::export]]
- NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B){
+//' @param x NumericVector
+//' @param B int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
+// [[Rcpp::export]]
+NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B){
      int n = x.length();
      unsigned int niter;
 
@@ -708,8 +714,14 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
      }
      // std::cout << s_temp << std::endl;
      return s_temp;
- }
+}
 
+//' Wrapper function for compution the Harris-McCabe bootstrap score test.
+//' @param x NumericVector
+//' @param B int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
 // [[Rcpp::export]]
 List HMCtest_boot(NumericVector X, int B){
     // old input: unsigned int type

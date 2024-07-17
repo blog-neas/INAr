@@ -11,41 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// HMC_Cpp
-NumericVector HMC_Cpp(NumericVector x);
-RcppExport SEXP _INAr_HMC_Cpp(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMC_Cpp(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// HMC_semiparBOOT_Cpp
-NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B);
-RcppExport SEXP _INAr_HMC_semiparBOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMC_semiparBOOT_Cpp(x, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// HMCtest_boot
-List HMCtest_boot(NumericVector X, int B);
-RcppExport SEXP _INAr_HMCtest_boot(SEXP XSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMCtest_boot(X, B));
-    return rcpp_result_gen;
-END_RCPP
-}
 // SMC_Cpp
 NumericVector SMC_Cpp(NumericVector x, unsigned int method);
 RcppExport SEXP _INAr_SMC_Cpp(SEXP xSEXP, SEXP methodSEXP) {
@@ -111,6 +76,64 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sortunique
+NumericVector sortunique(NumericVector v);
+RcppExport SEXP _INAr_sortunique(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(sortunique(v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ecdfcpp
+DataFrame ecdfcpp(NumericVector eval, NumericVector x);
+RcppExport SEXP _INAr_ecdfcpp(SEXP evalSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type eval(evalSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(ecdfcpp(eval, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HMC_Cpp
+NumericVector HMC_Cpp(NumericVector x);
+RcppExport SEXP _INAr_HMC_Cpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(HMC_Cpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HMC_semiparBOOT_Cpp
+NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B);
+RcppExport SEXP _INAr_HMC_semiparBOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(HMC_semiparBOOT_Cpp(x, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HMCtest_boot
+List HMCtest_boot(NumericVector X, int B);
+RcppExport SEXP _INAr_HMCtest_boot(SEXP XSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(HMCtest_boot(X, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 // INARp_cpp
 NumericVector INARp_cpp(NumericVector resid, DoubleVector a);
 RcppExport SEXP _INAr_INARp_cpp(SEXP residSEXP, SEXP aSEXP) {
@@ -149,44 +172,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sortunique
-NumericVector sortunique(NumericVector v);
-RcppExport SEXP _INAr_sortunique(SEXP vSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(sortunique(v));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ecdfcpp
-DataFrame ecdfcpp(NumericVector eval, NumericVector x);
-RcppExport SEXP _INAr_ecdfcpp(SEXP evalSEXP, SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type eval(evalSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(ecdfcpp(eval, x));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_INAr_HMC_Cpp", (DL_FUNC) &_INAr_HMC_Cpp, 1},
-    {"_INAr_HMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_HMC_semiparBOOT_Cpp, 2},
-    {"_INAr_HMCtest_boot", (DL_FUNC) &_INAr_HMCtest_boot, 2},
     {"_INAr_SMC_Cpp", (DL_FUNC) &_INAr_SMC_Cpp, 2},
     {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
     {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
     {"_INAr_SMC_pitBOOT_Cpp", (DL_FUNC) &_INAr_SMC_pitBOOT_Cpp, 3},
     {"_INAr_SMCtest_boot", (DL_FUNC) &_INAr_SMCtest_boot, 4},
+    {"_INAr_sortunique", (DL_FUNC) &_INAr_sortunique, 1},
+    {"_INAr_ecdfcpp", (DL_FUNC) &_INAr_ecdfcpp, 2},
+    {"_INAr_HMC_Cpp", (DL_FUNC) &_INAr_HMC_Cpp, 1},
+    {"_INAr_HMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_HMC_semiparBOOT_Cpp, 2},
+    {"_INAr_HMCtest_boot", (DL_FUNC) &_INAr_HMCtest_boot, 2},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
-    {"_INAr_sortunique", (DL_FUNC) &_INAr_sortunique, 1},
-    {"_INAr_ecdfcpp", (DL_FUNC) &_INAr_ecdfcpp, 2},
     {NULL, NULL, 0}
 };
 
