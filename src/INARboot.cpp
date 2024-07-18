@@ -3,12 +3,12 @@
 
 #include <RcppArmadilloExtensions/sample.h>
 #include <Rcpp.h>
-#include <PoissonBinomial.h>
+// #include <PoissonBinomial.h>
 // #include "INAr.h"
 
 using namespace R;
 using namespace Rcpp;
-using namespace PoissonBinomial;
+// using namespace PoissonBinomial;
 
 //
 // PARTE Script Sun-McCabe, prima era in INARbootSMC.cpp -----
@@ -453,7 +453,9 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 //' Wrapper function for compution the Sun-McCabe bootstrap score test.
-//' @param x NumericVector
+//' @param X NumericVector
+//' @param arrival int
+//' @param type unsigned int
 //' @param B int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
@@ -611,9 +613,9 @@ NumericVector HMC_Cpp(NumericVector x){
      NumericVector  xsum = x[idx];
      NumericVector  xsum_1 = x[idx_1];
 
-     NumericVector x2 = x-1;
+     NumericVector x2 = xsum-1;
 
-     NumericVector x_full(x.size() + x2.size());
+     NumericVector x_full(xsum.size() + x2.size());
 
      // Merge the vectors using the merge function
      std::merge(x.begin(), x.end(), x2.begin(), x2.end(),
@@ -621,6 +623,7 @@ NumericVector HMC_Cpp(NumericVector x){
      // std::cout << x_full << std::endl;
 
      NumericVector eval = sortunique(x_full);
+     // std::cout << eval << std::endl;
      DataFrame TAB = ecdfcpp(eval, x);
      NumericVector values = TAB["value"];
      NumericVector relfreq = TAB["fallback"];
@@ -630,8 +633,8 @@ NumericVector HMC_Cpp(NumericVector x){
 
      for (int j = 0; j < n-1; j++){
 
-         id = values==x[j];
-         id_1 = values==x[j]-1;
+         id = values==xsum[j];
+         id_1 = values==xsum[j]-1;
          // std::cout << id << std::endl;
 
          NumericVector tmp = relfreq[id];
@@ -666,6 +669,7 @@ NumericVector HMC_Cpp(NumericVector x){
 
 
 //' Semiparametric bootstrap version of the Harris-McCabe score test.
+//' !!!WARNING!!! Still under development, do not use.
 //' @param x NumericVector
 //' @param B int
 //' @details
@@ -717,7 +721,8 @@ NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B){
 }
 
 //' Wrapper function for compution the Harris-McCabe bootstrap score test.
-//' @param x NumericVector
+//' !!!WARNING!!! Still under development, do not use.
+//' @param X NumericVector
 //' @param B int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
@@ -758,9 +763,11 @@ List HMCtest_boot(NumericVector X, int B){
 
 
 /*** R
-# # x <- rpois(15,2)
+# x <- rpois(500,40)
 # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
-# B <- 999
+# HMC_Cpp(seq(0,20,by=2))
+# HMC_Cpp(x)
+# B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)
 # set.seed(1432)

@@ -7,9 +7,13 @@
 SMCtest_boot(X, arrival, type, B)
 }
 \arguments{
-\item{B}{int}
+\item{X}{NumericVector}
 
-\item{x}{NumericVector}
+\item{arrival}{int}
+
+\item{type}{unsigned int}
+
+\item{B}{int}
 }
 \description{
 Wrapper function for compution the Sun-McCabe bootstrap score test.

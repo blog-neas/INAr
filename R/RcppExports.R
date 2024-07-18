@@ -46,7 +46,9 @@ SMC_pitBOOT_Cpp <- function(x, B, method) {
 }
 
 #' Wrapper function for compution the Sun-McCabe bootstrap score test.
-#' @param x NumericVector
+#' @param X NumericVector
+#' @param arrival int
+#' @param type unsigned int
 #' @param B int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
@@ -84,6 +86,7 @@ HMC_Cpp <- function(x) {
 }
 
 #' Semiparametric bootstrap version of the Harris-McCabe score test.
+#' !!!WARNING!!! Still under development, do not use.
 #' @param x NumericVector
 #' @param B int
 #' @details
@@ -94,7 +97,8 @@ HMC_semiparBOOT_Cpp <- function(x, B) {
 }
 
 #' Wrapper function for compution the Harris-McCabe bootstrap score test.
-#' @param x NumericVector
+#' !!!WARNING!!! Still under development, do not use.
+#' @param X NumericVector
 #' @param B int
 #' @details
 #' This is an internal function, it will be excluded in future versions.

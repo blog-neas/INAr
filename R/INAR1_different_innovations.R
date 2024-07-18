@@ -53,7 +53,8 @@
 #' @importFrom tolerance rpoislind
 #' @importFrom RNGforGPD GenUniGpois
 #' @examples
-#' # Generate 500 observations from an INAR(1) model with thinning \eqn{\alpha}=0.5 and Poisson(2) innovations
+#' # Generate 500 observations from an INAR(1) model with
+#' # thinning parameter \eqn{\alpha}=0.5 and Poisson(2) innovations
 #' set.seed(1234)
 #' lam <- 2
 #' genINAR(500, a = 0.5, par = lam, arrival = "poisson")

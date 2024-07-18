@@ -2,7 +2,8 @@
 % Please edit documentation in R/RcppExports.R
 \name{HMC_semiparBOOT_Cpp}
 \alias{HMC_semiparBOOT_Cpp}
-\title{Semiparametric bootstrap version of the Harris-McCabe score test.}
+\title{Semiparametric bootstrap version of the Harris-McCabe score test.
+!!!WARNING!!! Still under development, do not use.}
 \usage{
 HMC_semiparBOOT_Cpp(x, B)
 }
@@ -13,6 +14,7 @@ HMC_semiparBOOT_Cpp(x, B)
 }
 \description{
 Semiparametric bootstrap version of the Harris-McCabe score test.
+!!!WARNING!!! Still under development, do not use.
 }
 \details{
 This is an internal function, it will be excluded in future versions.

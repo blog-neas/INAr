@@ -2,17 +2,19 @@
 % Please edit documentation in R/RcppExports.R
 \name{HMCtest_boot}
 \alias{HMCtest_boot}
-\title{Wrapper function for compution the Harris-McCabe bootstrap score test.}
+\title{Wrapper function for compution the Harris-McCabe bootstrap score test.
+!!!WARNING!!! Still under development, do not use.}
 \usage{
 HMCtest_boot(X, B)
 }
 \arguments{
-\item{B}{int}
+\item{X}{NumericVector}
 
-\item{x}{NumericVector}
+\item{B}{int}
 }
 \description{
 Wrapper function for compution the Harris-McCabe bootstrap score test.
+!!!WARNING!!! Still under development, do not use.
 }
 \details{
 This is an internal function, it will be excluded in future versions.

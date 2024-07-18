@@ -1,7 +1,7 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.1.1
+Version: 0.2.1
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
@@ -36,7 +36,6 @@ Imports: Rcpp (>= 1.0.0),
     good,
     skellam,
     Rdpack,
-    PoissonBinomial,
     RNGforGPD
 Suggests: 
     covr,

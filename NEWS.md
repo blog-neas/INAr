@@ -1,11 +1,22 @@
+# INAr 0.2.1
+
+* Added Harris-McCabe test statistic.
+    * Bootstrap procedures are still on development phase.
+
+
+# INAr 0.2.0
+
+* Added parametric and semiparametric bootstrap procedures for the Sun-McCabe Score test.
+
+
 # INAr 0.1.1
 
-* Preparing the support of the Harris-McCabe test statistics for the upcoming 0.2 update:
+* Preparing the support of the Harris-McCabe test statistics for the upcoming 0.2 update
 
 
 # INAr 0.1.0
 
-* Added parametric and semiparametric bootstrap procedures for the Sun McCabe Score test in case of Generalized Poisson innovations.
+* Added parametric and semiparametric bootstrap procedures for the Sun-McCabe Score test in case of Generalized Poisson innovations.
 
 
 # INAr 0.0.12
@@ -29,14 +40,14 @@
 # INAr 0.0.11
 
 * Added a new test in `test.R` that follow the same concept of the previous one:
-  * Added the `SMCboot.test` function that computes the semiparametric or parametric bootstrap Sun McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+  * Added the `SMCboot.test` function that computes the semiparametric or parametric bootstrap Sun-McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
   * In future the the C++ routines that compute the tests will become internal.
 
 
 # INAr 0.0.10
 
 * Added a new script, namely `test.R`, that will include all the front-end test functions.
-  * Added the `SMC.test` function that computes the Sun McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+  * Added the `SMC.test` function that computes the Sun-McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
   * In future the bootstrapped version of the above tests will be added and the C++ routines that compute the tests will become internal.
 
 
@@ -67,7 +78,7 @@
 
 * Added package sticker.
 
-* Implementing the Sun-MC Cabe bootstrap test. This cose is still in development and works properly only for INAR(1) processes. 
+* Implementing the Sun-McCabe bootstrap test. This cose is still in development and works properly only for INAR(1) processes. 
 
 
 # INAr 0.0.5
