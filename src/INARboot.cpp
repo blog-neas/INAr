@@ -613,9 +613,10 @@ NumericVector HMC_Cpp(NumericVector x){
      NumericVector  xsum = x[idx];
      NumericVector  xsum_1 = x[idx_1];
 
-     NumericVector x2 = xsum-1;
+     // NumericVector x2 = xsum-1;
+     NumericVector x2 = x-1;
 
-     NumericVector x_full(xsum.size() + x2.size());
+     NumericVector x_full(x.size() + x2.size());
 
      // Merge the vectors using the merge function
      std::merge(x.begin(), x.end(), x2.begin(), x2.end(),
@@ -626,7 +627,7 @@ NumericVector HMC_Cpp(NumericVector x){
      // std::cout << eval << std::endl;
      DataFrame TAB = ecdfcpp(eval, x);
      NumericVector values = TAB["value"];
-     NumericVector relfreq = TAB["fallback"];
+     NumericVector relfreq = TAB["fallback"]; // improved estimatof probs. (check!)
 
      NumericVector pi_hat(n-1);
      NumericVector pi_hat_L1(n-1);
@@ -763,10 +764,11 @@ List HMCtest_boot(NumericVector X, int B){
 
 
 /*** R
-# x <- rpois(500,40)
+set.seed(1913)
+x <- rpois(500,40)
 # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
 # HMC_Cpp(seq(0,20,by=2))
-# HMC_Cpp(x)
+HMC_Cpp(x)
 # B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)
