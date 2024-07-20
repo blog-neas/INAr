@@ -1,3 +1,12 @@
+# INAr 0.2.2
+
+* Added Rho test statistic that will be used as benchmark for the other tests.
+
+* Added a `INARtest` wrapper function to call the INAR tests.
+
+* Cleaning scripts and minor changes.
+
+
 # INAr 0.2.1
 
 * Added Harris-McCabe test statistic.

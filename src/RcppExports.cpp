@@ -11,6 +11,29 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// RHO_Cpp
+NumericVector RHO_Cpp(NumericVector x);
+RcppExport SEXP _INAr_RHO_Cpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(RHO_Cpp(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// RHO_BOOT_Cpp
+NumericVector RHO_BOOT_Cpp(NumericVector x, int B);
+RcppExport SEXP _INAr_RHO_BOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(RHO_BOOT_Cpp(x, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SMC_Cpp
 NumericVector SMC_Cpp(NumericVector x, unsigned int method);
 RcppExport SEXP _INAr_SMC_Cpp(SEXP xSEXP, SEXP methodSEXP) {
@@ -110,15 +133,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// HMC_semiparBOOT_Cpp
-NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B);
-RcppExport SEXP _INAr_HMC_semiparBOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
+// HMC_BOOT_Cpp
+NumericVector HMC_BOOT_Cpp(NumericVector x, int B);
+RcppExport SEXP _INAr_HMC_BOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMC_semiparBOOT_Cpp(x, B));
+    rcpp_result_gen = Rcpp::wrap(HMC_BOOT_Cpp(x, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -174,6 +197,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_INAr_RHO_Cpp", (DL_FUNC) &_INAr_RHO_Cpp, 1},
+    {"_INAr_RHO_BOOT_Cpp", (DL_FUNC) &_INAr_RHO_BOOT_Cpp, 2},
     {"_INAr_SMC_Cpp", (DL_FUNC) &_INAr_SMC_Cpp, 2},
     {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
     {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
@@ -182,7 +207,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_sortunique", (DL_FUNC) &_INAr_sortunique, 1},
     {"_INAr_ecdfcpp", (DL_FUNC) &_INAr_ecdfcpp, 2},
     {"_INAr_HMC_Cpp", (DL_FUNC) &_INAr_HMC_Cpp, 1},
-    {"_INAr_HMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_HMC_semiparBOOT_Cpp, 2},
+    {"_INAr_HMC_BOOT_Cpp", (DL_FUNC) &_INAr_HMC_BOOT_Cpp, 2},
     {"_INAr_HMCtest_boot", (DL_FUNC) &_INAr_HMCtest_boot, 2},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},

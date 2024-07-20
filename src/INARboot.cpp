@@ -1,14 +1,86 @@
 // [[Rcpp::plugins("cpp11")]]
 // [[Rcpp::depends(RcppArmadillo)]]
+// // [[Rcpp::depends(RcppParallel)]]
 
 #include <RcppArmadilloExtensions/sample.h>
 #include <Rcpp.h>
+// #include <RcppParallel.h>
 // #include <PoissonBinomial.h>
 // #include "INAr.h"
 
 using namespace R;
 using namespace Rcpp;
+// using namespace RcppParallel;
 // using namespace PoissonBinomial;
+
+//' Autocorrelation rho test statistic to test for unit root in an integer autoregressive process
+//' @param x NumericVector
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
+// [[Rcpp::export]]
+NumericVector RHO_Cpp(NumericVector x){
+     int n = x.length();
+     NumericVector out(2);
+     int lag = 1; // to compute acf at lag 1
+
+     NumericVector x_scaled = x - mean(noNA(x));
+     NumericVector xsum = x_scaled[Range(lag,n-1)];
+     NumericVector xsum_1 = x_scaled[Range(0,n-lag-1)];
+
+     double NUM = sum(xsum*xsum_1);
+     double DEN = sum(pow(x_scaled,2));
+
+     double stat = NUM/DEN; // rho_1
+
+     out[0] = stat * sqrt(n);
+     out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
+
+     return out;
+}
+
+
+
+//' Autocorrelation bootstrap test.
+//' @param x NumericVector
+//' @param B int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @export
+// [[Rcpp::export]]
+NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
+     int n = x.length();
+     unsigned int niter;
+     NumericVector s_temp(B);
+
+     for(int i = 0; i < B; i++){
+
+         NumericVector xb(n);
+         niter = 0;
+         // print(xb);
+
+         // check!
+         LogicalVector id(n);
+         do {
+             id = xb==xb[0];
+
+             while(Rcpp::all(id).is_true()) {
+                 xb = RcppArmadillo::sample(x,n,true);
+                 id = xb==xb[0];
+             }
+
+             s_temp[i] = RHO_Cpp(xb)[0];
+
+             niter += 1;
+
+             // con false esce, con true resta
+         } while ( std::isnan(s_temp[i]) & (niter < 10) );
+
+     }
+
+     return s_temp;
+}
+
 
 //
 // PARTE Script Sun-McCabe, prima era in INARbootSMC.cpp -----
@@ -25,11 +97,11 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
   int n = x.length();
 
   NumericVector out(2);
-  Range idx = seq(1,n-1);
-  Range idx_1 = seq(0,n-2);
+  Range idx = seq(1,n-1); // delete and use Range(..)
+  Range idx_1 = seq(0,n-2); // delete and use Range(..)
 
-  NumericVector  xsum = x[idx];
-  NumericVector  xsum_1 = x[idx_1];
+  NumericVector xsum = x[idx]; // change with x[Range(1,n-1)]
+  NumericVector xsum_1 = x[idx_1]; // change with x[Range(0,n-2)]
 
   if(method == 1){
     // poisson case
@@ -669,15 +741,15 @@ NumericVector HMC_Cpp(NumericVector x){
 
 
 
-//' Semiparametric bootstrap version of the Harris-McCabe score test.
-//' !!!WARNING!!! Still under development, do not use.
+//' Bootstrap version of the Harris-McCabe score test.
+//' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param x NumericVector
 //' @param B int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
-NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B){
+NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
      int n = x.length();
      unsigned int niter;
 
@@ -722,7 +794,7 @@ NumericVector HMC_semiparBOOT_Cpp(NumericVector x, int B){
 }
 
 //' Wrapper function for compution the Harris-McCabe bootstrap score test.
-//' !!!WARNING!!! Still under development, do not use.
+//' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param X NumericVector
 //' @param B int
 //' @details
@@ -740,8 +812,7 @@ List HMCtest_boot(NumericVector X, int B){
 
     unsigned int type = 1;
     if(type == 1){
-        // SEMIPARAMETRIC
-        SmcB = HMC_semiparBOOT_Cpp(X,B);
+        SmcB = HMC_BOOT_Cpp(X,B);
     }
     // else if(type == 2){
     //     // PARAMETRIC
