@@ -239,6 +239,28 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         # tolerance::rpoislind
         resid_ <- tolerance::rpoislind(s,theta_)
     }
+    else if(arrival=="mix_bin_negbin"){
+        stopifnot(length(par)==5)
+
+        enne_ <- unname(par[1]) # size
+        pb_ <- unname(par[2]) # prob
+        g_ <- unname(par[3]) # size, gamma
+        pnb_ <- unname(par[4]) # prob successo
+        mixp_ <- unname(par[5])
+
+        selettore <- runif(s) < mixp_
+        p.compl_ <- 1-pnb_
+
+        resid_[selettore] <-  rbinom(sum(selettore),enne_,pb_)
+        resid_[!selettore] <- rnbinom(sum(!selettore),g_,p.compl_)
+    }
+    else if(arrival=="disc_unif"){
+        stopifnot(length(par)==1)
+
+        max_ <- unname(par[1])
+
+        resid_ <- round(runif(s,0,max_),0)
+    }
     else{
     stop("please specify one of the available distributions", call. = FALSE)
   }
