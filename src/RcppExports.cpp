@@ -34,6 +34,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RHO_BOOT_Cpp_Parallel
+NumericVector RHO_BOOT_Cpp_Parallel(NumericVector x, int B, int num_threads);
+RcppExport SEXP _INAr_RHO_BOOT_Cpp_Parallel(SEXP xSEXP, SEXP BSEXP, SEXP num_threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    Rcpp::traits::input_parameter< int >::type num_threads(num_threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(RHO_BOOT_Cpp_Parallel(x, B, num_threads));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SMC_Cpp
 NumericVector SMC_Cpp(NumericVector x, unsigned int method);
 RcppExport SEXP _INAr_SMC_Cpp(SEXP xSEXP, SEXP methodSEXP) {
@@ -199,6 +212,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_INAr_RHO_Cpp", (DL_FUNC) &_INAr_RHO_Cpp, 1},
     {"_INAr_RHO_BOOT_Cpp", (DL_FUNC) &_INAr_RHO_BOOT_Cpp, 2},
+    {"_INAr_RHO_BOOT_Cpp_Parallel", (DL_FUNC) &_INAr_RHO_BOOT_Cpp_Parallel, 3},
     {"_INAr_SMC_Cpp", (DL_FUNC) &_INAr_SMC_Cpp, 2},
     {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
     {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
