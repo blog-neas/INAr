@@ -20,10 +20,6 @@ RHO_BOOT_Cpp <- function(x, B) {
     .Call('_INAr_RHO_BOOT_Cpp', PACKAGE = 'INAr', x, B)
 }
 
-RHO_BOOT_Cpp_Parallel <- function(x, B, num_threads = 2L) {
-    .Call('_INAr_RHO_BOOT_Cpp_Parallel', PACKAGE = 'INAr', x, B, num_threads)
-}
-
 #' Sun-McCabe score statistic to test for dependence in an integer autoregressive process
 #' @param x NumericVector
 #' @param method unsigned int
