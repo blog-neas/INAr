@@ -250,7 +250,6 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         mixp_ <- unname(par[5])
 
         selettore <- runif(s) < mixp_
-        p.compl_ <- 1-pnb_
 
         resid_[selettore] <-  rbinom(sum(selettore),enne1_,pb1_)
         resid_[!selettore] <- rbinom(sum(!selettore),enne2_,pb2_)
