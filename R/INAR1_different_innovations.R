@@ -240,6 +240,21 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         # tolerance::rpoislind
         resid_ <- tolerance::rpoislind(s,theta_)
     }
+    else if(arrival=="mix_bin"){
+        stopifnot(length(par)==5)
+
+        enne1_ <- unname(par[1]) # size
+        pb1_ <- unname(par[2]) # prob
+        enne2_ <- unname(par[3]) # size, gamma
+        pb2_ <- unname(par[4]) # prob successo
+        mixp_ <- unname(par[5])
+
+        selettore <- runif(s) < mixp_
+        p.compl_ <- 1-pnb_
+
+        resid_[selettore] <-  rbinom(sum(selettore),enne1_,pb1_)
+        resid_[!selettore] <- rbinom(sum(!selettore),enne2_,pb2_)
+    }
     else if(arrival=="mix_bin_negbin"){
         stopifnot(length(par)==5)
 
