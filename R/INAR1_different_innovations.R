@@ -66,9 +66,9 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     stopifnot(sum(a) < 1)
     lags <- length(a)
     arrival <- tolower(arrival)
+    s <- n + burnout
     resid_ <- rep(NA,s)
 
-    s <- n + burnout
     # CHECK CONDIZ DI STAZIONARIETà
     mat <- matrix(0, nrow = lags, ncol = lags)
     mat[row(mat) - 1 == col(mat)] <- 1
