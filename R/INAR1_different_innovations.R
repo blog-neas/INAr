@@ -66,6 +66,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     stopifnot(sum(a) < 1)
     lags <- length(a)
     arrival <- tolower(arrival)
+    resid_ <- rep(NA,s)
 
     s <- n + burnout
     # CHECK CONDIZ DI STAZIONARIETà
@@ -95,102 +96,102 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         resid_ <- rnbinom(s, size=(l_/(d_-1)), mu=l_)
     }
     else if(arrival=="zip"){
-    stopifnot(length(par)==2)
+        stopifnot(length(par)==2)
 
-    l_ <- unname(par[1])
-    sig_ <- unname(par[2])
+        l_ <- unname(par[1])
+        sig_ <- unname(par[2])
 
-    # gamlss.dist::rZIP
-    resid_ <- rZIP(s, mu = l_, sigma = sig_)
-  }
-  else if(arrival=="bimodal_poisson"){
-    stopifnot(length(par)==3)
+        # gamlss.dist::rZIP
+        resid_ <- rZIP(s, mu = l_, sigma = sig_)
+    }
+    else if(arrival=="bimodal_poisson"){
+        stopifnot(length(par)==3)
 
-    lam1_ <- unname(par[1])
-    lam2_ <- unname(par[2])
-    mixp_ <- unname(par[3])
+        lam1_ <- unname(par[1])
+        lam2_ <- unname(par[2])
+        mixp_ <- unname(par[3])
 
-    u_rand <- runif(s)
+        u_rand <- runif(s)
 
-    selettore <- u_rand < mixp_
-    resid_ <- rep(NA,s)
-    resid_[selettore] <- rpois(sum(selettore),lam1_)
-    resid_[!selettore] <- rpois(sum(!selettore),lam2_)
-  }
-  else if(arrival=="negbin"){
-      stopifnot(length(par)==2)
+        selettore <- u_rand < mixp_
+        resid_[selettore] <- rpois(sum(selettore),lam1_)
+        resid_[!selettore] <- rpois(sum(!selettore),lam2_)
+    }
+    else if(arrival=="negbin"){
+        stopifnot(length(par)==2)
 
-      # # VECCHIA PARAMETRIZZAZIONE, CON GAMMA E BETA
-      # g_ <- unname(par[1]) # size, gamma
-      # b_ <- unname(par[2]) # transf. prob, beta
-      #
-      # p.compl_ <- b_/(1+b_)
-      # # dato che rnbinom prende le prob. invertite uso il complemento ad 1
-      # # della vera formula, che sarebbe: p_ <- 1/(1+b_)
-      # resid_ <- rnbinom(s,g_,p.compl_
+        # # VECCHIA PARAMETRIZZAZIONE, CON GAMMA E BETA
+        # g_ <- unname(par[1]) # size, gamma
+        # b_ <- unname(par[2]) # transf. prob, beta
+        #
+        # p.compl_ <- b_/(1+b_)
+        # # dato che rnbinom prende le prob. invertite uso il complemento ad 1
+        # # della vera formula, che sarebbe: p_ <- 1/(1+b_)
+        # resid_ <- rnbinom(s,g_,p.compl_
 
-      g_ <- unname(par[1]) # size, gamma
-      p_ <- unname(par[2]) # prob successo
+        g_ <- unname(par[1]) # size, gamma
+        p_ <- unname(par[2]) # prob successo
 
-      p.compl_ <- 1-p_
-      resid_ <- rnbinom(s,g_,p.compl_)
+        p.compl_ <- 1-p_
+        resid_ <- rnbinom(s,g_,p.compl_)
 
-  }  else if(arrival=="geom"){
-      stopifnot(length(par)==2)
+    }
+    else if(arrival=="geom"){
+        stopifnot(length(par)==2)
 
-      pi_ <- unname(par[1])
-      stopifnot(0 < pi_ & pi_ < 1)
+        pi_ <- unname(par[1])
+        stopifnot(0 < pi_ & pi_ < 1)
 
-      resid_ <- rgeom(s,pi_)
-  }
-  else if(arrival=="discunif"){
-    stopifnot(length(par)==2)
+        resid_ <- rgeom(s,pi_)
+    }
+    else if(arrival=="discunif"){
+        stopifnot(length(par)==2)
 
-    minu_ <- unname(par[1])
-    maxu_ <- unname(par[2])
-    stopifnot(minu_ < maxu_)
+        minu_ <- unname(par[1])
+        maxu_ <- unname(par[2])
+        stopifnot(minu_ < maxu_)
 
-    resid_ <- round(runif(s,minu_,maxu_),0)
-  }
-  else if(arrival=="binomial"){
+        resid_ <- round(runif(s,minu_,maxu_),0)
+    }
+    else if(arrival=="binomial"){
     stopifnot(length(par)==2)
 
     enne_ <- unname(par[1]) # size
     p_ <- unname(par[2]) # prob
 
     resid_ <- rbinom(s,enne_,p_)
-  }
-  else if(arrival=="genpoi"){
-    stopifnot(length(par)==2)
+    }
+    else if(arrival=="genpoi"){
+        stopifnot(length(par)==2)
 
-    l_ <- unname(par[1]) # lambda, come in sunmccabe
-    k_ <- unname(par[2]) # kappa, come in sunmccabe
+        l_ <- unname(par[1]) # lambda, come in sunmccabe
+        k_ <- unname(par[2]) # kappa, come in sunmccabe
 
 
-    stopifnot(l_ > 0)
-    stopifnot(k_ < 1)
+        stopifnot(l_ > 0)
+        stopifnot(k_ < 1)
 
-    # if(k_ < 0){
-    #     m <- l_ + 4:1000*k_
-    #     m <- ifelse(m <= 0, NA, m)
-    #     m <- which.min(m) + 3 # perche' parto da 4
-    #     lowb <- max(-1,-l_/m)
-    #     stopifnot(k_ > lowb)
-    # }
+        # if(k_ < 0){
+        #     m <- l_ + 4:1000*k_
+        #     m <- ifelse(m <= 0, NA, m)
+        #     m <- which.min(m) + 3 # perche' parto da 4
+        #     lowb <- max(-1,-l_/m)
+        #     stopifnot(k_ > lowb)
+        # }
 
-    # methods: five methods including Inversion, Branching, Normal-Approximation, Build-Up, and Chop-Down.
-    # All five methods come from Demirtas (2017).
-    # When lambda equals to 0, it is the ordinary Poisson distribution, so there is no need to specify the method.
-    # "Branching" only works when lambda is positive. When theta is less than 10, the "Normal-Approximation" may not be reliable.
+        # methods: five methods including Inversion, Branching, Normal-Approximation, Build-Up, and Chop-Down.
+        # All five methods come from Demirtas (2017).
+        # When lambda equals to 0, it is the ordinary Poisson distribution, so there is no need to specify the method.
+        # "Branching" only works when lambda is positive. When theta is less than 10, the "Normal-Approximation" may not be reliable.
 
-    # attenzione al metodo utilizzato!
-    # RNGforGPD::GenUniGpois
-    # resid_ <- GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
+        # attenzione al metodo utilizzato!
+        # RNGforGPD::GenUniGpois
+        # resid_ <- GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
 
-    # HMMpa::rgenpois
-    resid_ <- GenUniGpois(l_, k_, s, method = ifelse(l_ > 10, "Normal-Approximation", "Inversion"), details = FALSE)$data
-  }
-  else if(arrival=="katz"){
+        # HMMpa::rgenpois
+        resid_ <- GenUniGpois(l_, k_, s, method = ifelse(l_ > 10, "Normal-Approximation", "Inversion"), details = FALSE)$data
+    }
+    else if(arrival=="katz"){
     #
     # come fare???
     # resid_ <-
