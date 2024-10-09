@@ -20,6 +20,20 @@ Generation, estimation and testing of INteger Autoregressive models
 The INAr Project aims to provide a set of tools for the study of time series having a discrete support by using the integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
 INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
 
+
+## Installation
+
+``` r
+# Install from CRAN 
+# !!!---not available at the moment---!!!
+# install.packages("INAr")
+
+# Or the development version from GitHub
+# install.packages("devtools")
+devtools::install_github("blog-neas/INAr")
+```
+
+
 ## Roadmap
 
 #### Main Steps
@@ -69,17 +83,6 @@ The project considers to distribute a set of packages for the study of INAR(p) p
 	- [ ] References
 - [ ] Further steps and developments
 
-## Installation
-
-``` r
-# Install from CRAN 
-# !!!---not available at the moment---!!!
-# install.packages("INAr")
-
-# Or the development version from GitHub
-# install.packages("devtools")
-devtools::install_github("blog-neas/INAr")
-```
 
 # Contributing to INAr development
 

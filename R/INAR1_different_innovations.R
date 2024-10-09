@@ -144,14 +144,12 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
         resid_ <- rgeom(s,pi_)
     }
-    else if(arrival=="discunif"){
-        stopifnot(length(par)==2)
+    else if(arrival=="disc_unif"){
+        stopifnot(length(par)==1)
 
-        minu_ <- unname(par[1])
-        maxu_ <- unname(par[2])
-        stopifnot(minu_ < maxu_)
+        max_ <- unname(par[1])
 
-        resid_ <- round(runif(s,minu_,maxu_),0)
+        resid_ <- sample(0:max_,s,replace = TRUE)
     }
     else if(arrival=="binomial"){
     stopifnot(length(par)==2)
@@ -268,13 +266,6 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
         resid_[selettore] <-  rbinom(sum(selettore),enne_,pb_)
         resid_[!selettore] <- rnbinom(sum(!selettore),g_,p.compl_)
-    }
-    else if(arrival=="disc_unif"){
-        stopifnot(length(par)==1)
-
-        max_ <- unname(par[1])
-
-        resid_ <- round(runif(s,0,max_),0)
     }
     else{
     stop("please specify one of the available distributions", call. = FALSE)
