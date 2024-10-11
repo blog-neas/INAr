@@ -1,6 +1,8 @@
 # INAr 0.2.3
 
-* Added  the `disc_unif` and `mix_bin_negbin` arrival options into the `genINAR`function.
+* Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function.
+
+* [testing] Playing with some code about parallel computing in the C++ code.
 
 
 # INAr 0.2.2
@@ -12,7 +14,7 @@
 
 # INAr 0.2.1
 
-* Added Harris-McCabe test statistic.
+* [testing] Added Harris-McCabe test statistic.
     * Bootstrap procedures are still on development phase.
 
 
@@ -23,7 +25,7 @@
 
 # INAr 0.1.1
 
-* Preparing the support of the Harris-McCabe test statistics for the upcoming 0.2 update
+* [testing] Preparing the support of the Harris-McCabe test statistics for the upcoming 0.2 update
 
 
 # INAr 0.1.0
@@ -52,22 +54,22 @@
 # INAr 0.0.11
 
 * Added a new test in `test.R` that follow the same concept of the previous one:
-  * Added the `SMCboot.test` function that computes the semiparametric or parametric bootstrap Sun-McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
-  * In future the the C++ routines that compute the tests will become internal.
+    * Added the `SMCboot.test` function that computes the semiparametric or parametric bootstrap Sun-McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+    * In future the the C++ routines that compute the tests will become internal.
 
 
 # INAr 0.0.10
 
 * Added a new script, namely `test.R`, that will include all the front-end test functions.
-  * Added the `SMC.test` function that computes the Sun-McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
-  * In future the bootstrapped version of the above tests will be added and the C++ routines that compute the tests will become internal.
+    * Added the `SMC.test` function that computes the Sun-McCabe Score test statistics (with Poisson or Negative Binomial arrivals for the moment). The function returns an object of class `htest`.
+    * In future the bootstrapped version of the above tests will be added and the C++ routines that compute the tests will become internal.
 
 
 # INAr 0.0.9
 
 * Preparing for the first CRAN submission:
-  * Minor changes and few modifications;
-  * Script cleaning.
+    * Minor changes and few modifications;
+    * Script cleaning.
 
 
 # INAr 0.0.8
@@ -96,32 +98,33 @@
 # INAr 0.0.5
 
 * Improvement of the `INARfit.R` code to fit INAR(p) models. Now `INARfit()` performs a full Y-W estimation from a Poisson INAR(r) family, following the results of Du and Li. Some additional Rcpp utility functions (script `Xmoments.cpp`) have been added:
-  * `Xmoments()` [in development], compute the first two moments for the original series and the residual series. As output it returns mean and variance of both the starting and residual series, and the estimated residual series;
-  * `Xresid()` [in development], generates the series of residual values.
+    * `Xmoments()` [in development], compute the first two moments for the original series and the residual series. As output it returns mean and variance of both the starting and residual series, and the estimated residual series;
+    * `Xresid()` [in development], generates the series of residual values.
 
 
 # INAr 0.0.4
 
 * First `INARfit.R` code to fit INAR(p) models:
-  * `INARfit()` [in development], fitting an INAR(p) process, by using several procedures. At the momemt is hardcoded and works only for the Poisson case and only YW is provided;
-  * `est_mom()` [in development], estimation of innovations' parameters. At the momemt is hardcoded and works only for the Poisson case.
+    * `INARfit()` [in development], fitting an INAR(p) process, by using several procedures. At the momemt is hardcoded and works only for the Poisson case and only YW is provided;
+    * `est_mom()` [in development], estimation of innovations' parameters. At the momemt is hardcoded and works only for the Poisson case.
 
 
 # INAr 0.0.3
 
 * Generalization of genINAR function, now it generates INAR(p) models nstead of INAR(1).
+
 * Added stationarity condition check in `genINAR()` function.
+
 * The old `par` input vector contained both the thinning operator (at the first position) and innovations' parameters, now this vector is split is two: `a` and `par`, where:
-  * `a` contains the p thinning parameters of the INAR(p) to be generated
-  * `par` contains exclusively the innovations' parmeters
+    * `a` contains the p thinning parameters of the INAR(p) to be generated
+    * `par` contains exclusively the innovations' parmeters
 
 * Development of the C++ part to generate INAR(p) processes
-
-  * deleted INAR1\_gen.cpp and included the routine `INAR1\_ cpp` in  INARp\_gen.cpp
-  * development of the more general routine `INARp\_ cpp`; 
-  * the line `sim = clone(resid)` was added to avoid the shallow copy effect;
-  * INARp_gen.cpp contains the routine to generate an INAR(p) process;
-  * at the moment `INAR1\_ cpp` si obsolete, after some testing it will be deleted.
+    * deleted INAR1\_gen.cpp and included the routine `INAR1\_ cpp` in  INARp\_gen.cpp
+    * development of the more general routine `INARp\_ cpp`; 
+    * the line `sim = clone(resid)` was added to avoid the shallow copy effect;
+    * INARp_gen.cpp contains the routine to generate an INAR(p) process;
+    * at the moment `INAR1\_ cpp` si obsolete, after some testing it will be deleted.
  
 
 # INAr 0.0.2
@@ -133,9 +136,8 @@
 * Added references.
 
 * `DESCRIPTION` file updated
-
-  * additions: `URL`, `Roxygen`, `Depends: R (>= 4.2.1)`, `RdMacros`, `LinkingTo`, `RoxygenNote`;
-  * modifications: `Depends: R (>= 4.2.1)`, `Imports: Rcpp (>= 1.0.0)`, `RcppArmadillo`, `MASS`, `Rdpack`.
+    * additions: `URL`, `Roxygen`, `Depends: R (>= 4.2.1)`, `RdMacros`, `LinkingTo`, `RoxygenNote`;
+    * modifications: `Depends: R (>= 4.2.1)`, `Imports: Rcpp (>= 1.0.0)`, `RcppArmadillo`, `MASS`, `Rdpack`.
 
 
 # INAr 0.0.1
@@ -143,6 +145,5 @@
 * Initialization of the package, first settings.
 
 * First working version of the package:
-
-  * use of `Rcpp` and `RccpARmadillo` to add C++ code;
-  * a preliminary version of the function `inarGEN()` is implemented.
+    * use of `Rcpp` and `RccpARmadillo` to add C++ code;
+    * a preliminary version of the function `inarGEN()` is implemented.

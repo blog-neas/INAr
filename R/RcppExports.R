@@ -115,7 +115,7 @@ HMC_BOOT_Cpp <- function(x, B) {
     .Call('_INAr_HMC_BOOT_Cpp', PACKAGE = 'INAr', x, B)
 }
 
-#' Wrapper function for compution the Harris-McCabe bootstrap score test.
+#' Wrapper function for computation the Harris-McCabe bootstrap score test.
 #' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 #' @param X NumericVector
 #' @param B int

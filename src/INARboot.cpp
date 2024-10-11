@@ -704,7 +704,7 @@ NumericVector HMC_Cpp(NumericVector x){
      // std::cout << eval << std::endl;
      DataFrame TAB = ecdfcpp(eval, x);
      NumericVector values = TAB["value"];
-     NumericVector relfreq = TAB["fallback"]; // improved estimatof probs. (check!)
+     NumericVector relfreq = TAB["fallback"]; // improved estimator probs. (check!)
 
      NumericVector pi_hat(n-1);
      NumericVector pi_hat_L1(n-1);
@@ -798,7 +798,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
      return s_temp;
 }
 
-//' Wrapper function for compution the Harris-McCabe bootstrap score test.
+//' Wrapper function for computation the Harris-McCabe bootstrap score test.
 //' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param X NumericVector
 //' @param B int
@@ -840,11 +840,18 @@ List HMCtest_boot(NumericVector X, int B){
 
 
 /*** R
+# SMC
 set.seed(1913)
 x <- rpois(500,40)
 # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
 # HMC_Cpp(seq(0,20,by=2))
+HMC_Cpp(genINAR(100, a = 0.5, par = 2, arrival = "poisson")$X)
+
+# HMC
+set.seed(1913)
+x <- rpois(500,40)
 HMC_Cpp(x)
+
 # B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)
