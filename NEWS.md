@@ -2,7 +2,7 @@
 
 * Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function.
 
-* [testing] Playing with some code about parallel computing in the C++ code.
+* [testing] Playing with some solutions fo parallel computing in the C++ code.
 
 
 # INAr 0.2.2
