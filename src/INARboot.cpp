@@ -841,17 +841,17 @@ List HMCtest_boot(NumericVector X, int B){
 
 /*** R
 # SMC
-set.seed(1913)
-x <- rpois(500,40)
-# x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
-# HMC_Cpp(seq(0,20,by=2))
-HMC_Cpp(genINAR(100, a = 0.5, par = 2, arrival = "poisson")$X)
-
-# HMC
-set.seed(1913)
-x <- rpois(500,40)
-HMC_Cpp(x)
-
+# set.seed(1913)
+# x <- rpois(500,40)
+# # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
+# # HMC_Cpp(seq(0,20,by=2))
+# HMC_Cpp(genINAR(100, a = 0.5, par = 2, arrival = "poisson")$X)
+#
+# # HMC
+# set.seed(1913)
+# x <- rpois(500,40)
+# HMC_Cpp(x)
+#
 # B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)
