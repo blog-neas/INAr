@@ -167,7 +167,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
 
         stopifnot(l_ > 0)
-        stopifnot(k_ < 1)
+        stopifnot(k_ < 1 & k > -1)
 
         # if(k_ < 0){
         #     m <- l_ + 4:1000*k_
