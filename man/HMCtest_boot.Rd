@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{HMCtest_boot}
 \alias{HMCtest_boot}
-\title{Wrapper function for compution the Harris-McCabe bootstrap score test.
+\title{Wrapper function for computation the Harris-McCabe bootstrap score test.
 !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.}
 \usage{
 HMCtest_boot(X, B)
@@ -13,7 +13,7 @@ HMCtest_boot(X, B)
 \item{B}{int}
 }
 \description{
-Wrapper function for compution the Harris-McCabe bootstrap score test.
+Wrapper function for computation the Harris-McCabe bootstrap score test.
 !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 }
 \details{

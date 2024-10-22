@@ -167,18 +167,46 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
     // double var_x = var(noNA(x));
     double sd_x = sd(noNA(x));
 
+    NumericVector g_hat(n-1);
+
     double lambda_hat = sqrt(pow(mu_x,3))/sd_x; // # trick
     double kappa_hat = 1 - sqrt(mu_x)/sd_x; // # trick
     // printf("%f, %f \n",lambda_hat,kappa_hat);
 
-    // NumericVector xsumL = ind_val - 1;
-    NumericVector xsumL1 = xsum_1 - mu_x;
+    // vecchio sistema, non mi permetteva di discernere i casi limite con
+    // prob(x_t - 1) = 0 e/o prob(x_t) = 0
+    // NumericVector ltmp1 = (xsum - 2)*log(lambda_hat + kappa_hat*(xsum-1));
+    // NumericVector ltmp2 = (xsum - 1)*log(lambda_hat + kappa_hat*(xsum));
+    // NumericVector tmp3 = exp(kappa_hat)*xsum;
+    //
+    // g_hat = exp(ltmp1-ltmp2)*tmp3 - 1;
 
-    NumericVector ltmp1 = (xsum - 2)*log(lambda_hat + kappa_hat*(xsum-1));
-    NumericVector ltmp2 = (xsum - 1)*log(lambda_hat + kappa_hat*(xsum));
-    NumericVector tmp3 = exp(kappa_hat)*xsum;
+    double arg1;
+    double arg2;
+    double tmp3;
+    for (int i = 0; i < g_hat.size(); ++i) {
 
-    NumericVector g_hat = exp(ltmp1-ltmp2)*tmp3 - 1;
+        arg1 = lambda_hat + kappa_hat*(xsum[i]-1);
+        arg2 = lambda_hat + kappa_hat*(xsum[i]);
+        tmp3 = exp(kappa_hat)*xsum[i];
+
+        if (arg1 <= 0 & arg2 <= 0) {
+            // qua visto che abbiamo exp(-Inf + Inf) = approx ad exp(0) = 1
+            g_hat[i] = 1*tmp3 - 1;
+        }
+        else if(arg1 <= 0 | arg2 <= 0){
+            // qua non è chiaro
+            // se arg1 <0 abbiamo 0/p_x{t} = 0 ==> g_hat[i] = - 1
+            // ma se arg2<0 allora abbiamo p_{x{t}-1}/0 = Inf !!!
+            // per il momento faccio entrambi i casi con g_hat[i] = 0*tmp3 - 1
+            g_hat[i] = - 1;
+        }
+        else{
+            g_hat[i] = exp( (xsum[i] - 2)*log(arg1)-(xsum[i] - 1)*log(arg2) )*tmp3 - 1;
+        }
+    }
+
+
     double mu_g = mean(g_hat);
     double sd_g = sd(g_hat);
 
@@ -190,6 +218,7 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
     // }
 
     NumericVector xsumL = g_hat - mu_g;
+    NumericVector xsumL1 = xsum_1 - mu_x;
 
     NumericVector NUM = xsumL*xsumL1;
 
@@ -199,7 +228,7 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
   }
   if(method == 4){
     // katz case
-    // in development
+    // IN DEVELOPMENT, DO NOT USE!
 
     double mu_x = mean(noNA(x));
     double var_x = var(noNA(x));
