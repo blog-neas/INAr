@@ -1,6 +1,6 @@
 # INAr 0.2.3
 
-* Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function.
+* Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function. Solving minor bugs.
 
 * Applying some modifications to the `SMC_Cpp`function for the Generalized Poisson case. In particular, I am trying to figure out how to deal with some limit cases in which the test statistic is not defined, that is when $p_{x{t}-1}$ and/or $p_{x{t}}$ are zero.
 
