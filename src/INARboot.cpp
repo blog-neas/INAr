@@ -206,16 +206,8 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
         }
     }
 
-
     double mu_g = mean(g_hat);
     double sd_g = sd(g_hat);
-
-    // for(int i=0; i < ltmp1.length(); ++i){
-    //   Rprintf("the value of tmp1[%i] : %f \n", i, ltmp1[i]);
-    //   Rprintf("the value of tmp2[%i] : %f \n", i, ltmp2[i]);
-    //   Rprintf("the value of tmp3[%i] : %f \n", i, tmp3[i]);
-    //   Rprintf("the value of ghat[%i] : %f \n", i, g_hat[i]);
-    // }
 
     NumericVector xsumL = g_hat - mu_g;
     NumericVector xsumL1 = xsum_1 - mu_x;
@@ -558,7 +550,7 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 
-//' Wrapper function for compution the Sun-McCabe bootstrap score test.
+//' Wrapper function for computing the Sun-McCabe bootstrap score test.
 //' @param X NumericVector
 //' @param arrival int
 //' @param type unsigned int
@@ -589,7 +581,7 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
     }
 
     B_stat = mean(SmcB);
-    B_pval = mean(abs(SmcB) > std::fabs(Smc));
+    B_pval = mean(Rcpp::abs(SmcB) > std::fabs(Smc));
 
 
     return List::create(
@@ -651,7 +643,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
      int count = 0;
 
      // Vettore per le frequenze cumulate
-     IntegerVector abs(n);
+     IntegerVector abscum(n);
      // Vettore per le probabilità puntuali
      NumericVector probs(n);
      // Vettore per le frequenze cumulate relative
@@ -665,7 +657,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
 
      for (int i = 0; i < n; ++i){
          // frequenze assolute cumulate step
-         abs[i] = std::lower_bound(x.begin(), x.end(), samp[i]) - x.begin();
+         abscum[i] = std::lower_bound(x.begin(), x.end(), samp[i]) - x.begin();
          count = 0;
          for (int j = 0; j < m; ++j){
              if (x[j] == samp[i]) {
@@ -691,7 +683,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
 
      return DataFrame::create(
          Named("value") = samp,
-         Named("abscum") = abs,
+         Named("abscum") = abscum,
          Named("relcum") = relcum,
          Named("probability") = probs,
          Named("fallback") = fallback_probs
@@ -858,7 +850,7 @@ List HMCtest_boot(NumericVector X, int B){
     // }
 
     B_stat = mean(SmcB);
-    B_pval = mean(abs(SmcB) > std::fabs(Smc));
+    B_pval = mean(Rcpp::abs(SmcB) > std::fabs(Smc));
 
 
     return List::create(
