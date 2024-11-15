@@ -1,10 +1,14 @@
 # INAr 0.2.3
 
+* Removed the the `good` package since it is not available anymore on CRAN. In next updates I'll try to substitute the `good::rgood` function by using the `VGAM` package.
+
 * Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function. Solving minor bugs.
 
 * General debugging and modifications only for the Generalized Poisson case in `SMC_Cpp` function: In particular, I am trying to figure out how to deal with some limit cases in which the test statistic is not defined, that is when $p_{x{t}-1}$ and/or $p_{x{t}}$ are zero.
 
-* [testing] Playing with some solutions for parallel computing in the C++ code.
+* Introduced the `SMCtest` wrapper function for the Sun-McCabe Score test. The `INARtest` function will be deprecated in the next few updates.
+
+* [testing] Playing with some potential solutions for parallel computing in the C++ code.
 
 
 # INAr 0.2.2

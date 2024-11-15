@@ -1,10 +1,3 @@
-# require(gamlss.dist)
-# require(RNGforGPD)
-# require(skellam)
-# require(good)
-
-# Rcpp::sourceCpp("src/INAR1_gen.cpp")
-
 #' Generate INAR(p) models with different innovations
 #'
 #' @param n integer, number of observations, length of the series.
@@ -45,7 +38,6 @@
 #' @importFrom stats runif
 #' @importFrom stats rbinom
 #' @importFrom stats rnbinom
-#' @importFrom good rgood
 #' @importFrom gamlss.dist rZIP
 #' @importFrom skellam rskellam
 #' @importFrom HMMpa rgenpois
@@ -210,13 +202,14 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     vals <- rskellam(s, lam1_, lam2_)
     resid_ <- ifelse(vals < 0,0,vals)
   }
-    else if(arrival=="good"){
-        z_ <- unname(par[1])
-        s_ <- unname(par[2])
-
-        # good::rgood
-        resid_ <- rgood(s, z_, s_)
-    }
+    # good package is not available anymore
+    # else if(arrival=="good"){
+    #     z_ <- unname(par[1])
+    #     s_ <- unname(par[2])
+    #
+    #     # good::rgood
+    #     resid_ <- rgood(s, z_, s_)
+    # }
     else if(arrival=="yule"){
         rho_ <- unname(par[1])
         stopifnot(rho_ > 0)
