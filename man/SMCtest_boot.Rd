@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{SMCtest_boot}
 \alias{SMCtest_boot}
-\title{Wrapper function for compution the Sun-McCabe bootstrap score test.}
+\title{Wrapper function for computing the Sun-McCabe bootstrap score test.}
 \usage{
 SMCtest_boot(X, arrival, type, B)
 }
@@ -16,7 +16,7 @@ SMCtest_boot(X, arrival, type, B)
 \item{B}{int}
 }
 \description{
-Wrapper function for compution the Sun-McCabe bootstrap score test.
+Wrapper function for computing the Sun-McCabe bootstrap score test.
 }
 \details{
 This is an internal function, it will be excluded in future versions.
