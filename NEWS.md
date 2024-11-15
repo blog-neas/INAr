@@ -1,6 +1,6 @@
 # INAr 0.2.3
 
-* Removed the the `good` package since it is not available anymore on CRAN. In next updates I'll try to substitute the `good::rgood` function by using the `VGAM` package.
+* Removed the the `good` package since it is not available anymore on CRAN. In next updates I'm considering to substitute the `good::rgood` function by using the `VGAM` package.
 
 * Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function. Solving minor bugs.
 
