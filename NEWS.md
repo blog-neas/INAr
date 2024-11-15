@@ -2,7 +2,7 @@
 
 * Added  the `disc_unif`, `mix_bin` and `mix_bin_negbin` arrival options into the `genINAR`function. Solving minor bugs.
 
-* Applying some modifications to the `SMC_Cpp`function for the Generalized Poisson case. In particular, I am trying to figure out how to deal with some limit cases in which the test statistic is not defined, that is when $p_{x{t}-1}$ and/or $p_{x{t}}$ are zero.
+* General debugging and modifications only for the Generalized Poisson case in `SMC_Cpp` function: In particular, I am trying to figure out how to deal with some limit cases in which the test statistic is not defined, that is when $p_{x{t}-1}$ and/or $p_{x{t}}$ are zero.
 
 * [testing] Playing with some solutions for parallel computing in the C++ code.
 

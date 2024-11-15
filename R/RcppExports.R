@@ -64,7 +64,7 @@ SMC_pitBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_pitBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
 
-#' Wrapper function for compution the Sun-McCabe bootstrap score test.
+#' Wrapper function for computing the Sun-McCabe bootstrap score test.
 #' @param X NumericVector
 #' @param arrival int
 #' @param type unsigned int

@@ -35,7 +35,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SMC_Cpp
-NumericVector SMC_Cpp(NumericVector x, unsigned int method);
+List SMC_Cpp(NumericVector x, unsigned int method);
 RcppExport SEXP _INAr_SMC_Cpp(SEXP xSEXP, SEXP methodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

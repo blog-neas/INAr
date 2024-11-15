@@ -98,7 +98,7 @@ NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
 //' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
-NumericVector SMC_Cpp(NumericVector x, unsigned int method){
+List SMC_Cpp(NumericVector x, unsigned int method){
   int n = x.length();
 
   NumericVector out(2);
@@ -133,9 +133,13 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
 
     // check underdispersion
     if(var_x <= mu_x){
-        out[0] = NAN;
-        out[1] = NAN;
-        return out;
+        // out[0] = NAN;
+        // out[1] = NAN;
+        // return out;
+        return List::create(
+            _["stat"]  = NAN,
+            _["pval"]  = NAN
+        );
     }
     // printf("1) %f, %f %f \n",mu_x,var_x,std::abs(var_x-mu_x));
     // printf("2) %f, %f \n",pow(mu_x,2),var_x-mu_x);
@@ -243,7 +247,12 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
     out[0] = stat/sqrt(n);
     out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
   }
-  return out;
+
+  // return out;
+  return List::create(
+      _["stat"]  = out[0],
+      _["pval"]  = out[1]
+  );
 }
 
 
