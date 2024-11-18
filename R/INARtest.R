@@ -72,8 +72,7 @@ INARtest <- function(X, type, B = 0){
 #' @export
 SMCtest <- function(X, method, type = NA, B = 0){
     type <- tolower(type)
-    stopifnot(type %in% c("parametric","semiparametric"))
-    stopifnot(method %in% c("poi","negbin","genpoi"))
+    stopifnot(method %in% 1:3)
 
     B_stat <- NA
     B_pval <- NA
@@ -84,13 +83,14 @@ SMCtest <- function(X, method, type = NA, B = 0){
     pval <- smc_est$pval
 
     if(B > 0){
+        stopifnot(type %in% c("parametric","semiparametric"))
         # perform bootstrap test
         if(type == "parametric"){
             # call smc.test
-            smc_boot <- SMC_parBOOT_Cpp(X, method, B)
+            smc_boot <- SMC_parBOOT_Cpp(X, B, method)
         }else if(type == "semiparametric"){
             # call smc.test
-            smc_boot <- SMC_semiparBOOT_Cpp(X, method, B)
+            smc_boot <- SMC_semiparBOOT_Cpp(X, B, method)
         }else{
             stop("Specify a correct test type")
         }
