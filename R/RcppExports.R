@@ -20,6 +20,10 @@ RHO_BOOT_Cpp <- function(x, B) {
     .Call('_INAr_RHO_BOOT_Cpp', PACKAGE = 'INAr', x, B)
 }
 
+RHO_BOOT_Cpp_Parallel <- function(x, B, num_threads = 2L) {
+    .Call('_INAr_RHO_BOOT_Cpp_Parallel', PACKAGE = 'INAr', x, B, num_threads)
+}
+
 #' Sun-McCabe score statistic to test for dependence in an integer autoregressive process
 #' @param x NumericVector
 #' @param method unsigned int
@@ -64,7 +68,7 @@ SMC_pitBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_pitBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
 
-#' Wrapper function for computing the Sun-McCabe bootstrap score test.
+#' Wrapper function for compution the Sun-McCabe bootstrap score test.
 #' @param X NumericVector
 #' @param arrival int
 #' @param type unsigned int
@@ -115,7 +119,7 @@ HMC_BOOT_Cpp <- function(x, B) {
     .Call('_INAr_HMC_BOOT_Cpp', PACKAGE = 'INAr', x, B)
 }
 
-#' Wrapper function for computation the Harris-McCabe bootstrap score test.
+#' Wrapper function for compution the Harris-McCabe bootstrap score test.
 #' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 #' @param X NumericVector
 #' @param B int
@@ -124,6 +128,10 @@ HMC_BOOT_Cpp <- function(x, B) {
 #' @export
 HMCtest_boot <- function(X, B) {
     .Call('_INAr_HMCtest_boot', PACKAGE = 'INAr', X, B)
+}
+
+YW_cpp <- function(r) {
+    .Call('_INAr_YW_cpp', PACKAGE = 'INAr', r)
 }
 
 INARp_cpp <- function(resid, a) {

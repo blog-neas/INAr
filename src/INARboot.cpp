@@ -80,6 +80,75 @@ NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
 }
 
 
+
+//
+//  ----------------------------------------------------------------------------
+//  ----------------------------------------------------------------------------
+//  ----------------------------------------------------------------------------
+//
+
+// testing the possibility to use a parallel version of the bootstrap
+// WARNING: compilation error on Mac OS X
+
+// [[Rcpp::plugins(openmp)]]
+#include <omp.h>
+
+// [[Rcpp::export]]
+NumericVector RHO_BOOT_Cpp_Parallel(NumericVector x, int B, int num_threads = 2) {
+    int n = x.length();
+    NumericVector s_temp(B);
+
+        // Set the number of threads (optional, default is usually the number of cores)
+        if(num_threads > 1 & num_threads <= omp_get_max_threads()){
+            omp_set_num_threads(num_threads);
+        }else{
+            num_threads = 1;
+        }
+
+#pragma omp parallel num_threads(num_threads)
+{
+    // Each thread needs its own RNG
+    RNGScope scope;
+
+#pragma omp for
+    for(int i = 0; i < B; i++) {
+        // simplified version for testing, to update using the correct do while loop
+        NumericVector xb = RcppArmadillo::sample(x, n, true);
+        s_temp[i] = RHO_Cpp(xb)[0];
+    }
+}
+
+return s_temp;
+}
+
+
+// #include <omp.h>
+//
+// // Placeholder for the RHO_Cpp function, which you need to provide
+// NumericVector RHO_Cpp(NumericVector x);
+//
+// // [[Rcpp::export]]
+// NumericVector RHO_BOOT_Cpp_Parallel(NumericVector x, int B, int threads = 0) {
+//     int n = x.length();
+//     NumericVector s_temp(B);
+//
+//     // Set the number of threads (optional, default is usually the number of cores)
+//     if(threads > 0 & threads <= omp_get_max_threads()){
+//         omp_set_num_threads(threads);
+//     }else{
+//         omp_set_num_threads(1);
+//     }
+//
+// #pragma omp parallel for
+//     for(int i = 0; i < B; i++) {
+//         NumericVector xb = RcppArmadillo::sample(x, n, true);
+//         s_temp[i] = RHO_Cpp(xb)[0];
+//     }
+//
+//     return s_temp;
+// }
+
+
 //
 //  ----------------------------------------------------------------------------
 //  ----------------------------------------------------------------------------
@@ -98,7 +167,7 @@ NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
 //' This is an internal function, it will be excluded in future versions.
 //' @export
 // [[Rcpp::export]]
-List SMC_Cpp(NumericVector x, unsigned int method){
+NumericVector SMC_Cpp(NumericVector x, unsigned int method){
   int n = x.length();
 
   NumericVector out(2);
@@ -133,13 +202,9 @@ List SMC_Cpp(NumericVector x, unsigned int method){
 
     // check underdispersion
     if(var_x <= mu_x){
-        // out[0] = NAN;
-        // out[1] = NAN;
-        // return out;
-        return List::create(
-            _["stat"]  = NAN,
-            _["pval"]  = NAN
-        );
+        out[0] = NAN;
+        out[1] = NAN;
+        return out;
     }
     // printf("1) %f, %f %f \n",mu_x,var_x,std::abs(var_x-mu_x));
     // printf("2) %f, %f \n",pow(mu_x,2),var_x-mu_x);
@@ -171,50 +236,29 @@ List SMC_Cpp(NumericVector x, unsigned int method){
     // double var_x = var(noNA(x));
     double sd_x = sd(noNA(x));
 
-    NumericVector g_hat(n-1);
-
     double lambda_hat = sqrt(pow(mu_x,3))/sd_x; // # trick
     double kappa_hat = 1 - sqrt(mu_x)/sd_x; // # trick
     // printf("%f, %f \n",lambda_hat,kappa_hat);
 
-    // vecchio sistema, non mi permetteva di discernere i casi limite con
-    // prob(x_t - 1) = 0 e/o prob(x_t) = 0
-    // NumericVector ltmp1 = (xsum - 2)*log(lambda_hat + kappa_hat*(xsum-1));
-    // NumericVector ltmp2 = (xsum - 1)*log(lambda_hat + kappa_hat*(xsum));
-    // NumericVector tmp3 = exp(kappa_hat)*xsum;
-    //
-    // g_hat = exp(ltmp1-ltmp2)*tmp3 - 1;
+    // NumericVector xsumL = ind_val - 1;
+    NumericVector xsumL1 = xsum_1 - mu_x;
 
-    double arg1;
-    double arg2;
-    double tmp3;
-    for (int i = 0; i < g_hat.size(); ++i) {
+    NumericVector ltmp1 = (xsum - 2)*log(lambda_hat + kappa_hat*(xsum-1));
+    NumericVector ltmp2 = (xsum - 1)*log(lambda_hat + kappa_hat*(xsum));
+    NumericVector tmp3 = exp(kappa_hat)*xsum;
 
-        arg1 = lambda_hat + kappa_hat*(xsum[i]-1);
-        arg2 = lambda_hat + kappa_hat*(xsum[i]);
-        tmp3 = exp(kappa_hat)*xsum[i];
-
-        if (arg1 <= 0 & arg2 <= 0) {
-            // qua visto che abbiamo exp(-Inf + Inf) = approx ad exp(0) = 1
-            g_hat[i] = 1*tmp3 - 1;
-        }
-        else if(arg1 <= 0 | arg2 <= 0){
-            // qua non è chiaro
-            // se arg1 <0 abbiamo 0/p_x{t} = 0 ==> g_hat[i] = - 1
-            // ma se arg2<0 allora abbiamo p_{x{t}-1}/0 = Inf !!!
-            // per il momento faccio entrambi i casi con g_hat[i] = 0*tmp3 - 1
-            g_hat[i] = - 1;
-        }
-        else{
-            g_hat[i] = exp( (xsum[i] - 2)*log(arg1)-(xsum[i] - 1)*log(arg2) )*tmp3 - 1;
-        }
-    }
-
+    NumericVector g_hat = exp(ltmp1-ltmp2)*tmp3 - 1;
     double mu_g = mean(g_hat);
     double sd_g = sd(g_hat);
 
+    // for(int i=0; i < ltmp1.length(); ++i){
+    //   Rprintf("the value of tmp1[%i] : %f \n", i, ltmp1[i]);
+    //   Rprintf("the value of tmp2[%i] : %f \n", i, ltmp2[i]);
+    //   Rprintf("the value of tmp3[%i] : %f \n", i, tmp3[i]);
+    //   Rprintf("the value of ghat[%i] : %f \n", i, g_hat[i]);
+    // }
+
     NumericVector xsumL = g_hat - mu_g;
-    NumericVector xsumL1 = xsum_1 - mu_x;
 
     NumericVector NUM = xsumL*xsumL1;
 
@@ -224,7 +268,7 @@ List SMC_Cpp(NumericVector x, unsigned int method){
   }
   if(method == 4){
     // katz case
-    // IN DEVELOPMENT, DO NOT USE!
+    // in development
 
     double mu_x = mean(noNA(x));
     double var_x = var(noNA(x));
@@ -247,12 +291,7 @@ List SMC_Cpp(NumericVector x, unsigned int method){
     out[0] = stat/sqrt(n);
     out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
   }
-
-  // return out;
-  return List::create(
-      _["stat"]  = out[0],
-      _["pval"]  = out[1]
-  );
+  return out;
 }
 
 
@@ -559,7 +598,7 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 
 
 
-//' Wrapper function for computing the Sun-McCabe bootstrap score test.
+//' Wrapper function for compution the Sun-McCabe bootstrap score test.
 //' @param X NumericVector
 //' @param arrival int
 //' @param type unsigned int
@@ -590,7 +629,7 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
     }
 
     B_stat = mean(SmcB);
-    B_pval = mean(Rcpp::abs(SmcB) > std::fabs(Smc));
+    B_pval = mean(abs(SmcB) > std::fabs(Smc));
 
 
     return List::create(
@@ -652,7 +691,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
      int count = 0;
 
      // Vettore per le frequenze cumulate
-     IntegerVector abscum(n);
+     IntegerVector abs(n);
      // Vettore per le probabilità puntuali
      NumericVector probs(n);
      // Vettore per le frequenze cumulate relative
@@ -666,7 +705,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
 
      for (int i = 0; i < n; ++i){
          // frequenze assolute cumulate step
-         abscum[i] = std::lower_bound(x.begin(), x.end(), samp[i]) - x.begin();
+         abs[i] = std::lower_bound(x.begin(), x.end(), samp[i]) - x.begin();
          count = 0;
          for (int j = 0; j < m; ++j){
              if (x[j] == samp[i]) {
@@ -692,7 +731,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
 
      return DataFrame::create(
          Named("value") = samp,
-         Named("abscum") = abscum,
+         Named("abscum") = abs,
          Named("relcum") = relcum,
          Named("probability") = probs,
          Named("fallback") = fallback_probs
@@ -734,7 +773,7 @@ NumericVector HMC_Cpp(NumericVector x){
      // std::cout << eval << std::endl;
      DataFrame TAB = ecdfcpp(eval, x);
      NumericVector values = TAB["value"];
-     NumericVector relfreq = TAB["fallback"]; // improved estimator probs. (check!)
+     NumericVector relfreq = TAB["fallback"]; // improved estimatof probs. (check!)
 
      NumericVector pi_hat(n-1);
      NumericVector pi_hat_L1(n-1);
@@ -828,7 +867,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
      return s_temp;
 }
 
-//' Wrapper function for computation the Harris-McCabe bootstrap score test.
+//' Wrapper function for compution the Harris-McCabe bootstrap score test.
 //' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param X NumericVector
 //' @param B int
@@ -859,7 +898,7 @@ List HMCtest_boot(NumericVector X, int B){
     // }
 
     B_stat = mean(SmcB);
-    B_pval = mean(Rcpp::abs(SmcB) > std::fabs(Smc));
+    B_pval = mean(abs(SmcB) > std::fabs(Smc));
 
 
     return List::create(
@@ -870,18 +909,11 @@ List HMCtest_boot(NumericVector X, int B){
 
 
 /*** R
-# SMC
-# set.seed(1913)
-# x <- rpois(500,40)
-# # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
-# # HMC_Cpp(seq(0,20,by=2))
-# HMC_Cpp(genINAR(100, a = 0.5, par = 2, arrival = "poisson")$X)
-#
-# # HMC
-# set.seed(1913)
-# x <- rpois(500,40)
-# HMC_Cpp(x)
-#
+set.seed(1913)
+x <- rpois(500,40)
+# x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
+# HMC_Cpp(seq(0,20,by=2))
+HMC_Cpp(x)
 # B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)

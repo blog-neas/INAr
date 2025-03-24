@@ -1,5 +1,5 @@
 
-#' Yule-Walker for INAR(p) parameter estimation
+#' Yule-Walker for INAR(p) alphas parameter estimation
 #'
 #' Internal function
 #'
@@ -22,20 +22,23 @@ estimYW <- function(x, p, ...) {
 
     r <- acf(x, plot = FALSE)$acf[2:(p+1)]
     if(p > 1){
-        R <- diag(p)
-        for(i in 1:(p-1)){
-            for(j in (i+1):p){
-                R[i,j] <- r[abs(i-j)]
-            }
-        }
-        R[lower.tri(R)] <- t(R)[lower.tri(R)]
+        # OLD, sostituito da YW_cpp
+        # R <- diag(p)
+        # for(i in 1:(p-1)){
+        #     for(j in (i+1):p){
+        #         R[i,j] <- r[abs(i-j)]
+        #     }
+        # }
+        # R[lower.tri(R)] <- t(R)[lower.tri(R)]
+
+        R <- YW_cpp(r)
 
         # ALPHAS = R^-1r
         # alphas <- solve(R, r)
 
         # versione fast nonnegative factorization
         # RcppML::nnls
-        alphas <- as.vector(nnls(as.matrix(R),as.matrix(r), ...))
+        alphas <- as.vector(nnls(as.matrix(R),as.matrix(r)))
 
         # nnls::nnls
         # alphas <- nnls(R, r)$x
@@ -58,7 +61,8 @@ estimYW <- function(x, p, ...) {
     mX <- mean(x)
     vX <- var(x)
     mINN <- (1 - sum(alphas))*mX
-    vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas));
+    vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas))
+    #  acf(x, plot = FALSE)$acf[1] - sum(alphas*r)
 
     OUT <- list("alphas" = alphas,
                 "meanX" = mX, "varX" = vX,

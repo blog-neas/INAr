@@ -180,6 +180,18 @@ plot.INAR <- function (object){
 }
 # methods(summary)
 
+#' Get INAR(p) fitted values
+#'
+#' summary method for class `INAR`.
+#' @rdname INAR
+#' @method fitted INAR
+#'
+#' @param object, an `INAR` object
+#' @export
+fitted.INAR <- function(object, ...){
+    fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, arrival = object$arrival, burnout = 500)$X
+    return(fitted)
+}
 
 # Set methods (S4 style) ...................
 # setMethod("print", "INAR", print.INAR)

@@ -4,7 +4,7 @@
 #' Fitting INAR(p) Models
 #'
 #' @param X data vector
-#' @param order p, the order of the INAR(p) process
+#' @param p the order of the INAR(p) process
 #' @param arrival distribution of the innovation process
 #' @param method estimation method
 #'
@@ -12,19 +12,20 @@
 #' @details
 #' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
 #' @export
-INAR <- function(X, order, arrival="poisson", method = "CLS"){
+INAR <- function(X, p, arrival="poisson", method = "CLS"){
     # cl <- match.call()
     n <- length(X)
     arrival <- trimws(tolower(arrival))
 
     stopifnot(all(X == as.integer(X)))
-    stopifnot(order < n)
+    stopifnot(p < n)
     if(arrival == "negbin" & var(X) <= mean(X)){ stop( "Only overdispersed data allowed for the negbin case" ) }
 
     if(method == "YW"){
-        mom <- estimYW(X, order)
+        est <- estimYW(X, p)
     }else if(method == "CLS"){
-        mom <- estimCLS(X, order)
+        est <- estimCLS(X, p)
+        alphas <- est$alphas
     }else if(method == "CML"){
         # TO DO
         stop("CML: TO DO")
@@ -33,22 +34,16 @@ INAR <- function(X, order, arrival="poisson", method = "CLS"){
         stop("SP: TO DO")
     }else{ stop('Specify a valid method. Available options: "YW", "CLS", "CML", "SP"') }
 
-    fit_res <- Xresid(X = X, alphas = mom$alphas, mINN = mom$meanINN, vINN = mom$varINN)
-
-    # TO DO
-    # - varianza stimatori
-    # - loglik e bic
-
     # Innovation Parameters
-    est <- est_pars(mom$meanX, mom$varX, mom$meanINN, mom$varINN, arrival)
+    innest <- est_pars(est$meanX, est$varX, est$meanINN, est$varINN, arrival)
 
-    alphas <- mom$alphas
-    attr(alphas,"names") <- paste0("a",1:order)
+    alphas <- est$alphas
+    attr(alphas,"names") <- paste0("a",1:p)
 
-    pars <- est$pars
+    pars <- innest$pars
     # attr(moments,"pars") # lo fa già est_mom
 
-    momentsINN <- c(mom$meanINN, mom$varINN)
+    momentsINN <- c(est$meanINN, est$varINN)
     attr(momentsINN,"names") <- c("mean", "sigma2")
 
     coef <- list(
@@ -56,9 +51,21 @@ INAR <- function(X, order, arrival="poisson", method = "CLS"){
         "pars"=pars
     )
 
+    # fitted lo escludo perchè faccio funzione esterna
+    # fitted <- genINAR(n, a = alphas, par = pars, arrival = arrival, burnout = 500)$X
+    resid <- Xresid(X = X, alphas = alphas, mINN = est$meanINN, vINN = est$varINN)
+    rms <- sqrt(mean(resid$resid^2,na.rm = TRUE))
+
+    # TO DO
+    # - varianza stimatori
+    # - loglik e bic
+
+    #AIC <-  n*log(???) + 2*p ????
+    #BIC <-  n*log(???) + p*log(n) ????
+
     # TO DO! --------------------------------
-    var.alphas <- matrix(NA,order,order)
-    var.pars <- est$vcov
+    var.alphas <- matrix(NA,p,p)
+    var.pars <- innest$vcov
 
     var <- list(
         "alphas"=var.alphas,
@@ -66,25 +73,25 @@ INAR <- function(X, order, arrival="poisson", method = "CLS"){
     )
 
     mask <- list(
-        "alphas"=rep(TRUE,order),
+        "alphas"=rep(TRUE,p),
         "pars"=rep(TRUE,length(pars))
     )
 
     resid <- list(
-        "res.raw"=fit_res$resid,
-        "res.std"=fit_res$stdresid
+        "res.raw"=resid$resid,
+        "res.std"=resid$stdresid
     )
 
     OUT <- list(
-        call = match.call(), call0 = paste0("INAR(",order,") model with ",arrival," innovations"),
-        data = X, momentsINN = momentsINN, arrival = arrival,
+        call = match.call(), call0 = paste0("INAR(",p,") model with ",arrival," innovations"),
+        data = X, n = n, momentsINN = momentsINN, arrival = arrival,
         coef = coef, var.coef = var, mask = mask,
-        loglik = NA, aic = NA, bic = NA,
+        loglik = NA, aic = NA, bic = NA, RMSE = rms,
         residuals = resid, SMCtest = NULL,
-        model = paste0(toupper(arrival),"-INAR(",order,")")
+        model = paste0(toupper(arrival),"-INAR(",p,")")
     )
     class(OUT) <- "INAR" # structure(OUT, class = "INAR")
-    OUT
+    return(OUT)
 }
 
 
@@ -169,10 +176,10 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 # veloce esempio --------------------------------------------------------
 # N <- 500
 # y <- genINAR(N,0.1,par=1.2,arrival="poisson")$X
-# INARfit(y, order=1)
+# INAR(y, p=1)
 # y <- genINAR(N,c(0.9,0.01),par=2,arrival="poisson")$X
-# INARfit(y, order=2)
+# INARfit(y, p=2)
 # y <- genINAR(N,0.1,par=c(1,0.5),arrival="negbin")$X
-# INARfit(y, order=1, arrival="negbin)
+# INARfit(y, p=1, arrival="negbin)
 # y <- genINAR(N,c(0.9,0.01),par=c(2,0.66),arrival="poisson")$X
-# INARfit(y, order=2, arrival="negbin)
+# INARfit(y, p=2, arrival="negbin)

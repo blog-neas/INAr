@@ -274,18 +274,6 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
   return(dati_sim)
 }
 
-# zzz <- rbinom(1000,40,0.7)
-# asd <- function(A,B){
-#   OUT <- A
-#   for(i in 2:length(A)){
-#     OUT[i] <- rbinom(1,OUT[i-1],B) + A[i]
-#   }
-#   return(OUT)
-# }
-#
-# microbenchmark::microbenchmark(INAR1_cpp(zzz,0.7),asd(zzz,0.7),times = 100L)
-
-
 # veloce esempio --------------------------------------------------------
 # N <- 500
 # y <- genINAR(N,0.9,2,arrival="poisson")$X

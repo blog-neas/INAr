@@ -5,20 +5,23 @@
 \alias{print.INAR}
 \alias{summary.INAR}
 \alias{plot.INAR}
+\alias{fitted.INAR}
 \title{Fitting INAR(p) Models}
 \usage{
-INAR(X, order, arrival = "poisson", method = "CLS")
+INAR(X, p, arrival = "poisson", method = "CLS")
 
 \method{print}{INAR}(x, digits = max(3L, getOption("digits") - 3L), se = TRUE, ...)
 
 \method{summary}{INAR}(object, ...)
 
 \method{plot}{INAR}(object)
+
+\method{fitted}{INAR}(object, ...)
 }
 \arguments{
 \item{X}{data vector}
 
-\item{order}{p, the order of the INAR(p) process}
+\item{p}{the order of the INAR(p) process}
 
 \item{arrival}{distribution of the innovation process}
 
@@ -38,6 +41,8 @@ INAR(X, order, arrival = "poisson", method = "CLS")
 The fitted model, an object of class \code{INAR}
 }
 \description{
+summary method for class \code{INAR}.
+
 summary method for class \code{INAR}.
 }
 \details{
