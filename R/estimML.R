@@ -3,8 +3,10 @@
 #'
 #' Internal function
 #'
-#' @param x, observed series
+#' @param X, observed series
 #' @param p, number of lags
+#' @param inn, innovation distribution
+#' @param control, list of control parameters for optim function
 #'
 #' @importFrom stats acf
 #' @importFrom stats var
@@ -15,80 +17,6 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimML <- function(x, p, ...) {
-    n <- length(x)
-    mX <- mean(x)
-    vX <- var(x)
-
-    # ''''''''''''''''''''''''''
-    # Some magic happens here
-    # ..........................
-    OUT <- list(alphas = alphas,
-                "meanX" = mX, "varX" = vX,
-                "meanINN" = mINN, "varINN" = vINN)
-    return(OUT)
-}
-
-
-# versione chatGPT
-
-# =========================================================
-# INAR(1)-Poisson: Exact MLE via Rcpp
-# =========================================================
-
-library(Rcpp)
-
-# ---------------------------------------------------------
-# Parte C++: log-verosimiglianza
-# ---------------------------------------------------------
-# Rcpp::sourceCpp(code = '
-# #include <Rcpp.h>
-# using namespace Rcpp;
-#
-# // [[Rcpp::export]]
-# double inar1_poi_loglik_cpp(const IntegerVector& x, double alpha, double lambda) {
-#   int n = x.size();
-#   if (n < 2) return NA_REAL;
-#   double ll = 0.0;
-#
-#   for (int t = 1; t < n; t++) {
-#     int xt = x[t];
-#     int xprev = x[t - 1];
-#     if (xt < 0 || xprev < 0) return NA_REAL;
-#
-#     int kmax = std::min(xt, xprev);
-#     std::vector<double> log_p(kmax + 1);
-#
-#     for (int k = 0; k <= kmax; k++) {
-#       // combinazione log
-#       double lchoose_val = R::lchoose(xprev, k);
-#       // log densità Poisson (x_t - k)
-#       int diff = xt - k;
-#       if (diff < 0) { log_p[k] = -INFINITY; continue; }
-#
-#       double lp = lchoose_val + k * log(alpha) +
-#         (xprev - k) * log(1.0 - alpha) +
-#         R::dpois(diff, lambda, true);
-#       log_p[k] = lp;
-#     }
-#
-#     // log-sum-exp trick per stabilità numerica
-#     double m = -INFINITY;
-#     for (int k = 0; k <= kmax; k++) if (log_p[k] > m) m = log_p[k];
-#     double sum_exp = 0.0;
-#     for (int k = 0; k <= kmax; k++) sum_exp += exp(log_p[k] - m);
-#     double log_p_xt = m + log(sum_exp);
-#
-#     if (!R_finite(log_p_xt)) return -INFINITY;
-#     ll += log_p_xt;
-#   }
-#   return ll;
-# }
-# ')
-
-# ---------------------------------------------------------
-# Wrapper R: ottimizzazione MLE
-# ---------------------------------------------------------
 estimML <- function(X, p, inn = "poi", control = list()) {
     stopifnot(p==1)
     stopifnot(inn == "poi")
@@ -139,9 +67,9 @@ estimML <- function(X, p, inn = "poi", control = list()) {
 
 # esempio
 set.seed(123)
-x <- genINAR(200,a = 0.5, par = 2,arrival = "poisson",burnout = 500)$X
+x <- genINAR(100000,a = 0.5, par = 2,arrival = "poisson",burnout = 500)$X
 fit <- estimML(x, p = 1, inn = "poi")
-
+fit
 # Parameter trick:
 # 1. to_theta: par_transform: transform parameters to unconstrained space
 #    alpha in (0,1) -> logit(alpha) = log(alpha/(1-alpha)) in R
