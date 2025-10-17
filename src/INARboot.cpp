@@ -804,7 +804,6 @@ NumericVector HMC_Cpp(NumericVector x){
      NumericVector xsumL = xsum_1 - mean_x;
 
      double NUM = sum(xsumL*(g_t-1));
-
      double stat = NUM/(sd_x*sd_g);
 
      out[0] = stat/sqrt(n);

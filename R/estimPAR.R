@@ -19,8 +19,18 @@ estimPAR <- function(alphas, mX, vX, mINN, vINN, inn = "poi"){
     stopifnot(inn %in% c("poi"))
 
     if(inn == "poi"){
-        par = c("lambda" = mINN)
+        par <- c("lambda" = mINN)
+    }else if(inn == "negbin"){
+        # TO DO
+    }else if(inn == "genpoi"){
+        # TO DO
+    }else if(inn == "katz"){
+        # TO DO
+    }else{
+        stop("Innovation distribution not implemented yet.")
     }
+
+
     # continua con altri innovation dgp
 
     OUT <- list("par"=par)
