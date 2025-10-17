@@ -5,21 +5,21 @@
 #'
 #' @param X data vector
 #' @param p the order of the INAR(p) process
-#' @param arrival distribution of the innovation process
+#' @param inn distribution of the innovation process
 #' @param method estimation method
 #'
 #' @return The fitted model, an object of class `INAR`
 #' @details
 #' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
 #' @export
-INAR <- function(X, p, arrival="poisson", method = "CLS"){
+INAR <- function(X, p, inn="poisson", method = "CLS"){
     # cl <- match.call()
     n <- length(X)
-    arrival <- trimws(tolower(arrival))
+    inn <- trimws(tolower(inn))
 
     stopifnot(all(X == as.integer(X)))
     stopifnot(p < n)
-    if(arrival == "negbin" & var(X) <= mean(X)){ stop( "Only overdispersed data allowed for the negbin case" ) }
+    if(inn == "negbin" & var(X) <= mean(X)){ stop( "Only overdispersed data allowed for the negbin case" ) }
 
     if(method == "YW"){
         est <- estimYW(X, p)
@@ -35,7 +35,7 @@ INAR <- function(X, p, arrival="poisson", method = "CLS"){
     }else{ stop('Specify a valid method. Available options: "YW", "CLS", "CML", "SP"') }
 
     # Innovation Parameters
-    innest <- est_pars(est$meanX, est$varX, est$meanINN, est$varINN, arrival)
+    innest <- est_pars(est$meanX, est$varX, est$meanINN, est$varINN, inn)
 
     alphas <- est$alphas
     attr(alphas,"names") <- paste0("a",1:p)
@@ -52,7 +52,7 @@ INAR <- function(X, p, arrival="poisson", method = "CLS"){
     )
 
     # fitted lo escludo perchè faccio funzione esterna
-    # fitted <- genINAR(n, a = alphas, par = pars, arrival = arrival, burnout = 500)$X
+    # fitted <- genINAR(n, a = alphas, par = pars, inn = inn, burnout = 500)$X
     resid <- Xresid(X = X, alphas = alphas, mINN = est$meanINN, vINN = est$varINN)
     rms <- sqrt(mean(resid$resid^2,na.rm = TRUE))
 
@@ -83,12 +83,12 @@ INAR <- function(X, p, arrival="poisson", method = "CLS"){
     )
 
     OUT <- list(
-        call = match.call(), call0 = paste0("INAR(",p,") model with ",arrival," innovations"),
-        data = X, n = n, momentsINN = momentsINN, arrival = arrival,
+        call = match.call(), call0 = paste0("INAR(",p,") model with ",inn," innovations"),
+        data = X, n = n, momentsINN = momentsINN, inn = inn,
         coef = coef, var.coef = var, mask = mask,
         loglik = NA, aic = NA, bic = NA, RMSE = rms,
         residuals = resid, SMCtest = NULL,
-        model = paste0(toupper(arrival),"-INAR(",p,")")
+        model = paste0(toupper(inn),"-INAR(",p,")")
     )
     class(OUT) <- "INAR" # structure(OUT, class = "INAR")
     return(OUT)
@@ -101,23 +101,23 @@ INAR <- function(X, p, arrival="poisson", method = "CLS"){
 #' @param varX variance of the INAR process
 #' @param mINN mean of the innovation process
 #' @param varINN variance of the innovation process
-#' @param arrival distribution of the innovation process
+#' @param inn distribution of the innovation process
 #'
 #' @return A list with parameter estimates
 #' @details
 #' Inner function that estimates the parameters related with the innovation process, given anINAR(p) model.
 #' @noRd
-est_pars <- function(mX,varX,mINN,varINN,arrival){
+est_pars <- function(mX,varX,mINN,varINN,inn){
     # parameter estimation for CML and YW methods
 
-    if(arrival == "poisson"){
+    if(inn == "poi"){
         lambda <- mINN
         pars <- lambda
         attr(pars,"names") <- "lambda"
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
-    }else if(arrival == "negbin"){
+    }else if(inn == "negbin"){
         diffvarmu <- abs(varINN - mINN) # trick
         gamma <- (mINN^2)/diffvarmu
         # pi <- mINN/varINN # old
@@ -128,7 +128,7 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
-    }else if(arrival == "genpoi"){
+    }else if(inn == "genpoi"){
         kappa <- 1 - sqrt(mINN/varINN)
         lambda <- mINN*sqrt(mINN/varINN)
 
@@ -137,7 +137,7 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
-    }else if(arrival == "geom"){
+    }else if(inn == "geom"){
         pi <- 1/(1 + mINN)
 
         pars <- c(pi)
@@ -145,7 +145,7 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
-    }else if(arrival == "yule"){
+    }else if(inn == "yule"){
         rho <- 1/(mINN - 1)
 
         pars <- c(rho)
@@ -153,7 +153,7 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 
         # TO DO
         vcov <- matrix(NA,length(pars),length(pars))
-    }else if(arrival == "poislind"){
+    }else if(inn == "poislind"){
         # Lívio, T., Khan, N. M., Bourguignon, M., & Bakouch, H. S. (2018).
         # - An INAR (1) model with Poisson–Lindley innovations. Econ. Bull, 38(3), 1505-1513.
         mINN_1 <- 1/mINN
@@ -175,11 +175,11 @@ est_pars <- function(mX,varX,mINN,varINN,arrival){
 # TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------
 # N <- 500
-# y <- genINAR(N,0.1,par=1.2,arrival="poisson")$X
+# y <- genINAR(N,0.1,par=1.2,inn="poisson")$X
 # INAR(y, p=1)
-# y <- genINAR(N,c(0.9,0.01),par=2,arrival="poisson")$X
+# y <- genINAR(N,c(0.9,0.01),par=2,inn="poisson")$X
 # INARfit(y, p=2)
-# y <- genINAR(N,0.1,par=c(1,0.5),arrival="negbin")$X
-# INARfit(y, p=1, arrival="negbin)
-# y <- genINAR(N,c(0.9,0.01),par=c(2,0.66),arrival="poisson")$X
-# INARfit(y, p=2, arrival="negbin)
+# y <- genINAR(N,0.1,par=c(1,0.5),inn="negbin")$X
+# INARfit(y, p=1, inn="negbin)
+# y <- genINAR(N,c(0.9,0.01),par=c(2,0.66),inn="poisson")$X
+# INARfit(y, p=2, inn="negbin)

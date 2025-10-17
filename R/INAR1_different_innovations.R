@@ -3,14 +3,14 @@
 #' @param n integer, number of observations, length of the series.
 #' @param a vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
 #' @param par vector, parameters related with the model, see the details section.
-#' @param arrival character, arrival distribution. Default value is `"poisson"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
+#' @param inn character, innovation distribution. Default value is `"poi"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
 #' @param burnout integer, number of starting observations to discard. Set to 500 by default.
 #' @param ... Additional arguments passed to the functions generating the random numbers.
 #' @details
 #' The function generates `n` observations drawn from an INAR(p) model
 #' \deqn{X_t = \alpha_1 {*} X_{t-1} + \ldots + \alpha_p {*} X_{t-p} + \varepsilon_t}
 #' where \eqn{*} is the binomial thinning operator and \eqn{\alpha_p} are the thinning parameters \insertCite{Steutel1979,al1987first}{INAr}.
-#' The values of the thinning parameters \eqn{\alpha_i} are the elements of the `a` vector, for \eqn{i=1, \ldots, p}, while in `par` vector are specified the parameters related with the arrival distribution `\varepsilon`. The available processes for the arrivals are listed below.
+#' The values of the thinning parameters \eqn{\alpha_i} are the elements of the `a` vector, for \eqn{i=1, \ldots, p}, while in `par` vector are specified the parameters related with the innovation distribution `\varepsilon`. The available processes for the innovations are listed below.
 #'
 #' **Poisson**. Innovations are drawn from a Poisson distribution \eqn{Poi(\lambda)}
 #' \deqn{P(\varepsilon_t = k)= \dfrac{\lambda^k e^{-\lambda}}{k!},}
@@ -49,15 +49,15 @@
 #' # thinning parameter \eqn{\alpha}=0.5 and Poisson(2) innovations
 #' set.seed(1234)
 #' lam <- 2
-#' genINAR(500, a = 0.5, par = lam, arrival = "poisson")
+#' genINAR(500, a = 0.5, par = lam, inn = "poi")
 #'
 #' @export
-genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
+genINAR <- function(n, a, par, inn="poi", burnout=500, ...){
     stopifnot(is.vector(a))
     stopifnot(all(a >= 0))
     stopifnot(sum(a) < 1)
     lags <- length(a)
-    arrival <- tolower(arrival)
+    inn <- tolower(inn)
     s <- n + burnout
     resid_ <- rep(NA,s)
 
@@ -72,13 +72,13 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     sim_X <- rep(-99,s)
 
     # Poisson marginal
-    if(arrival=="poisson"){
+    if(inn=="poi"){
         stopifnot(length(par)==1)
         l_ <- unname(par)
         resid_ <- rpois(s,l_)
 
     }
-    else if(arrival=="overdisp_poisson"){
+    else if(inn=="overdisp_poisson"){
         stopifnot(length(par)==2)
 
         l_ <- unname(par[1])
@@ -87,7 +87,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
         resid_ <- rnbinom(s, size=(l_/(d_-1)), mu=l_)
     }
-    else if(arrival=="zip"){
+    else if(inn=="zip"){
         stopifnot(length(par)==2)
 
         l_ <- unname(par[1])
@@ -96,7 +96,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         # gamlss.dist::rZIP
         resid_ <- rZIP(s, mu = l_, sigma = sig_)
     }
-    else if(arrival=="bimodal_poisson"){
+    else if(inn=="bimodal_poisson"){
         stopifnot(length(par)==3)
 
         lam1_ <- unname(par[1])
@@ -109,7 +109,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         resid_[selettore] <- rpois(sum(selettore),lam1_)
         resid_[!selettore] <- rpois(sum(!selettore),lam2_)
     }
-    else if(arrival=="negbin"){
+    else if(inn=="negbin"){
         stopifnot(length(par)==2)
 
         # # VECCHIA PARAMETRIZZAZIONE, CON GAMMA E BETA
@@ -128,7 +128,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         resid_ <- rnbinom(s,g_,p.compl_)
 
     }
-    else if(arrival=="geom"){
+    else if(inn=="geom"){
         stopifnot(length(par)==2)
 
         pi_ <- unname(par[1])
@@ -136,14 +136,14 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
         resid_ <- rgeom(s,pi_)
     }
-    else if(arrival=="disc_unif"){
+    else if(inn=="disc_unif"){
         stopifnot(length(par)==1)
 
         max_ <- unname(par[1])
 
         resid_ <- sample(0:max_,s,replace = TRUE)
     }
-    else if(arrival=="binomial"){
+    else if(inn=="binomial"){
     stopifnot(length(par)==2)
 
     enne_ <- unname(par[1]) # size
@@ -151,7 +151,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
     resid_ <- rbinom(s,enne_,p_)
     }
-    else if(arrival=="genpoi"){
+    else if(inn=="genpoi"){
         stopifnot(length(par)==2)
 
         l_ <- unname(par[1]) # lambda, come in sunmccabe
@@ -181,20 +181,20 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         # HMMpa::rgenpois
         resid_ <- GenUniGpois(l_, k_, s, method = ifelse(l_ > 10, "Normal-Approximation", "Inversion"), details = FALSE)$data
     }
-    else if(arrival=="katz"){
+    else if(inn=="katz"){
     #
     # come fare???
     # resid_ <-
     #
   }
-  else if(arrival=="truncnorm"){
+  else if(inn=="truncnorm"){
     mu_ <- unname(par[1])
     sig_ <- unname(par[2])
 
     vals <- round(rnorm(s,mu_,sig_),0)
     resid_ <- ifelse(vals < 0,0,vals)
   }
-  else if(arrival=="truncskel"){
+  else if(inn=="truncskel"){
     lam1_ <- unname(par[1])
     lam2_ <- unname(par[2])
 
@@ -203,35 +203,35 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
     resid_ <- ifelse(vals < 0,0,vals)
   }
     # good package is not available anymore
-    # else if(arrival=="good"){
+    # else if(inn=="good"){
     #     z_ <- unname(par[1])
     #     s_ <- unname(par[2])
     #
     #     # good::rgood
     #     resid_ <- rgood(s, z_, s_)
     # }
-    else if(arrival=="yule"){
+    else if(inn=="yule"){
         rho_ <- unname(par[1])
         stopifnot(rho_ > 0)
 
         # VGAM::ryules
         resid_ <- ryules(s,rho_)
     }
-    else if(arrival=="zeta"){
+    else if(inn=="zeta"){
         esse_ <- unname(par[1])
         stopifnot(esse_ > 0)
 
         # VGAM::rzeta
         resid_ <- VGAM::rzeta(s, esse_)
     }
-    else if(arrival=="poislind"){
+    else if(inn=="poislind"){
         theta_ <- unname(par[1])
         stopifnot(theta_ > 0)
 
         # tolerance::rpoislind
         resid_ <- tolerance::rpoislind(s,theta_)
     }
-    else if(arrival=="mix_bin"){
+    else if(inn=="mix_bin"){
         stopifnot(length(par)==5)
 
         enne1_ <- unname(par[1]) # size
@@ -245,7 +245,7 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
         resid_[selettore] <-  rbinom(sum(selettore),enne1_,pb1_)
         resid_[!selettore] <- rbinom(sum(!selettore),enne2_,pb2_)
     }
-    else if(arrival=="mix_bin_negbin"){
+    else if(inn=="mix_bin_negbin"){
         stopifnot(length(par)==5)
 
         enne_ <- unname(par[1]) # size
@@ -276,54 +276,54 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 
 # veloce esempio --------------------------------------------------------
 # N <- 500
-# y <- genINAR(N,0.9,2,arrival="poisson")$X
+# y <- genINAR(N,0.9,2,inn="poi")$X
 # plot(y)
 # N <- 500
 # par <- c("a"=0.7,"lambda"=2)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="poisson")$X
+# sim <- genINAR(N,par,inn="poi")$X
 # plot(sim,type="b", main = "Poisson")
 #
 # #
 # par <- c("a"=0.7,"lambda"=1.5,"disp"=2)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="overdisp_poisson")$X
+# sim <- genINAR(N,par,inn="overdisp_poisson")$X
 # plot(sim,type="b", main = "Overdispersed Poisson")
 #
 # #
 # par <- c("a"=0.7,"mu"=4,"sigma"=0.33)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="zip")$X
+# sim <- genINAR(N,par,inn="zip")$X
 # plot(sim,type="b", main = "ZIP")
 #
 # #
 # par <- c("a"=0.7,"lam1"=2,"lam2"=10,"mixprob"=0.66)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="bimodal_poisson")$X
+# sim <- genINAR(N,par,inn="bimodal_poisson")$X
 # plot(sim,type="b", main = "Bimodal Poisson")
 #
 # #
 # par <- c("a"=0.7,"g"=2,"b"=2/3)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="negbin")$X
+# sim <- genINAR(N,par,inn="negbin")$X
 # plot(sim,type="b", main = "Negative Binomial")
 #
 # #
 # par <- c("a"=0.7,"min"=0,"max"=9)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="discunif")$X
+# sim <- genINAR(N,par,inn="discunif")$X
 # plot(sim,type="b", main = "Discrete Uniform")
 #
 # #
 # par <- c("a"=0,"n"=5,"p"=0.4)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="binomial")$X
+# sim <- genINAR(N,par,inn="binomial")$X
 # plot(sim,type="b", main = "Binomial")
 #
 # #
 # par <- c("a"=0.7,"lambda"=2,"kappa"=0.9)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="genpoi", details=FALSE)$X
+# sim <- genINAR(N,par,inn="genpoi", details=FALSE)$X
 # plot(sim,type="b", main = "Generalized Poisson")
 #
 # # sim <- genINAR("katz") # non ancora implememntato
@@ -331,13 +331,13 @@ genINAR <- function(n, a, par, arrival="poisson", burnout=500, ...){
 # #
 # par <- c("a"=0.7,"mu"=0,"sigma"=6)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="truncnorm")$X
+# sim <- genINAR(N,par,inn="truncnorm")$X
 # plot(sim,type="b", main = "Truncated Normal")
 #
 # #
 # par <- c("a"=0.7,"lam1"=2,"lam2"=10)
 # set.seed(1926)
-# sim <- genINAR(N,par,arrival="trunkskel")$X
+# sim <- genINAR(N,par,inn="trunkskel")$X
 # plot(sim,type="b", main = "Truncated Skellam")
 
 

@@ -1,60 +1,9 @@
-#' Perform INAR tests
-#'
-#' @param X vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
-#' @param type character, the type of test to be performed. The options are "smc", "hmc" and "rho".
-#' @param B integer, the number of bootstrap samples to be generated. The default value is 0, corresponding to no bootstrap samples.
-#' @return A number.
-#'
-#' @details
-#' The function performs tests for the INAR(1) model.
-#' The tests are based on the Sun-McCabe (SMC), Harris-McCabe (HMC) and Rho statistics.
-#' The tests can be performed using the original data or using bootstrap samples.
-#' The bootstrap samples are generated using the parametric, semiparametric and nonparametric methods.
-#' It is possible to perform the tests using the original data (B=0) or using bootstrap samples (B > 0).
-#' @examples
-#' # ....... examples .....
-#' # INARtest(X = rpois(100,2), type = "smc", B = 0)
-#'
-#' @export
-INARtest <- function(X, type, B = 0){
-    type <- tolower(type)
-    stopifnot(type %in% c("smc","hmc","rho"))
-    OUT <- NA # completa lo script
-
-    if(B > 1){
-        # perform bootstrap tests
-        if(type == "smc"){
-            # call smc.test
-        }else if(type == "hmc"){
-            # call hmc.test
-        }else if(type == "rho"){
-            # call rho.test
-        }
-
-    }else{
-        # perform simple tests
-        if(type == "smc"){
-            # call smc.test
-        }else if(type == "hmc"){
-            # call hmc.test
-        }else if(type == "rho"){
-            # call rho.test
-        }
-
-    }
-
-    # TO DO:
-    # configure OUT to have a nice output in the style of a summary of a test
-
-    return(OUT)
-}
-
 #' Perform Sun-McCabe INAR tests
 #'
-#' @param X vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
-#' @param method character, the distribution to be used in the test. The options are "poi", "negbin" and "genpoi".
-#' @param type character, the type of test to be performed, the alternatives are "parametric or "semiparametric".
+#' @param X vector, thinning parameters. The length of this vector defines the number of lags `p` of the INAR(p) process.
+#' @param inn character, the innovation distribution to be used in the test. The options are "poi", "negbin" and "genpoi".
 #' @param B integer, the number of bootstrap samples to be generated. The default value is 0, corresponding to no bootstrap samples.
+#' @param method character, the type of test to be performed, the alternatives are "par" or "semipar".
 #' @return A number.
 #'
 #' @details
@@ -63,52 +12,192 @@ INARtest <- function(X, type, B = 0){
 #' SMC tests are based on Poisson, negative binomial and generalized Poisson
 #' distributions, in all the considered cases, both parametric and semiparametric
 #' methods are available.
-#' It is possible to perform the tests using the original data (B=0) or using
-#' bootstrap samples (B > 0).
+#' It is possible to perform the exact tests using the original data (B=0) or
+#' using bootstrap samples (B > 0).
 #' @examples
 #' # ....... examples .....
 #' # SMCtest(X = rpois(100,2), type = "semiparametric", B = 0)
 #'
 #' @export
-SMCtest <- function(X, method, type = NA, B = 0){
-    type <- tolower(type)
-    stopifnot(method %in% 1:3)
+SMCtest <- function(X, inn = "poi", B = 0, method = NA){
+    if(!all(X == as.integer(X))) X <- as.integer(X)
+    if(!is.integer(B)) B <- as.integer(B)
 
-    B_stat <- NA
-    B_pval <- NA
-
-    # perform exact test
-    smc_est <- SMC_Cpp(X, method)
-    stat <- smc_est$stat
-    pval <- smc_est$pval
-
-    if(B > 0){
-        stopifnot(type %in% c("parametric","semiparametric"))
-        # perform bootstrap test
-        if(type == "parametric"){
-            # call smc.test
-            smc_boot <- SMC_parBOOT_Cpp(X, B, method)
-        }else if(type == "semiparametric"){
-            # call smc.test
-            smc_boot <- SMC_semiparBOOT_Cpp(X, B, method)
-        }else{
-            stop("Specify a correct test type")
-        }
-        B_stat <- mean(smc_boot)
-        B_pval <- mean(abs(smc_boot) > abs(stat), na.rm = TRUE) # imbroglio, uso: na.rm = TRUE
+    stopifnot(inn %in% info_inn$inn, B >= 0)
+    stopifnot(is.na(method) | method %in% c("par","semipar"))
+    if(B > 0 & is.na(method)) stop("Specify the method: 'par' or 'semipar'")
+    stopifnot(all(X == as.integer(X)), !all(X == X[1]), is.integer(B))
+    if(inn == "negbin" & var(X) <= mean(X)){
+        stop("Underdispersion detected: Negative Binomial test not applicable (var <= mean).\n Try switching to generalized Poisson distribution.");
     }
 
-    OUT <- list(
-        stat = stat,
-        pval = pval,
-        B_stat = B_stat,
-        B_pval = B_pval
-        )
+    OUT <- get_info(list(
+        test = "smc",
+        inn = inn,
+        method = method,
+        B = B
+    ))
 
-    # TO DO:
-    # configure OUT to have a nice output in the style of a summary of a test
+    if(B > 0 & method == "par" & !OUT$check) stop(paste("The selected innovation distribution (",inn,") is not available for the parametric SMC bootstrap test",sep=""))
+    OUT$data.name = deparse1(substitute(X)) # deparse(args(X))
+
+    smc_est <- SMC_Cpp(X, OUT$inn_num)
+
+    if(B > 0){
+        # perform bootstrap test
+        if(method == "par"){
+            smc_boot <- SMC_parBOOT_Cpp(X, B, OUT$inn_num)
+        }else if(method == "semipar"){
+            smc_boot <- SMC_semiparBOOT_Cpp(X, B, OUT$inn_num)
+        }else{
+            stop("Specify a correct test type: 'par' or 'semipar'")
+        }
+
+        # add Boot results to OUT
+        OUT$statistic <- c(T = mean(smc_boot))
+        OUT$p.value <- mean(abs(smc_boot) > abs(smc_est[1]), na.rm = TRUE)
+    }else{
+        OUT$statistic <- c(T = smc_est[1])
+        OUT$p.value <- smc_est[2]
+    }
+    return(OUT)
+}
+
+# example usage:
+set.seed(1926)
+x <- rpois(100000,2)
+SMCtest(x, inn = "katz", B = 0)
+SMCtest(x, inn = "negbin", B = 0, method = "semipar")
+
+
+#' Perform the over(under)-Dispersion Index test for the INAR(1) (Weiss et al, 2019)
+#'
+#' @param X vector, a series of counts.
+#' @return ........
+#'
+#' @details
+#' The function performs the zero inflation test for the INAR(1) model.
+#' @examples
+#' # ....... examples .....
+#' # DItest(X = rpois(100,2))
+#'
+#' @export
+DItest <- function(X){ # , inn = "poi"
+    if(!all(X == as.integer(X))) X <- as.integer(X)
+
+    n <- length(X)
+    est <- estimYW(X, p = 1)
+    alpha <- abs(est$alphas)
+
+    # sotto H0 ho sqrt(T)*(Id - 1)/s --> N(0,1)
+    stderr <- sqrt(2 * (1 + alpha^2)/(1 - alpha^2))
+    DIstat <- sqrt(n)*(est$varX / est$meanX - 1)/stderr
+
+    pval <- 2 * (1 - pnorm(abs(DIstat)))
+
+    OUT <- get_info(list(
+        data.name = deparse1(substitute(X)),
+        test = "di",
+        statistic = c(T = DIstat),
+        parameter = c("a1" = alpha),
+        p.value = pval,
+        method = NA,
+        B = 0
+    ))
 
     return(OUT)
 }
 
+# DItest(rpois(1000,2))
+# DItest(genINAR(1000,a = 0.5, par = 2,arrival = "poisson")$X)
+# DItest(genINAR(1000,a = 0.5, par = c(2,0.7),arrival = "negbin")$X)
 
+
+#' Perform the zero inflation test for the INAR(1) (Weiss et al, 2019)
+#'
+#' @param X vector, a series.
+#' @param type character, one of the possible zero inflation tests, ... ("pv") or ... ("vdb").
+#' @return ........
+#'
+#' @details
+#' The function performs the zero inflation test for the INAR(1) model.
+#' @examples
+#' # ....... examples .....
+#' # ZItest(X = rpois(100,2))
+#'
+#' @export
+ZItest <- function(X,type = "pv"){ # , inn = "poi"
+    stopifnot(type %in% c("pv","vdb"))
+    if(!all(X == as.integer(X))) X <- as.integer(X)
+    # stopifnot(inn %in% info_inn$inn)
+
+    n <- length(X)
+    est <- estimYW(X, p = 1)
+    alpha <- abs(est$alphas)
+    p0 <- sum(X == 0) / n
+
+    if(type == "pv"){
+        ser1 <- series_varpv(est$meanX, alpha)
+        se_pv <- sqrt((exp(est$meanX) - 1)/(est$meanX^2) - (1/est$meanX)*((1 + alpha)/(1 - alpha)) + (2/est$meanX^2)*ser1)
+        ZIpv <- sqrt(n)*((1 + (log(p0)/est$meanX))/se_pv)
+        stat <- ZIpv
+        pval <- 2*(1 - pnorm(abs(ZIpv)))
+    }else if(type == "vdb"){
+        ser1 <- series_varpv(est$meanX, alpha)
+        se_vdb <- sqrt(exp(est$meanX) - 1 - est$meanX*((1+alpha)/(1-alpha)) + 2*ser1)
+        ZIvdb <- sqrt(n)*((p0*exp(est$meanX) - 1)/se_vdb)
+        stat <- ZIvdb
+        pval <- 2*(1 - pnorm(abs(ZIvdb)))
+    }
+
+    OUT <- get_info(list(
+        data.name = deparse1(substitute(X)),
+        test = paste("zi",type,sep="_"),
+        statistic = c(T = stat),
+        p.value = pval,
+        parameter = c("a1" = alpha),
+        inn = "none",
+        method = NA,
+        B = 0
+    ))
+
+    return(OUT)
+}
+
+# ZItest(rpois(1000,2),"pv")
+# ZItest(rpois(1000,2),"vdb")
+#
+# ZItest(genINAR(1000,a = 0.5, par = 2,arrival = "poisson")$X,"pv")
+# ZItest(genINAR(1000,a = 0.5, par = 2,arrival = "poisson")$X,"vdb")
+# ZItest(genINAR(1000,a = 0.5, par = c(2,0.7),arrival = "negbin")$X,"pv")
+# ZItest(genINAR(1000,a = 0.5, par = c(2,0.7),arrival = "negbin")$X,"vdb")
+
+
+# # example usage:
+# x <- rpois(100000,2)
+# result <- ZEROtest(x)
+# result
+#
+# M = 10000
+# out <-rep(0, M)
+# for(m in 1:M){
+#   lambda <- 1
+#   a1 = 0.25
+#   x <- genINAR(1000,a1,lambda*(1-a1),arrival="poisson",burnout=500)$X
+#   mu_x <- mean(x)
+#   alpha <- acf(x, plot = FALSE)$acf[2]
+#   one <- (exp(mu_x) - 1) / (mu_x^2)
+#   two <- (1 + alpha) / (mu_x * (1 - alpha))
+#   thr <- (2 / (mu_x^2)) * loopseries(mu_x, alpha)
+#
+#   out[m] <- (one - two + thr)
+# }
+# print(mean(out))
+# plot(density(out))
+#
+# mu_x <- 1
+# alpha <- 0.25
+# one <- (exp(mu_x) - 1) / (mu_x^2)
+# two <- (1 + alpha) / (mu_x * (1 - alpha))
+# thr <- (2 / (mu_x^2)) * loopseries(mu_x, alpha)
+# (one - two + thr)

@@ -1,6 +1,3 @@
-
-# generic functions
-
 #' Fitting INAR(p) Models
 #'
 #' @rdname INAR
@@ -192,6 +189,8 @@ fitted.INAR <- function(object, ...){
     fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, arrival = object$arrival, burnout = 500)$X
     return(fitted)
 }
+
+
 
 # Set methods (S4 style) ...................
 # setMethod("print", "INAR", print.INAR)

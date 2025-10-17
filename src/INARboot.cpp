@@ -38,7 +38,6 @@ NumericVector RHO_Cpp(NumericVector x){
 }
 
 
-
 //' Autocorrelation bootstrap test.
 //' @param x NumericVector
 //' @param B int
@@ -202,6 +201,8 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
 
     // check underdispersion
     if(var_x <= mu_x){
+        // Rcpp::Rcout << "Underdispersion detected: switching to generalized Poisson method.\n";
+        // method = 3;
         out[0] = NAN;
         out[1] = NAN;
         return out;
@@ -910,10 +911,10 @@ List HMCtest_boot(NumericVector X, int B){
 
 /*** R
 set.seed(1913)
-x <- rpois(500,40)
+x <- rpois(500,1)
+HMC_Cpp(x)
 # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
 # HMC_Cpp(seq(0,20,by=2))
-HMC_Cpp(x)
 # B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)

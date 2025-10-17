@@ -1,4 +1,3 @@
-
 #' Conditional Nonnegative Least Squares for INAR(p) parameter estimation
 #'
 #' Internal function
