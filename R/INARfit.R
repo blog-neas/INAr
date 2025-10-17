@@ -12,7 +12,7 @@
 #' @details
 #' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
 #' @export
-INAR <- function(X, p, inn="poisson", method = "CLS"){
+INAR <- function(X, p, inn="poi", method = "CLS"){
     # cl <- match.call()
     n <- length(X)
     inn <- trimws(tolower(inn))
@@ -22,11 +22,13 @@ INAR <- function(X, p, inn="poisson", method = "CLS"){
     if(inn == "negbin" & var(X) <= mean(X)){ stop( "Only overdispersed data allowed for the negbin case" ) }
 
     if(method == "YW"){
-        est <- estimYW(X, p)
+        est <- estimYW(X, p, inn = inn)
     }else if(method == "CLS"){
-        est <- estimCLS(X, p)
+        est <- estimCLS(X, p, inn = inn)
         alphas <- est$alphas
     }else if(method == "CML"){
+        est <- estimCLM(X, p, inn = inn)
+        alphas <- est$alphas
         # TO DO
         stop("CML: TO DO")
     }else if(method == "SP"){

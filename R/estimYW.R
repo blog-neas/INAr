@@ -1,4 +1,3 @@
-
 #' Yule-Walker for INAR(p) alphas parameter estimation
 #'
 #' Internal function

@@ -2,8 +2,8 @@
 #'
 #' Internal function
 #'
-#' @param x, observed series
-#' @param p, number of lags
+#' @param x vector, observed series
+#' @param p integer, number of lags
 #'
 #' @importFrom stats var
 #' @importFrom RcppML nnls
@@ -39,9 +39,12 @@ estimCLS <- function(x, p) {
     mINN <- mod[1]
     vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
 
+    par_hat <- estimPAR(alphas, mX, vX, mINN, vINN, inn = "poi")
+
     # est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
 
     OUT <- list(alphas = alphas,
+                par = par_hat$par,
                 "meanX" = mX, "varX" = vX,
                 "meanINN" = mINN, "varINN" = vINN)
     return(OUT)

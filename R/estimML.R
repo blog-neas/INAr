@@ -8,16 +8,12 @@
 #' @param inn, innovation distribution
 #' @param control, list of control parameters for optim function
 #'
-#' @importFrom stats acf
-#' @importFrom stats var
-#' @importFrom RcppML nnls
-#'
 #' @details
-#' Reference alla procedura (Du and Li)
+#' Descrizione del metodo e Reference alla procedura (Du and Li)
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimML <- function(X, p, inn = "poi", control = list()) {
+estimCML <- function(X, p, inn = "poi", control = list()) {
     stopifnot(p==1)
     stopifnot(inn == "poi")
 
@@ -66,39 +62,10 @@ estimML <- function(X, p, inn = "poi", control = list()) {
 }
 
 # esempio
-set.seed(123)
-x <- genINAR(100000,a = 0.5, par = 2,arrival = "poisson",burnout = 500)$X
-fit <- estimML(x, p = 1, inn = "poi")
-fit
-# Parameter trick:
-# 1. to_theta: par_transform: transform parameters to unconstrained space
-#    alpha in (0,1) -> logit(alpha) = log(alpha/(1-alpha)) in R
-#    lambda in (0,inf) -> log(lambda) in R
-# 2. from_theta: par_back: transform back to original space
-#    logit(alpha) -> alpha = exp(logit(alpha)) / (1 + exp(logit(alpha)))
-#    log(lambda) -> lambda = exp(log(lambda))
-# how to use:
-# 1. transform initial parameters
-# 2. transform back the parameters within the optimization function to compute the nll
-#    in this way the nll uses the original parameters
-#    here the thick is to compute a classical nll function but call it in a nll_transformed
-#    which is the one passed to optim and has the only task to transform back the parameters
-#    example:
-# nll_transformed <- function(theta) {
-#     par <- from_theta(theta)  # passa da spazio non vincolato a quello reale
-#     alpha <- par["alpha"]
-#     lambda <- par["lambda"]
-#
-#     # valuta la negative log-likelihood
-#     saddle_nll_cpp(x, alpha, lambda)
-# }
-# 3. nll is computed by using real parameters but nll_transformed is linked to
-# the transformed parameters, so to obtain the real estimates we need
-# to transform back the resulting parameter coming out from optim
-
-# trasformazioni parametri
-# to_theta <- function(par) c(qlogis(par["alpha"]), log(par["lambda"]))
-# from_theta <- function(theta) c(alpha = plogis(theta[1]), lambda = exp(theta[2]))
+# set.seed(123)
+# x <- genINAR(100000,a = 0.5, par = 2,arrival = "poisson",burnout = 500)$X
+# fit <- estimCML(x, p = 1, inn = "poi")
+# fit
 
 
 #' Transformed log-likelihood
