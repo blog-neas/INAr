@@ -62,7 +62,7 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
 # esempio
 # set.seed(123)
 # x <- genINAR(100000,a = 0.5, par = 2,arrival = "poisson",burnout = 500)$X
-# fit <- estimCML(x, p = 1, inn = "poi")
+# fit <- INAr:::estimCML(x, p = 1, inn = "poi")
 # fit
 
 

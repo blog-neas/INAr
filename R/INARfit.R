@@ -6,11 +6,11 @@
 #' @param X data vector
 #' @param p the order of the INAR(p) process
 #' @param inn distribution of the innovation process
-#' @param method estimation method
+#' @param method estimation method, one of "YW" (Yule-Walker), "CLS" (Conditional Least Squares), "CML" (Conditional Maximum Likelihood), "SP" (Saddlepoint Approximation)
 #'
 #' @return The fitted model, an object of class `INAR`
 #' @details
-#' Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
+#' This function estimates an INAR(p) model given the distribution of the innovation process.
 #' @export
 INAR <- function(X, p, inn="poi", method = "CLS"){
     # cl <- match.call()
@@ -37,15 +37,14 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
     a_hat <- est$alphas
     par_hat <- est$par
 
-    resid <- Xresid(X = X, alphas = a_hat, mINN = est$meanINN, vINN = est$varINN)
-    RMSE <- sqrt(mean(resid$resid^2,na.rm = TRUE))
-
+    # resid <- Xresid(X = X, alphas = a_hat, mINN = est$meanINN, vINN = est$varINN)
+    # RMSE <- sqrt(mean(resid$resid^2,na.rm = TRUE))
 
     OUT <- list(
         "alphas" = a_hat,
         "par" = par_hat
     )
-    class(OUT) <- "INAR" # structure(OUT, class = "INAR")
+    # class(OUT) <- "INAR" # structure(OUT, class = "INAR")
     return(OUT)
 }
 
