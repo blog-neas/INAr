@@ -34,20 +34,13 @@ estimYW <- function(X, p, inn = "poi", ...) {
         alphas <- r
     }
 
-    mX <- mean(X)
-    vX <- var(X)
-    mINN <- (1 - sum(alphas))*mX
-    vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas))
-
-    if(inn == "poi"){
-        par = c("lambda" = mINN)
-    }
-    # continua con altri innovation dgp
+    par <- estimPAR(alphas, mean(X), var(X), inn = inn)
 
     OUT <- list("alphas" = alphas,
-                "par"=par,
-                "meanX" = mX, "varX" = vX,
-                "meanINN" = mINN, "varINN" = vINN)
+                "par"=par
+                # "meanX" = mX, "varX" = vX,
+                # "meanINN" = mINN, "varINN" = vINN
+                )
     return(OUT)
 }
 

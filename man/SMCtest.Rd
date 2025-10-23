@@ -4,16 +4,16 @@
 \alias{SMCtest}
 \title{Perform Sun-McCabe INAR tests}
 \usage{
-SMCtest(X, method, type = NA, B = 0)
+SMCtest(X, inn = "poi", B = 0, method = NA)
 }
 \arguments{
-\item{X}{vector, thinning parameters. The lenght of this vector defines the number of lags \code{p} of the INAR(p) process.}
+\item{X}{vector, thinning parameters. The length of this vector defines the number of lags \code{p} of the INAR(p) process.}
 
-\item{method}{character, the distribution to be used in the test. The options are "poi", "negbin" and "genpoi".}
-
-\item{type}{character, the type of test to be performed, the alternatives are "parametric or "semiparametric".}
+\item{inn}{character, the innovation distribution to be used in the test. The options are "poi", "negbin" and "genpoi".}
 
 \item{B}{integer, the number of bootstrap samples to be generated. The default value is 0, corresponding to no bootstrap samples.}
+
+\item{method}{character, the type of test to be performed, the alternatives are "par" or "semipar".}
 }
 \value{
 A number.
@@ -27,8 +27,8 @@ It is possible to run an exact (B = 0) or a bootstrap (B > 0) test.
 SMC tests are based on Poisson, negative binomial and generalized Poisson
 distributions, in all the considered cases, both parametric and semiparametric
 methods are available.
-It is possible to perform the tests using the original data (B=0) or using
-bootstrap samples (B > 0).
+It is possible to perform the exact tests using the original data (B=0) or
+using bootstrap samples (B > 0).
 }
 \examples{
 # ....... examples .....

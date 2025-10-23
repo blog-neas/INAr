@@ -1,3 +1,20 @@
+# INAr 0.3.0
+
+* Overhaul of the package structure and code organization. The package is now organized into multiple R scripts, each dedicated to specific functionalities such as data generation, model fitting, statistical tests and utility functions. List of the main functions:
+    * `genINAR`: Main frontend function to generate INAR(p) models.
+    * `INAR`: Main frontend function to fit INAR(p) models.
+    * `DItest`: Main frontend function to perform the Dispersion Index test.
+    * `ZItest`: Main frontend function to perform the Zero-Inflation test.
+    * `SMCtest`: Main frontend function to perform the Sun-McCabe Score test.
+    * `HMCtest`: Main frontend function to perform the Harrison-McCabe test (under development).
+
+* New function organization to improve scalability and maintainability. The function dependency structure is described in the readme file.
+
+* Reshaping all the C++ code to improve efficiency and speed.
+
+* Parallel C++ scripts for bootstrap procedures under development phase.
+
+
 # INAr 0.2.3
 
 * Removed the the `good` package since it is not available anymore on CRAN. In next updates I'm considering to substitute the `good::rgood` function by using the `VGAM` package.

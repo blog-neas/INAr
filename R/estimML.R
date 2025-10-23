@@ -10,6 +10,7 @@
 #'
 #' @details
 #' Descrizione del metodo e Reference alla procedura (Du and Li)
+#' @importFrom stats optim
 #' @references
 #'   \insertAllCited{}
 #' @noRd
@@ -17,22 +18,19 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
     stopifnot(p==1)
     stopifnot(inn == "poi")
 
-    # if (is.null(init)) {
-    #     YW <- estimYW(X, p)
-    #     mu <- YW$meanX
-    #     alpha0 <- YW$alphas
-    #     lambda0 <- max(0.1, mu * (1 - alpha0))
-    #     init <- c(alpha = alpha0, lambda = lambda0)
-    # # }
+    if (is.null(control$init)){
+        YW <- estimYW(X, p, inn = inn)
+        alpha0 <- YW$alphas
+        lambda0 <- YW$par[1]
+        theta0 <- par_transform(alpha0, lambda0, inn)
+    }else{
+        theta0 <- control$init
+    }
 
     # initial parameter estimation via Yule-Walker
-    YW <- estimYW(X, p, inn = inn)
-    alpha0 <- YW$alphas
-    lambda0 <- YW$par[1]
-    theta0 <- par_transform(alpha0, lambda0, inn)
 
     if(p == 1 & inn == "poi"){
-        opt <- optim(theta0, nll_transformed_inar1_poi, method = "BFGS", control = control) #, hessian = hessian)
+        opt <- optim(theta0, nll_transformed_inar1_poi_ml, data = X, method = "BFGS", control = control) #, hessian = hessian)
         theta_hat <- opt$par
         par_hat <- par_back(theta_hat,inn)
 
@@ -68,7 +66,7 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
 # fit
 
 
-#' Transformed log-likelihood
+#' Transformed log-likelihood for MLE
 #'
 #' @description
 #' Transformed negative log-likelihood for INAR(1)-Poisson
@@ -76,12 +74,13 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
 #'
 #' @keywords internal
 #' @noRd
-nll_transformed_inar1_poi <- function(theta) {
+nll_transformed_inar1_poi_ml <- function(data, theta) {
+    X <- data
     par_b <- par_back(theta, inn = "poi")
     alpha <- par_b$alphas
     lambda <- par_b$par
     if (alpha <= 0 || alpha >= 1 || lambda <= 0) return(1e10)
-    ll <- inar1_poi_loglik_cpp(x, alpha, lambda)
+    ll <- inar1_poi_loglik_cpp(X, alpha, lambda)
     if (!is.finite(ll)) return(1e10)
     return(-ll)
 }

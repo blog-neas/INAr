@@ -19,7 +19,7 @@ info_inn <- data.frame(
     smc = c(TRUE, TRUE, FALSE, FALSE,NA),
     hmc = c(FALSE, FALSE, FALSE, FALSE,NA)
 )
-usethis::use_data(info_inn, internal = TRUE)
+# usethis::use_data(info_inn, internal = TRUE)
 
 
 #' Generate test output list
@@ -137,13 +137,12 @@ lagmat <- function(x, p, cut = TRUE){
 # }
 
 
-
 #' Parameter transformation and back-transformation
 #'
 #' @description
 #' Internal function to transform and back-transform parameters
 #'
-#'
+#' @importFrom stats qlogis
 #' @keywords internal
 #' @noRd
 par_transform <- function(a, par, inn){
@@ -161,7 +160,7 @@ par_transform <- function(a, par, inn){
 #' @description
 #' Internal function to transform and back-transform parameters
 #'
-#'
+#' @importFrom stats plogis
 #' @keywords internal
 #' @noRd
 par_back <- function(theta, inn){

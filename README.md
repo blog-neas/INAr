@@ -13,12 +13,11 @@ Generation, estimation and testing of INteger Autoregressive models
 <!-- badges: end -->
 
 
-
-
 ## Overview
 
-The INAr Project aims to provide a set of tools for the study of time series having a discrete support by using the integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
+The INAr is a package for the study of integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
 INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
+The package aims to provide tools for the generation, estimation and testing of these models.
 
 
 ## Installation
@@ -38,29 +37,43 @@ devtools::install_github("blog-neas/INAr")
 
 #### Main Steps
 
-The project considers to distribute a set of packages for the study of INAR(p) processes, which aim to provide tools for the generation, estimation and testing of these models. The following steps are planned for the future:
+The INAr package will provide functions for the generation, estimation and test INAR(p) processes with different types of innovations. 
+Some functionalities are already available, while others are planned for the future develpoments. In particular, the main steps are listed below:
 
-1. **Score Tests** 
+1. **Generation of INAR(p) processes** 
+
+- [ ] Generation
+	- [x] Simulating INAR(p) process with different innovations (Poisson, Negative Binomial, Generalized Poisson, Katz)
+
+2. **Estimation of INAR(p) processes**
+
+- [ ] Estimation
+	- [x] CML estimation of INAR(1) processes with Poisson innovations
+	- [x] YL estimation of INAR(1) processes with Poisson innovations
+	- [x] SP estimation of INAR(1) processes with Poisson innovations
+	- [x] YW estimation of INAR(p) processes with Negative Binomial innovations
+	- [x] CLS estimation of INAR(p) processes with Negative Binomial innovations
+	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Generalized Poisson, Katz family, ...)
+	- [ ] CML estimation of INAR(p) processes
+	- [ ] Forecasting INAR(p) processes
+
+
+3. **Testing for the presence of INAR structure** 
 
 - [ ] Sun & McCabe Test
+	- [x] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [x] Semiparametric Bootstrap test
 	- [x] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other distributions
 - [ ] Harris & McCabe Test
+	- [ ] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [ ] Semiparametric Bootstrap test
 	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other distributions
 
 
-2. **INAR model fitting, estimation and forecast** 
+4. **Visualization and summary of INAR(p) models**
 
-- [ ] Generation
-	- [x] Simulating INAR(p) process with different innovations
-- [ ] Estimation
-	- [x] YW and CLS estimation of INAR(p) processes with Poisson and Negative Binomial innovations
-	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Generalized Poisson, Katz family, ...)
-	- [ ] CML estimation of INAR(p) processes
-	- [ ] Forecasting INAR(p) processes
 - [ ] Visualization
 	- [ ] Summary
 	- [ ] Plotting
@@ -72,7 +85,9 @@ The project considers to distribute a set of packages for the study of INAR(p) p
 	- [ ] Functions
 	- [ ] Dependencies list
 - [x] Licensing: GPL-3
-- [ ] Testing
+- [ ] Testing and functions coverage
+	- [ ] Unit tests
+	- [ ] Code coverage
 - [ ] Documentation
 	- [ ] Function documentation
 	- [ ] Vignettes
@@ -96,8 +111,8 @@ First of all, thanks for considering contributing to `INAr`! 👍
  [new_issue]: https://github.com/blog-neas/INAr/issues/new
  [website]: https://blog-neas.github.io/en/
  [citation]: https://blog-neas.github.io/en/INAr/authors.html
- [email]: mailto:lucio.palazzo@unina.it
- [ideas]: mailto:lucio.palazzo@unina.it
+ [email]: mailto:lucio.palazzo@unior.it
+ [ideas]: mailto:lucio.palazzo@unior.it
 
 
 There are several ways you can contribute to this project. 

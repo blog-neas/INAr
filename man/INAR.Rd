@@ -8,7 +8,7 @@
 \alias{fitted.INAR}
 \title{Fitting INAR(p) Models}
 \usage{
-INAR(X, p, arrival = "poisson", method = "CLS")
+INAR(X, p, inn = "poi", method = "CLS")
 
 \method{print}{INAR}(x, digits = max(3L, getOption("digits") - 3L), se = TRUE, ...)
 
@@ -23,7 +23,7 @@ INAR(X, p, arrival = "poisson", method = "CLS")
 
 \item{p}{the order of the INAR(p) process}
 
-\item{arrival}{distribution of the innovation process}
+\item{inn}{distribution of the innovation process}
 
 \item{method}{estimation method}
 

@@ -77,6 +77,7 @@ SMCtest <- function(X, inn = "poi", B = 0, method = NA){
 #'
 #' @details
 #' The function performs the zero inflation test for the INAR(1) model.
+#' @importFrom stats pnorm
 #' @examples
 #' # ....... examples .....
 #' # DItest(X = rpois(100,2))
@@ -173,71 +174,72 @@ ZItest <- function(X,type = "pv"){ # , inn = "poi"
 # ZItest(genINAR(1000,a = 0.5, par = c(2,0.7),arrival = "negbin")$X,"vdb")
 
 
-#' Perform Harrison-McCabe INAR tests
-#'
-#' @param X vector, thinning parameters. The length of this vector defines the number of
-#' lags `p` of the INAR(p) process.
-#' @param inn character, the innovation distribution to be used in the test.
-#' The options are "poi", "negbin" and "genpoi".
-#' @param B integer, the number of bootstrap samples to be generated.
-#' The default value is 0, corresponding to no bootstrap samples.
-#' @param method character, the type of test to be performed,
-#' the alternatives are "par" or "semipar".
-#' @return A number.
-#'
-#' @details
-#' The function performs the Harrison-McCabe (HMC) tests for the INAR
-#' model. It is possible to run an exact (B = 0) or a bootstrap (B > 0) test.
-#' HMC tests are based on Poisson, negative binomial and generalized Poisson
-#' distributions, in all the considered cases, both parametric and semiparametric
-#' methods are available.
-#' It is possible to perform the exact tests using the original data (B=0)
-#' or using bootstrap samples (B > 0).
-#' @examples
-#' # ....... examples .....
-#' # HMCtest(X = rpois(100,2), type = "semiparametric", B = 0)
-#'
-#' @export
-HMCtest <- function(X, inn = "poi", B = 0, method = NA){
-    if(!all(X == as.integer(X))) X <- as.integer(X)
-    if(!is.integer(B)) B <- as.integer(B)
-
-    stopifnot(inn %in% info_inn$inn, B >= 0)
-    stopifnot(is.na(method) | method %in% c("par","semipar"))
-    if(B > 0 & is.na(method)) stop("Specify the method: 'par' or 'semipar'")
-    stopifnot(all(X == as.integer(X)), !all(X == X[1]), is.integer(B))
-    if(inn == "negbin" & var(X) <= mean(X)){
-        stop("Underdispersion detected: Negative Binomial test not applicable (var <= mean).\n Try switching to generalized Poisson distribution.");
-    }
-
-    OUT <- get_info(list(
-        test = "hmc",
-        inn = inn,
-        method = method,
-        B = B
-    ))
-
-    if(B > 0 & method == "par" & !OUT$check) stop(paste("The selected innovation distribution (",inn,") is not available for the parametric HMC bootstrap test",sep=""))
-    OUT$data.name = deparse1(substitute(X)) # deparse(args(X))
-
-    hmc_est <- HMC_Cpp(X, OUT$inn_num)
-
-    if(B > 0){
-        # perform bootstrap test
-        if(method == "par"){
-            hmc_boot <- HMC_parBOOT_Cpp(X, B, OUT$inn_num)
-        }else if(method == "semipar"){
-            hmc_boot <- HMC_semiparBOOT_Cpp(X, B, OUT$inn_num)
-        }else{
-            stop("Specify a correct test type: 'par' or 'semipar'")
-        }
-
-        # add Boot results to OUT
-        OUT$statistic <- c(T = mean(hmc_boot))
-        OUT$p.value <- mean(abs(hmc_boot) > abs(hmc_est[1]), na.rm = TRUE)
-    }else{
-        OUT$statistic <- c(T = hmc_est[1])
-        OUT$p.value <- hmc_est[2]
-    }
-    return(OUT)
-}
+# #' Perform Harrison-McCabe INAR tests
+# #'
+# #' @param X vector, thinning parameters. The length of this vector defines the number of
+# #' lags `p` of the INAR(p) process.
+# #' @param inn character, the innovation distribution to be used in the test.
+# #' The options are "poi", "negbin" and "genpoi".
+# #' @param B integer, the number of bootstrap samples to be generated.
+# #' The default value is 0, corresponding to no bootstrap samples.
+# #' @param method character, the type of test to be performed,
+# #' the alternatives are "par" or "semipar".
+# #' @return A number.
+# #'
+# #' @details
+# #' The function performs the Harrison-McCabe (HMC) tests for the INAR
+# #' model. It is possible to run an exact (B = 0) or a bootstrap (B > 0) test.
+# #' HMC tests are based on Poisson, negative binomial and generalized Poisson
+# #' distributions, in all the considered cases, both parametric and semiparametric
+# #' methods are available.
+# #' It is possible to perform the exact tests using the original data (B=0)
+# #' or using bootstrap samples (B > 0).
+# #' @examples
+# #' # ....... examples .....
+# #' # HMCtest(X = rpois(100,2), type = "semiparametric", B = 0)
+# #'
+# #' @export
+# #'
+# HMCtest <- function(X, inn = "poi", B = 0, method = NA){
+#     if(!all(X == as.integer(X))) X <- as.integer(X)
+#     if(!is.integer(B)) B <- as.integer(B)
+#
+#     stopifnot(inn %in% info_inn$inn, B >= 0)
+#     stopifnot(is.na(method) | method %in% c("par","semipar"))
+#     if(B > 0 & is.na(method)) stop("Specify the method: 'par' or 'semipar'")
+#     stopifnot(all(X == as.integer(X)), !all(X == X[1]), is.integer(B))
+#     if(inn == "negbin" & var(X) <= mean(X)){
+#         stop("Underdispersion detected: Negative Binomial test not applicable (var <= mean).\n Try switching to generalized Poisson distribution.");
+#     }
+#
+#     OUT <- get_info(list(
+#         test = "hmc",
+#         inn = inn,
+#         method = method,
+#         B = B
+#     ))
+#
+#     if(B > 0 & method == "par" & !OUT$check) stop(paste("The selected innovation distribution (",inn,") is not available for the parametric HMC bootstrap test",sep=""))
+#     OUT$data.name = deparse1(substitute(X)) # deparse(args(X))
+#
+#     hmc_est <- HMC_Cpp(X, OUT$inn_num)
+#
+#     if(B > 0){
+#         # perform bootstrap test
+#         if(method == "par"){
+#             hmc_boot <- HMC_parBOOT_Cpp(X, B, OUT$inn_num)
+#         }else if(method == "semipar"){
+#             hmc_boot <- HMC_semiparBOOT_Cpp(X, B, OUT$inn_num)
+#         }else{
+#             stop("Specify a correct test type: 'par' or 'semipar'")
+#         }
+#
+#         # add Boot results to OUT
+#         OUT$statistic <- c(T = mean(hmc_boot))
+#         OUT$p.value <- mean(abs(hmc_boot) > abs(hmc_est[1]), na.rm = TRUE)
+#     }else{
+#         OUT$statistic <- c(T = hmc_est[1])
+#         OUT$p.value <- hmc_est[2]
+#     }
+#     return(OUT)
+# }

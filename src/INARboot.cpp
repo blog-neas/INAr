@@ -814,7 +814,6 @@ NumericVector HMC_Cpp(NumericVector x){
 }
 
 
-
 //' Bootstrap version of the Harris-McCabe score test.
 //' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param x NumericVector
@@ -909,9 +908,9 @@ List HMCtest_boot(NumericVector X, int B){
 
 
 /*** R
-set.seed(1913)
-x <- rpois(500,1)
-HMC_Cpp(x)
+# set.seed(1913)
+# x <- rpois(500,1)
+# HMC_Cpp(x)
 # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
 # HMC_Cpp(seq(0,20,by=2))
 # B <- 21

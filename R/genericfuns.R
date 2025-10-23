@@ -159,6 +159,7 @@ summary.INAR <- function (object, ...){
     #     ans$na.action <- z$na.action
     # class(ans) <- "summary.lm"
     # ans
+    object
 }
 
 #' Plotting INAR(p) Models
@@ -186,8 +187,9 @@ plot.INAR <- function (object){
 #' @param object, an `INAR` object
 #' @export
 fitted.INAR <- function(object, ...){
-    fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, arrival = object$arrival, burnout = 500)$X
-    return(fitted)
+    # fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, inn = object$inn, burnout = 500)$X
+    # return(fitted)
+    object
 }
 
 

@@ -3,8 +3,8 @@ test_that("generate INAR series", {
     a1 <- 0.5
     lam <- 2
     set.seed(1234)
-    x1 <- genINAR(N, a = a1, par = lam, arrival = "poisson")
+    x1 <- genINAR(N, a = a1, par = lam, inn = "poi")
     set.seed(1234)
-    x2 <- genINAR(N, a = a1, par = lam, arrival = "poisson")
+    x2 <- genINAR(N, a = a1, par = lam, inn = "poi")
     expect_equal(x1, x2)
 })

@@ -13,15 +13,11 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimCLS <- function(x, p) {
-    n <- length(x)
-    mX <- mean(x)
-    vX <- var(x)
+estimCLS <- function(X, p, inn = "poi"){
+    n <- length(X)
 
-    Yreg <- x[(p+1):n]
-    # Xreg <- lagmat(x,p)
-
-    Xreg <- lagmat(x,p)
+    Yreg <- X[(p+1):n]
+    Xreg <- lagmat(X,p)
 
     ## nnls::nnls
     # mod <- nnls(Xreg, Yreg)
@@ -39,14 +35,12 @@ estimCLS <- function(x, p) {
     mINN <- mod[1]
     vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
 
-    par_hat <- estimPAR(alphas, mX, vX, mINN, vINN, inn = "poi")
-
-    # est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
+    par_hat <- estimPAR(alphas, mean(X), var(X), mINN, vINN, inn = inn)
 
     OUT <- list(alphas = alphas,
-                par = par_hat$par,
-                "meanX" = mX, "varX" = vX,
-                "meanINN" = mINN, "varINN" = vINN)
+                par = par_hat$par
+                # "meanX" = mX, "varX" = vX,
+                # "meanINN" = mINN, "varINN" = vINN
+                )
     return(OUT)
 }
-
