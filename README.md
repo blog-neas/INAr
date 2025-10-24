@@ -18,7 +18,15 @@ Generation, estimation and testing of INteger Autoregressive models
 The INAr is a package for the study of integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
 INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
 The package aims to provide tools for the generation, estimation and testing of these models.
+For a detailed description of the package functionalities, please refer to the [vignettes]().
 
+INAr is not the only R package for the analysis of integer-valued time series, but it is among the few ones specifically focused on INAR(p) processes. Here are some others:
+
+- [tsinteger](https://github.com/RLesur/crrri) by Manoel Santos
+
+- [spINAR](https://github.com/MFaymon/spINAR) by Maxime Faymonville
+
+- [tscount](https://r-packages.io/packages/tscount) by Tobias Liboschik
 
 ## Installation
 
@@ -27,9 +35,13 @@ The package aims to provide tools for the generation, estimation and testing of 
 # !!!---not available at the moment---!!!
 # install.packages("INAr")
 
-# Or the development version from GitHub
+# Or the latest stable GitHub version
 # install.packages("devtools")
 devtools::install_github("blog-neas/INAr")
+
+# Or the development version from GitHub
+# install.packages("devtools")
+devtools::install_github("blog-neas/INAr", ref = "devel")
 ```
 
 
