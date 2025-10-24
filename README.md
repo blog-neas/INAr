@@ -54,13 +54,14 @@ Some functionalities are already available, while others are planned for the fut
 
 1. **Generation of INAR(p) processes** 
 
-- [ ] Simulating INAR(p) process with different innovations
+- [x] Generation of INAR(p) process with different innovations
 	- [x] Poisson
 	- [x] Negative Binomial
 	- [x] Generalized Poisson
 	- [x] Katz
+- [ ] Include the possibility to use custom innovations
 
-	
+
 2. **Estimation of INAR(p) processes**
 
 - [ ] CML estimation of INAR(p) processes
@@ -98,6 +99,13 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] Semiparametric Bootstrap test
 	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
+- [x] Zero Inflation Test
+	- [x] pv 
+	- [x] vdb
+- [x] Under- and Over- Dispersion Test
+- [ ] Goodness-of-fit tests
+	- [ ] Chi-2 test 
+	- [ ] Poissonity test (under development)
 
 
 4. **Visualization and summary of INAR(p) models**
@@ -132,8 +140,12 @@ Some functionalities are already available, while others are planned for the fut
 
 <!-- This section is adapted from https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c -->
 
-First of all, thanks for considering contributing to `INAr`! 👍 
+First of all, thanks for considering contributing to `INAr`, contributions are welcome!
 `INAr` is an open source project maintained by people who care, and an help is always appreciated. 😊
+If you are interested in improving or extending the package, feel free to get in touch.
+You can contact directly one of the package mantainers to discuss ideas, report issues, or propose new features.
+
+There are several ways you can contribute to this project, you can also open an issue or submit a pull request via GitHub.
 
  [repo]: https://github.com/blog-neas/INAr
  [issues]: https://github.com/blog-neas/INAr/issues
@@ -143,10 +155,7 @@ First of all, thanks for considering contributing to `INAr`! 👍
  [email]: mailto:lucio.palazzo@unior.it
  [ideas]: mailto:lucio.palazzo@unior.it
 
-
-There are several ways you can contribute to this project. 
-
- - Think `INAr` is useful? Let others discover it, by telling them in person, via Twitter or a blog post.
+<!--  - Think `INAr` is useful? Let others discover it, by telling them in person, via Twitter or a blog post. -->
 
  - Using `INAr` for a paper you are writing? Consider [citing it][citation].
  
