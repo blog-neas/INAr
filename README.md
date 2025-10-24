@@ -1,6 +1,6 @@
 
 # INAr R Project <img src="man/img/hexlogo.png" align="right" height="138.5" />
-Generation, estimation and testing of INteger Autoregressive models
+Generation, estimation and testing of Integer Autoregressive models
 
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
@@ -54,20 +54,36 @@ Some functionalities are already available, while others are planned for the fut
 
 1. **Generation of INAR(p) processes** 
 
-- [ ] Generation
-	- [x] Simulating INAR(p) process with different innovations (Poisson, Negative Binomial, Generalized Poisson, Katz)
+- [ ] Simulating INAR(p) process with different innovations
+	- [x] Poisson
+	- [x] Negative Binomial
+	- [x] Generalized Poisson
+	- [x] Katz
 
+	
 2. **Estimation of INAR(p) processes**
 
-- [ ] Estimation
-	- [x] CML estimation of INAR(1) processes with Poisson innovations
-	- [x] YL estimation of INAR(1) processes with Poisson innovations
-	- [x] SP estimation of INAR(1) processes with Poisson innovations
-	- [x] YW estimation of INAR(p) processes with Negative Binomial innovations
-	- [x] CLS estimation of INAR(p) processes with Negative Binomial innovations
-	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Generalized Poisson, Katz family, ...)
-	- [ ] CML estimation of INAR(p) processes
-	- [ ] Forecasting INAR(p) processes
+- [ ] CML estimation of INAR($p$) processes
+	- [x] with $p = 1$ and Poisson innovations
+	- [ ] with $p = 1$ and Negative Binomial innovations
+	- [ ] with $p = 1$ and additional innovations (Good, Generalized Poisson, Katz family, ...)
+	- [ ] with $p > 1$ and additional innovations
+- [ ] CLS estimation of INAR($p$) processes
+	- [x] with $p = 1$ and Poisson innovations
+	- [ ] with $p = 1$ and Negative Binomial innovations
+	- [ ] with $p = 1$ and additional innovations (Good, Generalized Poisson, Katz family, ...)
+	- [ ] with $p > 1$
+- [ ] SP estimation of INAR($p$) processes
+	- [x] with $p = 1$ and Poisson innovations
+	- [ ] with $p = 1$ and Negative Binomial innovations
+	- [ ] with $p = 1$ and additional innovations (Good, Generalized Poisson, Katz family, ...)
+	- [ ] with $p > 1$ and additional innovations
+- [ ] YW estimation of INAR($p$) processes
+	- [x] with $p = 1$ and Poisson innovations
+	- [ ] with $p = 1$ and Negative Binomial innovations
+	- [ ] with $p = 1$ and additional innovations (Good, Generalized Poisson, Katz family, ...)
+	- [ ] with $p > 1$
+- [ ] Forecasting INAR(p) processes
 
 
 3. **Testing for the presence of INAR structure** 
@@ -76,18 +92,19 @@ Some functionalities are already available, while others are planned for the fut
 	- [x] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [x] Semiparametric Bootstrap test
 	- [x] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
-	- [ ] Parametric Bootstrap test - Other distributions
+	- [ ] Parametric Bootstrap test - Other innovations (Good, Generalized Poisson, Katz family, ...)
 - [ ] Harris & McCabe Test
 	- [ ] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [ ] Semiparametric Bootstrap test
 	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
-	- [ ] Parametric Bootstrap test - Other distributions
+	- [ ] Parametric Bootstrap test - Other innovations (Good, Generalized Poisson, Katz family, ...)
 
 
 4. **Visualization and summary of INAR(p) models**
 
 - [ ] Visualization
 	- [ ] Summary
+	- [ ] Fitted values
 	- [ ] Plotting
 
 
