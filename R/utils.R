@@ -164,11 +164,12 @@ par_transform <- function(a, par, inn){
 #' @keywords internal
 #' @noRd
 par_back <- function(theta, inn){
-    m <- length(theta)
+    n <- length(theta)
     if(inn == "poi"){
-        a <- plogis(theta[1:(m-1)])
-        attr(a,"names") <- paste0("a",1:(m-1))
-        par <- exp(theta[m])
+        m <- 1 # nr of innovation parameters
+        a <- plogis(theta[1:(n-m)])
+        attr(a,"names") <- paste0("a",1:(n-m))
+        par <- exp(theta[(n-m+1):n])
     }
     return(list("alphas"=a,"par"=par))
 }

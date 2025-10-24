@@ -85,3 +85,77 @@ nll_transformed_inar1_poi_ml <- function(data, theta) {
     return(-ll)
 }
 
+
+#' Transformed log-likelihood for MLE
+#'
+#' @description
+#' Transformed negative log-likelihood for INAR(1)-Negative Binomial
+#'
+#'
+#' @keywords internal
+#' @noRd
+nll_transformed_inar1_negbin_ml <- function(data, theta){
+    # X <- data
+    # par_b <- par_back(theta, inn = "negbin")
+    # alpha <- par_b$alphas
+    # gamma <- par_b$par[1]
+    # pi <- par_b$par[2]
+    #
+    # if (alpha <= 0 || alpha >= 1 || pi <= 0 || pi >= 1 || gamma <= 0) return(1e10)
+    # ll <- inar1_nebgin_loglik_cpp(X, alpha, gamma, pi)
+    # if (!is.finite(ll)) return(1e10)
+    # return(-ll)
+    data
+}
+
+
+#' Transformed log-likelihood for MLE
+#'
+#' @description
+#' Transformed negative log-likelihood for INAR(1)-Generalized Poisson
+#'
+#'
+#' @keywords internal
+#' @noRd
+nll_transformed_inar1_genpoi_ml <- function(data, theta){
+    # X <- data
+    # par_b <- par_back(theta, inn = "genpoi")
+    # alpha <- par_b$alphas
+    # kappa <- par_b$par[1]
+    # lambda <- par_b$par[2]
+    #
+    #
+    # if(alpha <= 0 || alpha >= 1 || kappa < 0 || kappa >=1 || lambda <= 0) return(1e10)
+    # ll <- inar1_nebgin_loglik_cpp(X, alpha, gamma, pi)
+    # if (!is.finite(ll)) return(1e10)
+    # return(-ll)
+    data
+}
+
+
+#' Transformed log-likelihood for MLE
+#'
+#' @description
+#' Transformed negative log-likelihood for INAR(1)-Katz
+#'
+#'
+#' @keywords internal
+#' @noRd
+nll_transformed_inar1_katz_ml <- function(data, theta){
+    # X <- data
+    # par_b <- par_back(theta, inn = "genpoi")
+    # alpha <- par_b$alphas
+    # kappa <- par_b$par[1]
+    # lambda <- par_b$par[2]
+    #
+    #
+    # if(alpha <= 0 || alpha >= 1 || kappa < 0 || kappa >=1 || lambda <= 0) return(1e10)
+    # ll <- inar1_nebgin_loglik_cpp(X, alpha, gamma, pi)
+    # if (!is.finite(ll)) return(1e10)
+    # return(-ll)
+    data
+}
+
+
+
+
