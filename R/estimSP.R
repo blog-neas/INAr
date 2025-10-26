@@ -32,8 +32,8 @@ estimSP <- function(X, p, inn = "poi", control = list()){
     }
 
     OUT <- list("alphas" = par_hat$alphas,
-                "par" = par_hat$par
-                # "meanX" = mX, "varX" = vX,
+                "par" = par_hat$par,
+                "meanX" = mean(X), "varX" = var(X)
                 # "meanINN" = mINN, "varINN" = vINN
     )
     return(OUT)

@@ -5,6 +5,7 @@
     * `INAR`: Main frontend function to fit INAR(p) models.
     * `DItest`: Main frontend function to perform the Dispersion Index test.
     * `ZItest`: Main frontend function to perform the Zero-Inflation test.
+    * `ZIDItest`: Main frontend function to perform the combined Zero-Inflation and Dispersion Index test.
     * `SMCtest`: Main frontend function to perform the Sun-McCabe Score test.
     * `HMCtest`: Main frontend function to perform the Harrison-McCabe test (under development).
 

@@ -5,7 +5,7 @@
 #' @param par vector, parameters related with the model, see the details section.
 #' @param inn character, innovation distribution. Default value is `"poi"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
 #' @param burnout integer, number of starting observations to discard. Set to 500 by default.
-#' @param ... Additional arguments passed to the functions generating the random numbers.
+# #' @param ... Additional arguments passed to the functions generating the random numbers.
 #' @details
 #' The function generates `n` observations drawn from an INAR(p) model
 #' \deqn{X_t = \alpha_1 {*} X_{t-1} + \ldots + \alpha_p {*} X_{t-p} + \varepsilon_t}
@@ -52,7 +52,7 @@
 #' genINAR(500, a = 0.5, par = lam, inn = "poi")
 #'
 #' @export
-genINAR <- function(n, a, par, inn="poi", burnout=500, ...){
+genINAR <- function(n, a, par, inn="poi", burnout=500){
     stopifnot(is.vector(a))
     stopifnot(all(a >= 0))
     stopifnot(sum(a) < 1)

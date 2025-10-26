@@ -38,8 +38,8 @@ estimCLS <- function(X, p, inn = "poi"){
     par_hat <- estimPAR(alphas, mean(X), var(X), mINN, vINN, inn = inn)
 
     OUT <- list("alphas" = alphas,
-                "par" = par_hat$par
-                # "meanX" = mX, "varX" = vX,
+                "par" = par_hat$par,
+                "meanX" = mean(X), "varX" = var(X)
                 # "meanINN" = mINN, "varINN" = vINN
                 )
     return(OUT)

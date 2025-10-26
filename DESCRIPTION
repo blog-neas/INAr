@@ -1,12 +1,12 @@
 Package: INAr
 Type: Package
 Title: Generation, estimation and testing of INteger Autoregressive models
-Version: 0.2.3
+Version: 0.3.0
 Authors@R: 
     c(person(given = "Lucio",
            family = "Palazzo",
            role = c("aut", "cre"),
-           email = "lucio.palazzo@unina.it",
+           email = "lucio.palazzo@unior.it",
            comment = c(ORCID = "0000-0001-7529-4689")), 
            person(given = "Riccardo",
            family = "Ievoli",

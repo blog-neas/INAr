@@ -100,11 +100,11 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
 - [x] Zero Inflation Test
-	- [x] pv 
-	- [x] vdb
+	- [x] Puig and Valero (2006)
+	- [x] van den Broek (1995)
 - [x] Under- and Over- Dispersion Test
 - [ ] Goodness-of-fit tests
-	- [ ] Chi-2 test 
+	- [x] Chi-squared test (Weiss et al, 2019)
 	- [ ] Poissonity test (under development)
 
 

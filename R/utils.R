@@ -72,6 +72,20 @@ get_info <- function(LIST){
             inn_num = info_inn$inn_num[id_inn],
             check = TRUE
         )
+    }else if(LIST$test == "zidi_pv"){
+        OUT <- list(
+            method = paste("Chi-squared test for joint zero-inflation and dispersion in INAR(1) models - PV version."), # with", innovation, "innovations."),
+            inn_name = innovation,
+            inn_num = info_inn$inn_num[id_inn],
+            check = TRUE
+        )
+    }else if(LIST$test == "zidi_vdb"){
+        OUT <- list(
+            method = paste("Chi-squared test for joint zero-inflation and dispersion in INAR(1) models - VDB version."), # with", innovation, "innovations."),
+            inn_name = innovation,
+            inn_num = info_inn$inn_num[id_inn],
+            check = TRUE
+        )
     }
 
     if(!is.null(LIST$parameter)) OUT$parameter <- LIST$parameter

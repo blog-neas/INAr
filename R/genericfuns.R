@@ -26,7 +26,7 @@ print.INAR <- function (x, digits = max(3L, getOption("digits") - 3L), se = TRUE
         }
         print.default(alphas, print.gap = 2)
 
-        cat("\nInnovation Parameters,",toupper(x$arrival),"Distribution:\n")
+        cat("\nInnovation Parameters,",toupper(x$inn),"Distribution:\n")
         pars <- round(x$coef$pars, digits = digits)
         if (se && NROW(x$var.coef$pars)) {
             ses <- rep.int(0, length(pars))

@@ -52,8 +52,8 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
     }
 
     OUT <- list("alphas" = par_hat$alphas,
-                "par" = par_hat$par
-                # "meanX" = mX, "varX" = vX,
+                "par" = par_hat$par,
+                "meanX" = mean(X), "varX" = var(X)
                 # "meanINN" = mINN, "varINN" = vINN
                 )
     return(OUT)
@@ -61,7 +61,7 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
 
 # esempio
 # set.seed(123)
-# x <- genINAR(100000,a = 0.5, par = 2,arrival = "poisson",burnout = 500)$X
+# x <- genINAR(100000,a = 0.5, par = 2, inn = "poisson",burnout = 500)$X
 # fit <- INAr:::estimCML(x, p = 1, inn = "poi")
 # fit
 

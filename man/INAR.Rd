@@ -25,7 +25,7 @@ INAR(X, p, inn = "poi", method = "CLS")
 
 \item{inn}{distribution of the innovation process}
 
-\item{method}{estimation method}
+\item{method}{estimation method, one of "YW" (Yule-Walker), "CLS" (Conditional Least Squares), "CML" (Conditional Maximum Likelihood), "SP" (Saddlepoint Approximation)}
 
 \item{x, }{an \code{INAR} object.}
 
@@ -46,5 +46,5 @@ summary method for class \code{INAR}.
 summary method for class \code{INAR}.
 }
 \details{
-Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
+This function estimates an INAR(p) model given the distribution of the innovation process.
 }

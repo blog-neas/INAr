@@ -64,10 +64,9 @@ SMCtest <- function(X, inn = "poi", B = 0, method = NA){
 }
 
 # example usage:
-# set.seed(1926)
-# x <- rpois(100000,2)
-# SMCtest(x, inn = "katz", B = 0)
-# SMCtest(x, inn = "negbin", B = 0, method = "semipar")
+# SMCtest(rpois(1000,2), inn = "poi", B = 0)
+# SMCtest(rpois(1000,2), inn = "katz", B = 0)
+# SMCtest(rpois(1000,2), inn = "negbin", B = 0, method = "semipar")
 
 
 #' Perform the over(under)-Dispersion Index test for the INAR(1) (Weiss et al, 2019)
@@ -99,8 +98,8 @@ DItest <- function(X){ # , inn = "poi"
     OUT <- get_info(list(
         data.name = deparse1(substitute(X)),
         test = "di",
-        statistic = c(T = DIstat),
-        parameter = c("a1" = alpha),
+        statistic = c(T = unname(DIstat)),
+        parameter = c("a1" = unname(alpha)),
         p.value = pval,
         method = NA,
         B = 0
@@ -122,6 +121,7 @@ DItest <- function(X){ # , inn = "poi"
 #'
 #' @details
 #' The function performs the zero inflation test for the INAR(1) model.
+#' @importFrom stats pnorm
 #' @examples
 #' # ....... examples .....
 #' # ZItest(X = rpois(100,2))
@@ -154,9 +154,9 @@ ZItest <- function(X,type = "pv"){ # , inn = "poi"
     OUT <- get_info(list(
         data.name = deparse1(substitute(X)),
         test = paste("zi",type,sep="_"),
-        statistic = c(T = stat),
+        statistic = c(T = unname(stat)),
         p.value = pval,
-        parameter = c("a1" = alpha),
+        parameter = c("a1" = unname(alpha)),
         inn = "none",
         method = NA,
         B = 0
@@ -173,6 +173,74 @@ ZItest <- function(X,type = "pv"){ # , inn = "poi"
 # ZItest(genINAR(1000,a = 0.5, par = c(2,0.7),arrival = "negbin")$X,"pv")
 # ZItest(genINAR(1000,a = 0.5, par = c(2,0.7),arrival = "negbin")$X,"vdb")
 
+
+#
+#' Joint test for zero-inflation and dispersion for the INAR(1) (Weiss et al, 2019)
+#'
+#' @param X vector, a series.
+#' @param type character, one of the possible zero inflation tests, ... ("pv") or ... ("vdb").
+#' @return ........
+#'
+#' @details
+#' The function performs the zero inflation test for the INAR(1) model.
+#' @importFrom stats pchisq
+#' @examples
+#' # ....... examples .....
+#' # ZIDItest(X = rpois(100,2))
+#'
+ZIDItest <- function(X, type = "pv"){
+    stopifnot(type %in% c("pv","vdb"))
+    if(!all(X == as.integer(X))) X <- as.integer(X)
+    # stopifnot(inn %in% info_inn$inn)
+
+    n <- length(X)
+    est <- estimYW(X, p = 1)
+    alpha <- abs(est$alphas)
+    p0 <- sum(X == 0) / n
+    ser1 <- series_varpv(est$meanX, alpha)
+
+    DIc <- est$varX / est$meanX - 1
+    Sigma <- matrix(0,2,2)
+    if(type == "pv"){
+        var_pv <-(exp(est$meanX) - 1)/(est$meanX^2) - (1/est$meanX)*((1 + alpha)/(1 - alpha)) + (2/est$meanX^2)*ser1
+        Sigma[1,1] <- var_pv
+        Sigma[1,2] <- (1 + alpha^2)/(1 - alpha^2)
+        ZIc <- 1 + log(p0)/est$meanX
+    }else if(type == "vdb"){
+        var_vdb <- exp(est$meanX) - 1 - est$meanX*((1+alpha)/(1-alpha)) + 2*ser1
+        Sigma[1,1] <- var_vdb
+        Sigma[1,2] <- est$meanX*((1 + alpha^2)/(1 - alpha^2))
+        ZIc <- p0*exp(est$meanX) - 1
+    }
+    Sigma[2,1] <- Sigma[1,2]
+    Sigma[2,2] <- 2 * (1 + alpha^2)/(1 - alpha^2)
+    solve(Sigma)
+
+    Ic <- matrix(c(ZIc, DIc), ncol = 1)
+    stat <- n*t(Ic)%*%solve(Sigma)%*%Ic
+    pval <- 1 - pchisq(stat, df = 2)
+
+    OUT <- get_info(list(
+        data.name = deparse1(substitute(X)),
+        test = paste("zidi",type,sep="_"),
+        statistic = c(T = stat),
+        p.value = pval,
+        parameter = c("a1" = unname(alpha)),
+        inn = "none",
+        method = NA,
+        B = 0
+    ))
+
+    return(OUT)
+}
+
+# ZIDItest(rpois(1000,2),"pv")
+# ZIDItest(rpois(1000,2),"vdb")
+#
+# ZIDItest(genINAR(1000,a = 0.5, par = 2,arrival = "poisson")$X,"pv")
+# ZIDItest(genINAR(1000,a = 0.5, par = 2,arrival = "poisson")$X,"vdb")
+# ZIDItest(genINAR(1000,a = 0.5, par = c(2,0.9),inn = "negbin")$X,"pv")
+# ZIDItest(genINAR(1000,a = 0.5, par = c(2,0.1),inn = "negbin")$X,"vdb")
 
 # #' Perform Harrison-McCabe INAR tests
 # #'

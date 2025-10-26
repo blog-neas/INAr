@@ -39,8 +39,8 @@ estimYW <- function(X, p, inn = "poi", ...) {
     par <- estimPAR(alphas, mean(X), var(X), inn = inn)
 
     OUT <- list("alphas" = alphas,
-                "par"=par$par
-                # "meanX" = mX, "varX" = vX,
+                "par"=par$par,
+                "meanX" =  mean(X), "varX" = var(X)
                 # "meanINN" = mINN, "varINN" = vINN
                 )
     return(OUT)
