@@ -102,7 +102,7 @@ Some functionalities are already available, while others are planned for the fut
 - [x] Zero Inflation Test
 	- [x] Puig and Valero (2006)
 	- [x] van den Broek (1995)
-- [x] Under- and Over- Dispersion Test
+- [x] Under- and Over- Dispersion Test (Fisher, 1950)
 - [ ] Goodness-of-fit tests
 	- [x] Chi-squared test (Weiss et al, 2019)
 	- [ ] Poissonity test (under development)
