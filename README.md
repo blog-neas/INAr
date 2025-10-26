@@ -18,7 +18,7 @@ Generation, estimation and testing of Integer Autoregressive models
 The INAr is a package for the study of integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
 INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
 The package aims to provide tools for the generation, estimation and testing of these models.
-For a detailed description of the package functionalities, please refer to the [vignettes]().
+For a detailed description of the package functionalities, please refer to the [vignette]().
 
 INAr is not the only R package for the analysis of integer-valued time series, but it is among the few ones specifically focused on INAR(p) processes. Here are some others:
 
