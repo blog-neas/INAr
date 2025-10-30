@@ -16,4 +16,3 @@ arma::mat YW_cpp(const arma::vec& r) {
     R = arma::symmatu(R);
     return R;
 }
-

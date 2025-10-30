@@ -187,7 +187,7 @@ ZItest <- function(X,type = "pv"){ # , inn = "poi"
 #' @examples
 #' # ....... examples .....
 #' # ZIDItest(X = rpois(100,2))
-#'
+#' @export
 ZIDItest <- function(X, type = "pv"){
     stopifnot(type %in% c("pv","vdb"))
     if(!all(X == as.integer(X))) X <- as.integer(X)
