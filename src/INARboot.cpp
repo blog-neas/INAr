@@ -845,7 +845,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
 
              s_temp[i] = HMC_Cpp(xb)[0];
 
-             if(!arma::is_finite(s_temp[i])){
+             if(!std::isfinite(s_temp[i])){
                  s_temp[i] = sign(s_temp[i])*pow(n,10);
              };
 
@@ -859,7 +859,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
              niter += 1;
              // con false esce, con true resta
              // check for whether a value is finite, e.g. not NaN,Inf, or -Inf, by using arma::is_finite()
-         } while (!arma::is_finite(s_temp[i]) & (niter < 10) );
+         } while (!std::isfinite(s_temp[i]) & (niter < 10) );
 
      }
      // std::cout << s_temp << std::endl;
