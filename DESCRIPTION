@@ -37,7 +37,6 @@ Imports: Rcpp (>= 1.0.0),
     Rdpack,
     RNGforGPD
 Suggests: 
-    covr,
     knitr,
     rmarkdown,
     tidyverse,
