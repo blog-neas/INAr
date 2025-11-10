@@ -14,6 +14,8 @@ SMCtest(X, inn = "poi", B = 0, method = NA, saveboot = FALSE)
 \item{B}{integer, the number of bootstrap samples to be generated. The default value is 0, corresponding to no bootstrap samples.}
 
 \item{method}{character, the type of test to be performed, the alternatives are "par" or "semipar".}
+
+\item{saveboot}{logical, if TRUE the bootstrap replicates are saved in the output object (only if B > 0).}
 }
 \value{
 A number.
