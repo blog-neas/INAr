@@ -5,31 +5,12 @@ series_varpv <- function(mu, alpha, max_j = 2000L) {
     .Call('_INAr_series_varpv', PACKAGE = 'INAr', mu, alpha, max_j)
 }
 
-#' Autocorrelation rho test statistic to test for unit root in an integer autoregressive process
-#' @param x NumericVector
-#' @details
-#' This is an internal function, it will be excluded in future versions.
-#' @export
-RHO_Cpp <- function(x) {
-    .Call('_INAr_RHO_Cpp', PACKAGE = 'INAr', x)
-}
-
-#' Autocorrelation bootstrap test.
-#' @param x NumericVector
-#' @param B int
-#' @details
-#' This is an internal function, it will be excluded in future versions.
-#' @export
-RHO_BOOT_Cpp <- function(x, B) {
-    .Call('_INAr_RHO_BOOT_Cpp', PACKAGE = 'INAr', x, B)
-}
-
 #' Sun-McCabe score statistic to test for dependence in an integer autoregressive process
 #' @param x NumericVector
 #' @param method unsigned int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 SMC_Cpp <- function(x, method) {
     .Call('_INAr_SMC_Cpp', PACKAGE = 'INAr', x, method)
 }
@@ -40,7 +21,7 @@ SMC_Cpp <- function(x, method) {
 #' @param method unsigned int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 SMC_semiparBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_semiparBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
@@ -51,7 +32,7 @@ SMC_semiparBOOT_Cpp <- function(x, B, method) {
 #' @param method unsigned int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 SMC_parBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_parBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
@@ -63,7 +44,7 @@ SMC_parBOOT_Cpp <- function(x, B, method) {
 #' @details
 #' This is an internal function, it will be excluded in future versions.
 #' !!!!! DA IMPLEMENTARE !!!!!
-#' @export
+#' @noRd
 SMC_pitBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_pitBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
@@ -75,7 +56,7 @@ SMC_pitBOOT_Cpp <- function(x, B, method) {
 #' @param B int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 SMCtest_boot <- function(X, arrival, type, B) {
     .Call('_INAr_SMCtest_boot', PACKAGE = 'INAr', X, arrival, type, B)
 }
@@ -84,7 +65,7 @@ SMCtest_boot <- function(X, arrival, type, B) {
 #' @param v NumericVector
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 sortunique <- function(v) {
     .Call('_INAr_sortunique', PACKAGE = 'INAr', v)
 }
@@ -94,7 +75,7 @@ sortunique <- function(v) {
 #' @param x NumericVector
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 ecdfcpp <- function(eval, x) {
     .Call('_INAr_ecdfcpp', PACKAGE = 'INAr', eval, x)
 }
@@ -103,7 +84,7 @@ ecdfcpp <- function(eval, x) {
 #' @param x NumericVector
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 HMC_Cpp <- function(x) {
     .Call('_INAr_HMC_Cpp', PACKAGE = 'INAr', x)
 }
@@ -114,7 +95,7 @@ HMC_Cpp <- function(x) {
 #' @param B int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 HMC_BOOT_Cpp <- function(x, B) {
     .Call('_INAr_HMC_BOOT_Cpp', PACKAGE = 'INAr', x, B)
 }
@@ -125,7 +106,7 @@ HMC_BOOT_Cpp <- function(x, B) {
 #' @param B int
 #' @details
 #' This is an internal function, it will be excluded in future versions.
-#' @export
+#' @noRd
 HMCtest_boot <- function(X, B) {
     .Call('_INAr_HMCtest_boot', PACKAGE = 'INAr', X, B)
 }
