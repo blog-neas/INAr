@@ -55,11 +55,13 @@ SMCtest <- function(X, inn = "poi", B = 0, method = NA, saveboot = FALSE){
         }
 
         # add Boot results to OUT
-        OUT$statistic <- c(T = mean(smc_boot))
+        OUT$statistic <- c(Sb = mean(smc_boot))
         OUT$p.value <- mean(abs(smc_boot) > abs(smc_est[1]), na.rm = TRUE)
+        OUT$statistic.exact <- c(S = smc_est[1])
+        OUT$p.value.exact <- smc_est[2]
         if(saveboot) OUT$bootvec <- smc_boot
     }else{
-        OUT$statistic <- c(T = smc_est[1])
+        OUT$statistic <- c(S = smc_est[1])
         OUT$p.value <- smc_est[2]
     }
     return(OUT)
