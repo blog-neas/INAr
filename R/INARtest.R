@@ -19,7 +19,7 @@
 #' # SMCtest(X = rpois(100,2), type = "semiparametric", B = 0)
 #'
 #' @export
-SMCtest <- function(X, inn = "poi", B = 0, method = NA){
+SMCtest <- function(X, inn = "poi", B = 0, method = NA, saveboot = FALSE){
     if(!all(X == as.integer(X))) X <- as.integer(X)
     if(!is.integer(B)) B <- as.integer(B)
 
@@ -56,6 +56,7 @@ SMCtest <- function(X, inn = "poi", B = 0, method = NA){
         # add Boot results to OUT
         OUT$statistic <- c(T = mean(smc_boot))
         OUT$p.value <- mean(abs(smc_boot) > abs(smc_est[1]), na.rm = TRUE)
+        OUT$bootvec <- smc_boot
     }else{
         OUT$statistic <- c(T = smc_est[1])
         OUT$p.value <- smc_est[2]

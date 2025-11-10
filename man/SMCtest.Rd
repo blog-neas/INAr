@@ -4,7 +4,7 @@
 \alias{SMCtest}
 \title{Perform Sun-McCabe INAR tests}
 \usage{
-SMCtest(X, inn = "poi", B = 0, method = NA)
+SMCtest(X, inn = "poi", B = 0, method = NA, saveboot = FALSE)
 }
 \arguments{
 \item{X}{vector, thinning parameters. The length of this vector defines the number of lags \code{p} of the INAR(p) process.}
