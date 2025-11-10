@@ -4,6 +4,7 @@
 #' @param inn character, the innovation distribution to be used in the test. The options are "poi", "negbin" and "genpoi".
 #' @param B integer, the number of bootstrap samples to be generated. The default value is 0, corresponding to no bootstrap samples.
 #' @param method character, the type of test to be performed, the alternatives are "par" or "semipar".
+#' @param saveboot logical, if TRUE the bootstrap replicates are saved in the output object (only if B > 0).
 #' @return A number.
 #'
 #' @details
@@ -56,7 +57,7 @@ SMCtest <- function(X, inn = "poi", B = 0, method = NA, saveboot = FALSE){
         # add Boot results to OUT
         OUT$statistic <- c(T = mean(smc_boot))
         OUT$p.value <- mean(abs(smc_boot) > abs(smc_est[1]), na.rm = TRUE)
-        OUT$bootvec <- smc_boot
+        if(saveboot) OUT$bootvec <- smc_boot
     }else{
         OUT$statistic <- c(T = smc_est[1])
         OUT$p.value <- smc_est[2]
