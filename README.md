@@ -1,14 +1,13 @@
 
 # INAr R Project <img src="man/img/hexlogo.png" align="right" height="138.5" />
-Generation, estimation and testing of INteger Autoregressive models
-
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/INAr?color=orange)](https://cran.r-project.org/package=INAr)
 [![Project Status: Active - The project is being actively developed](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License: GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
-[![License: GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 <!-- badges: end -->
+Generation, estimation and testing of INteger Autoregressive models
+
 
 <!-- [![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml) -->
 <!-- [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) -->
