@@ -11,39 +11,16 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// RHO_Cpp
-NumericVector RHO_Cpp(NumericVector x);
-RcppExport SEXP _INAr_RHO_Cpp(SEXP xSEXP) {
+// series_varpv
+double series_varpv(double mu, double alpha, int max_j);
+RcppExport SEXP _INAr_series_varpv(SEXP muSEXP, SEXP alphaSEXP, SEXP max_jSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(RHO_Cpp(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// RHO_BOOT_Cpp
-NumericVector RHO_BOOT_Cpp(NumericVector x, int B);
-RcppExport SEXP _INAr_RHO_BOOT_Cpp(SEXP xSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(RHO_BOOT_Cpp(x, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// RHO_BOOT_Cpp_Parallel
-NumericVector RHO_BOOT_Cpp_Parallel(NumericVector x, int B, int num_threads);
-RcppExport SEXP _INAr_RHO_BOOT_Cpp_Parallel(SEXP xSEXP, SEXP BSEXP, SEXP num_threadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    Rcpp::traits::input_parameter< int >::type num_threads(num_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(RHO_BOOT_Cpp_Parallel(x, B, num_threads));
+    Rcpp::traits::input_parameter< double >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type max_j(max_jSEXP);
+    rcpp_result_gen = Rcpp::wrap(series_varpv(mu, alpha, max_j));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -219,11 +196,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// inar1_poi_loglik_cpp
+double inar1_poi_loglik_cpp(const IntegerVector& x, double alpha, double lambda);
+RcppExport SEXP _INAr_inar1_poi_loglik_cpp(SEXP xSEXP, SEXP alphaSEXP, SEXP lambdaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const IntegerVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(inar1_poi_loglik_cpp(x, alpha, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// saddle_nll_cpp
+double saddle_nll_cpp(const IntegerVector& x, double alpha, double lambda);
+RcppExport SEXP _INAr_saddle_nll_cpp(SEXP xSEXP, SEXP alphaSEXP, SEXP lambdaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const IntegerVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(saddle_nll_cpp(x, alpha, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_INAr_RHO_Cpp", (DL_FUNC) &_INAr_RHO_Cpp, 1},
-    {"_INAr_RHO_BOOT_Cpp", (DL_FUNC) &_INAr_RHO_BOOT_Cpp, 2},
-    {"_INAr_RHO_BOOT_Cpp_Parallel", (DL_FUNC) &_INAr_RHO_BOOT_Cpp_Parallel, 3},
+    {"_INAr_series_varpv", (DL_FUNC) &_INAr_series_varpv, 3},
     {"_INAr_SMC_Cpp", (DL_FUNC) &_INAr_SMC_Cpp, 2},
     {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
     {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
@@ -238,6 +239,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
+    {"_INAr_inar1_poi_loglik_cpp", (DL_FUNC) &_INAr_inar1_poi_loglik_cpp, 3},
+    {"_INAr_saddle_nll_cpp", (DL_FUNC) &_INAr_saddle_nll_cpp, 3},
     {NULL, NULL, 0}
 };
 

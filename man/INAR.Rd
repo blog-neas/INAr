@@ -8,7 +8,7 @@
 \alias{fitted.INAR}
 \title{Fitting INAR(p) Models}
 \usage{
-INAR(X, p, arrival = "poisson", method = "CLS")
+INAR(X, p, inn = "poi", method = "CLS")
 
 \method{print}{INAR}(x, digits = max(3L, getOption("digits") - 3L), se = TRUE, ...)
 
@@ -23,9 +23,9 @@ INAR(X, p, arrival = "poisson", method = "CLS")
 
 \item{p}{the order of the INAR(p) process}
 
-\item{arrival}{distribution of the innovation process}
+\item{inn}{distribution of the innovation process}
 
-\item{method}{estimation method}
+\item{method}{estimation method, one of "YW" (Yule-Walker), "CLS" (Conditional Least Squares), "CML" (Conditional Maximum Likelihood), "SP" (Saddlepoint Approximation)}
 
 \item{x, }{an \code{INAR} object.}
 
@@ -46,5 +46,5 @@ summary method for class \code{INAR}.
 summary method for class \code{INAR}.
 }
 \details{
-Frontend function that estimates an INAR(p) model given the distribution of the innovation process.
+This function estimates an INAR(p) model given the distribution of the innovation process.
 }

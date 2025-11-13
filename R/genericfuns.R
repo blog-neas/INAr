@@ -1,6 +1,3 @@
-
-# generic functions
-
 #' Fitting INAR(p) Models
 #'
 #' @rdname INAR
@@ -29,7 +26,7 @@ print.INAR <- function (x, digits = max(3L, getOption("digits") - 3L), se = TRUE
         }
         print.default(alphas, print.gap = 2)
 
-        cat("\nInnovation Parameters,",toupper(x$arrival),"Distribution:\n")
+        cat("\nInnovation Parameters,",toupper(x$inn),"Distribution:\n")
         pars <- round(x$coef$pars, digits = digits)
         if (se && NROW(x$var.coef$pars)) {
             ses <- rep.int(0, length(pars))
@@ -162,6 +159,7 @@ summary.INAR <- function (object, ...){
     #     ans$na.action <- z$na.action
     # class(ans) <- "summary.lm"
     # ans
+    object
 }
 
 #' Plotting INAR(p) Models
@@ -189,9 +187,12 @@ plot.INAR <- function (object){
 #' @param object, an `INAR` object
 #' @export
 fitted.INAR <- function(object, ...){
-    fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, arrival = object$arrival, burnout = 500)$X
-    return(fitted)
+    # fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, inn = object$inn, burnout = 500)$X
+    # return(fitted)
+    object
 }
+
+
 
 # Set methods (S4 style) ...................
 # setMethod("print", "INAR", print.INAR)

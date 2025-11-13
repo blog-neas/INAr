@@ -1,10 +1,9 @@
-
 #' Conditional Nonnegative Least Squares for INAR(p) parameter estimation
 #'
 #' Internal function
 #'
-#' @param x, observed series
-#' @param p, number of lags
+#' @param x vector, observed series
+#' @param p integer, number of lags
 #'
 #' @importFrom stats var
 #' @importFrom RcppML nnls
@@ -14,15 +13,11 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimCLS <- function(x, p) {
-    n <- length(x)
-    mX <- mean(x)
-    vX <- var(x)
+estimCLS <- function(X, p, inn = "poi"){
+    n <- length(X)
 
-    Yreg <- x[(p+1):n]
-    # Xreg <- lagmat(x,p)
-
-    Xreg <- lagmat(x,p)
+    Yreg <- X[(p+1):n]
+    Xreg <- lagmat(X,p)
 
     ## nnls::nnls
     # mod <- nnls(Xreg, Yreg)
@@ -40,11 +35,12 @@ estimCLS <- function(x, p) {
     mINN <- mod[1]
     vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
 
-    # est <- est_mom(arr_mom$meanX, arr_mom$varX, arr_mom$meanINN, arr_mom$varINN, arrival)
+    par_hat <- estimPAR(alphas, mean(X), var(X), mINN, vINN, inn = inn)
 
-    OUT <- list(alphas = alphas,
-                "meanX" = mX, "varX" = vX,
-                "meanINN" = mINN, "varINN" = vINN)
+    OUT <- list("alphas" = alphas,
+                "par" = par_hat$par,
+                "meanX" = mean(X), "varX" = var(X)
+                # "meanINN" = mINN, "varINN" = vINN
+                )
     return(OUT)
 }
-

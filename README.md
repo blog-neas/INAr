@@ -14,13 +14,20 @@ Generation, estimation and testing of INteger Autoregressive models
 <!-- [![codecov](https://codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg?token=0XHCFZZYN8)](https://codecov.io/gh/blog-neas/INAr) -->
 
 
-
-
 ## Overview
 
-The INAr Project aims to provide a set of tools for the study of time series having a discrete support by using the integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
+The INAr is a package for the study of integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
 INAR(p) models are proved to useful for the study of realizations of random variables arising from counting, with range contained in the discrete set of non-negative integers.
+The package aims to provide tools for the generation, estimation and testing of these models.
+For a detailed description of the package functionalities, please refer to the [vignette]().
 
+INAr is not the only R package for the analysis of integer-valued time series, but it is among the few ones specifically focused on INAR(p) processes. Here are some others:
+
+- [tsinteger](https://github.com/RLesur/crrri) by Manoel Santos
+
+- [spINAR](https://github.com/MFaymon/spINAR) by Maxime Faymonville
+
+- [tscount](https://r-packages.io/packages/tscount) by Tobias Liboschik
 
 ## Installation
 
@@ -29,9 +36,13 @@ INAR(p) models are proved to useful for the study of realizations of random vari
 # !!!---not available at the moment---!!!
 # install.packages("INAr")
 
-# Or the development version from GitHub
+# Or the latest stable GitHub version
 # install.packages("devtools")
 devtools::install_github("blog-neas/INAr")
+
+# Or the development version from GitHub
+# install.packages("devtools")
+devtools::install_github("blog-neas/INAr", ref = "devel")
 ```
 
 
@@ -39,31 +50,70 @@ devtools::install_github("blog-neas/INAr")
 
 #### Main Steps
 
-The project considers to distribute a set of packages for the study of INAR(p) processes, which aim to provide tools for the generation, estimation and testing of these models. The following steps are planned for the future:
+The INAr package will provide functions for the generation, estimation and test INAR(p) processes with different types of innovations. 
+Some functionalities are already available, while others are planned for the future develpoments. In particular, the main steps are listed below:
 
-1. **Score Tests** 
+1. **Generation of INAR(p) processes** 
+
+- [x] Generation of INAR(p) process with different innovations
+	- [x] Poisson
+	- [x] Negative Binomial
+	- [x] Generalized Poisson
+	- [x] Katz
+- [ ] Include the possibility to use custom innovations
+
+
+2. **Estimation of INAR(p) processes**
+
+- [ ] CML estimation of INAR(p) processes
+	- [x] with p = 1 and Poisson innovations
+	- [ ] with p = 1 and Negative Binomial innovations
+	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
+	- [ ] with p > 1 and additional innovations
+- [ ] CLS estimation of INAR(p) processes
+	- [x] with p = 1 and Poisson innovations
+	- [ ] with p = 1 and Negative Binomial innovations
+	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
+	- [ ] with p > 1
+- [ ] SP estimation of INAR(p) processes
+	- [x] with p = 1 and Poisson innovations
+	- [ ] with p = 1 and Negative Binomial innovations
+	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
+	- [ ] with p > 1 and additional innovations
+- [ ] YW estimation of INAR(p) processes
+	- [x] with p = 1 and Poisson innovations
+	- [ ] with p = 1 and Negative Binomial innovations
+	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
+	- [ ] with p > 1
+- [ ] Forecasting INAR(p) processes
+
+
+3. **Testing for the presence of INAR structure** 
 
 - [ ] Sun & McCabe Test
+	- [x] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [x] Semiparametric Bootstrap test
 	- [x] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
-	- [ ] Parametric Bootstrap test - Other distributions
+	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
 - [ ] Harris & McCabe Test
+	- [ ] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [ ] Semiparametric Bootstrap test
 	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
-	- [ ] Parametric Bootstrap test - Other distributions
+	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
+- [x] Zero Inflation Test
+	- [x] Puig and Valero (2006)
+	- [x] van den Broek (1995)
+- [x] Under- and Over- Dispersion Test (Fisher, 1950)
+- [ ] Goodness-of-fit tests
+	- [x] Chi-squared test (Weiss et al, 2019)
+	- [ ] Poissonity test (under development)
 
 
-2. **INAR model fitting, estimation and forecast** 
+4. **Visualization and summary of INAR(p) models**
 
-- [ ] Generation
-	- [x] Simulating INAR(p) process with different innovations
-- [ ] Estimation
-	- [x] YW and CLS estimation of INAR(p) processes with Poisson and Negative Binomial innovations
-	- [ ] YW estimation of INAR(p) processes with other innovations (Good, Generalized Poisson, Katz family, ...)
-	- [ ] CML estimation of INAR(p) processes
-	- [ ] Forecasting INAR(p) processes
 - [ ] Visualization
 	- [ ] Summary
+	- [ ] Fitted values
 	- [ ] Plotting
 
 
@@ -73,7 +123,9 @@ The project considers to distribute a set of packages for the study of INAR(p) p
 	- [ ] Functions
 	- [ ] Dependencies list
 - [x] Licensing: GPL-3
-- [ ] Testing
+- [ ] Testing and functions coverage
+	- [ ] Unit tests
+	- [ ] Code coverage
 - [ ] Documentation
 	- [ ] Function documentation
 	- [ ] Vignettes
@@ -89,21 +141,22 @@ The project considers to distribute a set of packages for the study of INAR(p) p
 
 <!-- This section is adapted from https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c -->
 
-First of all, thanks for considering contributing to `INAr`! 👍 
+First of all, thanks for considering contributing to `INAr`, contributions are welcome!
 `INAr` is an open source project maintained by people who care, and an help is always appreciated. 😊
+If you are interested in improving or extending the package, feel free to get in touch.
+You can contact directly one of the package mantainers to discuss ideas, report issues, or propose new features.
+
+There are several ways you can contribute to this project, you can also open an issue or submit a pull request via GitHub.
 
  [repo]: https://github.com/blog-neas/INAr
  [issues]: https://github.com/blog-neas/INAr/issues
  [new_issue]: https://github.com/blog-neas/INAr/issues/new
  [website]: https://blog-neas.github.io/en/
  [citation]: https://blog-neas.github.io/en/INAr/authors.html
- [email]: mailto:lucio.palazzo@unina.it
- [ideas]: mailto:lucio.palazzo@unina.it
+ [email]: mailto:lucio.palazzo@unior.it
+ [ideas]: mailto:lucio.palazzo@unior.it
 
-
-There are several ways you can contribute to this project. 
-
- - Think `INAr` is useful? Let others discover it, by telling them in person, via Twitter or a blog post.
+<!--  - Think `INAr` is useful? Let others discover it, by telling them in person, via Twitter or a blog post. -->
 
  - Using `INAr` for a paper you are writing? Consider [citing it][citation].
  

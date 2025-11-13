@@ -11,73 +11,72 @@ using namespace Rcpp;
 // using namespace RcppParallel;
 // using namespace PoissonBinomial;
 
-//' Autocorrelation rho test statistic to test for unit root in an integer autoregressive process
-//' @param x NumericVector
-//' @details
-//' This is an internal function, it will be excluded in future versions.
-//' @export
-// [[Rcpp::export]]
-NumericVector RHO_Cpp(NumericVector x){
-     int n = x.length();
-     NumericVector out(2);
-     int lag = 1; // to compute acf at lag 1
+// //' Autocorrelation rho test statistic to test for unit root in an integer autoregressive process
+// //' @param x NumericVector
+// //' @details
+// //' This is an internal function, it will be excluded in future versions.
+// //' @noRd
+// // [[Rcpp::export]]
+// NumericVector RHO_Cpp(NumericVector x){
+//      int n = x.length();
+//      NumericVector out(2);
+//      int lag = 1; // to compute acf at lag 1
+//
+//      NumericVector x_scaled = x - mean(noNA(x));
+//      NumericVector xsum = x_scaled[Range(lag,n-1)];
+//      NumericVector xsum_1 = x_scaled[Range(0,n-lag-1)];
+//
+//      double NUM = sum(xsum*xsum_1);
+//      double DEN = sum(pow(x_scaled,2));
+//
+//      double stat = NUM/DEN; // rho_1
+//
+//      out[0] = stat * sqrt(n);
+//      out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
+//
+//      return out;
+// }
 
-     NumericVector x_scaled = x - mean(noNA(x));
-     NumericVector xsum = x_scaled[Range(lag,n-1)];
-     NumericVector xsum_1 = x_scaled[Range(0,n-lag-1)];
 
-     double NUM = sum(xsum*xsum_1);
-     double DEN = sum(pow(x_scaled,2));
-
-     double stat = NUM/DEN; // rho_1
-
-     out[0] = stat * sqrt(n);
-     out[1] = 1 - R::pnorm(out[0],0.0, 1.0, 1, 0);
-
-     return out;
-}
-
-
-
-//' Autocorrelation bootstrap test.
-//' @param x NumericVector
-//' @param B int
-//' @details
-//' This is an internal function, it will be excluded in future versions.
-//' @export
-// [[Rcpp::export]]
-NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
-     int n = x.length();
-     unsigned int niter;
-     NumericVector s_temp(B);
-
-     for(int i = 0; i < B; i++){
-
-         NumericVector xb(n);
-         niter = 0;
-         // print(xb);
-
-         // check!
-         LogicalVector id(n);
-         do {
-             id = xb==xb[0];
-
-             while(Rcpp::all(id).is_true()) {
-                 xb = RcppArmadillo::sample(x,n,true);
-                 id = xb==xb[0];
-             }
-
-             s_temp[i] = RHO_Cpp(xb)[0];
-
-             niter += 1;
-
-             // con false esce, con true resta
-         } while ( std::isnan(s_temp[i]) & (niter < 10) );
-
-     }
-
-     return s_temp;
-}
+// //' Autocorrelation bootstrap test.
+// //' @param x NumericVector
+// //' @param B int
+// //' @details
+// //' This is an internal function, it will be excluded in future versions.
+// //' @noRd
+// // [[Rcpp::export]]
+// NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
+//      int n = x.length();
+//      unsigned int niter;
+//      NumericVector s_temp(B);
+//
+//      for(int i = 0; i < B; i++){
+//
+//          NumericVector xb(n);
+//          niter = 0;
+//          // print(xb);
+//
+//          // check!
+//          LogicalVector id(n);
+//          do {
+//              id = xb==xb[0];
+//
+//              while(Rcpp::all(id).is_true()) {
+//                  xb = RcppArmadillo::sample(x,n,true);
+//                  id = xb==xb[0];
+//              }
+//
+//              s_temp[i] = RHO_Cpp(xb)[0];
+//
+//              niter += 1;
+//
+//              // con false esce, con true resta
+//          } while ( std::isnan(s_temp[i]) & (niter < 10) );
+//
+//      }
+//
+//      return s_temp;
+// }
 
 
 
@@ -89,37 +88,37 @@ NumericVector RHO_BOOT_Cpp(NumericVector x, int B){
 
 // testing the possibility to use a parallel version of the bootstrap
 // WARNING: compilation error on Mac OS X
-
-// [[Rcpp::plugins(openmp)]]
-#include <omp.h>
-
-// [[Rcpp::export]]
-NumericVector RHO_BOOT_Cpp_Parallel(NumericVector x, int B, int num_threads = 2) {
-    int n = x.length();
-    NumericVector s_temp(B);
-
-        // Set the number of threads (optional, default is usually the number of cores)
-        if(num_threads > 1 & num_threads <= omp_get_max_threads()){
-            omp_set_num_threads(num_threads);
-        }else{
-            num_threads = 1;
-        }
-
-#pragma omp parallel num_threads(num_threads)
-{
-    // Each thread needs its own RNG
-    RNGScope scope;
-
-#pragma omp for
-    for(int i = 0; i < B; i++) {
-        // simplified version for testing, to update using the correct do while loop
-        NumericVector xb = RcppArmadillo::sample(x, n, true);
-        s_temp[i] = RHO_Cpp(xb)[0];
-    }
-}
-
-return s_temp;
-}
+//
+// // [[Rcpp::plugins(openmp)]]
+// #include <omp.h>
+//
+// // [[Rcpp::export]]
+// NumericVector RHO_BOOT_Cpp_Parallel(NumericVector x, int B, int num_threads = 2) {
+//     int n = x.length();
+//     NumericVector s_temp(B);
+//
+//         // Set the number of threads (optional, default is usually the number of cores)
+//         if(num_threads > 1 & num_threads <= omp_get_max_threads()){
+//             omp_set_num_threads(num_threads);
+//         }else{
+//             num_threads = 1;
+//         }
+//
+// #pragma omp parallel num_threads(num_threads)
+// {
+//     // Each thread needs its own RNG
+//     RNGScope scope;
+//
+// #pragma omp for
+//     for(int i = 0; i < B; i++) {
+//         // simplified version for testing, to update using the correct do while loop
+//         NumericVector xb = RcppArmadillo::sample(x, n, true);
+//         s_temp[i] = RHO_Cpp(xb)[0];
+//     }
+// }
+//
+// return s_temp;
+// }
 
 
 // #include <omp.h>
@@ -165,7 +164,7 @@ return s_temp;
 //' @param method unsigned int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 NumericVector SMC_Cpp(NumericVector x, unsigned int method){
   int n = x.length();
@@ -202,6 +201,8 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
 
     // check underdispersion
     if(var_x <= mu_x){
+        // Rcpp::Rcout << "Underdispersion detected: switching to generalized Poisson method.\n";
+        // method = 3;
         out[0] = NAN;
         out[1] = NAN;
         return out;
@@ -302,7 +303,7 @@ NumericVector SMC_Cpp(NumericVector x, unsigned int method){
 //' @param method unsigned int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 NumericVector SMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
@@ -344,7 +345,7 @@ NumericVector SMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
 //' @param method unsigned int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
@@ -508,7 +509,7 @@ NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
 //' @details
 //' This is an internal function, it will be excluded in future versions.
 //' !!!!! DA IMPLEMENTARE !!!!!
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
     int n = x.length();
@@ -605,7 +606,7 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 //' @param B int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B){
     // int n = X.length();
@@ -667,7 +668,7 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
 //' @param v NumericVector
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 //[[Rcpp::export]]
 NumericVector sortunique(NumericVector v) {
      NumericVector sv = Rcpp::unique(v);
@@ -680,7 +681,7 @@ NumericVector sortunique(NumericVector v) {
 //' @param x NumericVector
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 //[[Rcpp::export]]
 DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
      // Valori unici ordinati in eval
@@ -743,7 +744,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
 //' @param x NumericVector
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 NumericVector HMC_Cpp(NumericVector x){
      int n = x.length();
@@ -803,7 +804,6 @@ NumericVector HMC_Cpp(NumericVector x){
      NumericVector xsumL = xsum_1 - mean_x;
 
      double NUM = sum(xsumL*(g_t-1));
-
      double stat = NUM/(sd_x*sd_g);
 
      out[0] = stat/sqrt(n);
@@ -814,14 +814,13 @@ NumericVector HMC_Cpp(NumericVector x){
 }
 
 
-
 //' Bootstrap version of the Harris-McCabe score test.
 //' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param x NumericVector
 //' @param B int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
      int n = x.length();
@@ -846,7 +845,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
 
              s_temp[i] = HMC_Cpp(xb)[0];
 
-             if(!arma::is_finite(s_temp[i])){
+             if(!std::isfinite(s_temp[i])){
                  s_temp[i] = sign(s_temp[i])*pow(n,10);
              };
 
@@ -860,7 +859,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
              niter += 1;
              // con false esce, con true resta
              // check for whether a value is finite, e.g. not NaN,Inf, or -Inf, by using arma::is_finite()
-         } while (!arma::is_finite(s_temp[i]) & (niter < 10) );
+         } while (!std::isfinite(s_temp[i]) & (niter < 10) );
 
      }
      // std::cout << s_temp << std::endl;
@@ -873,7 +872,7 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
 //' @param B int
 //' @details
 //' This is an internal function, it will be excluded in future versions.
-//' @export
+//' @noRd
 // [[Rcpp::export]]
 List HMCtest_boot(NumericVector X, int B){
     // old input: unsigned int type
@@ -909,11 +908,11 @@ List HMCtest_boot(NumericVector X, int B){
 
 
 /*** R
-set.seed(1913)
-x <- rpois(500,40)
+# set.seed(1913)
+# x <- rpois(500,1)
+# HMC_Cpp(x)
 # x <- c(1, 2, 12, 0, 2, 3, 2, 3, 4, 0, 1, 1, 2, 2, 4)
 # HMC_Cpp(seq(0,20,by=2))
-HMC_Cpp(x)
 # B <- 21
 # # test 1:
 # S <- HMC_Cpp(x)
