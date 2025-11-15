@@ -2,12 +2,12 @@
 % Please edit documentation in R/INARtest.R
 \name{SMCtest}
 \alias{SMCtest}
-\title{Perform Sun-McCabe INAR tests}
+\title{Perform Sun-McCabe INAR(1) tests.}
 \usage{
 SMCtest(X, inn = "poi", B = 0, method = NA, saveboot = FALSE)
 }
 \arguments{
-\item{X}{vector, thinning parameters. The length of this vector defines the number of lags \code{p} of the INAR(p) process.}
+\item{X}{vector, the observed series of counts.}
 
 \item{inn}{character, the innovation distribution to be used in the test. The options are "poi", "negbin" and "genpoi".}
 
@@ -21,7 +21,7 @@ SMCtest(X, inn = "poi", B = 0, method = NA, saveboot = FALSE)
 A number.
 }
 \description{
-Perform Sun-McCabe INAR tests
+Perform Sun-McCabe INAR(1) tests.
 }
 \details{
 The function performs the Sun-McCabe (SMC) tests for the INAR(1) model.

@@ -40,16 +40,29 @@ get_info <- function(LIST){
     innovation <- info_inn$inn_name[id_inn]
     method_name <- if(LIST$B > 0 & !is.na(LIST$method) & LIST$method %in% c("par","semipar")){ifelse(LIST$method == "par", "Parametric", "Semi-parametric")}else{""}
 
-    if(LIST$test == "smc" | LIST$test == "hmc"){
+    if(LIST$test == "smc"){
         OUT <- list(
-            method = paste(method_name,
-                           ifelse(LIST$test == "smc", "Sun-McCabe", "Harrison-McCabe"),
+            method = paste(method_name, "Sun-McCabe",
                            ifelse(LIST$B > 0, "bootstrap", ""),
                            "test with", innovation, "innovations.",
-                           ifelse(LIST$B > 0, paste(LIST$B, "bootstrap replications."), "")),
+                           ifelse(LIST$B > 0, paste("B =",LIST$B, "bootstrap replications."), "")),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
-            check = ifelse(LIST$test == "smc", info_inn$smc[id_inn], info_inn$hmc[id_inn])
+            alternative = "greater",
+            null.value = c(a1 = 0),
+            check = info_inn$smc[id_inn]
+        )
+    }else if(LIST$test == "hmc"){
+        OUT <- list(
+            method = paste("Harris-McCabe",
+                           ifelse(LIST$B > 0, "bootstrap", ""),
+                           "test. ",
+                           ifelse(LIST$B > 0, paste("B =",LIST$B, "bootstrap replications."), "")),
+            inn_name = innovation,
+            inn_num = info_inn$inn_num[id_inn],
+            alternative = "greater",
+            null.value = c(a1 = 0),
+            check = info_inn$hmc[id_inn]
         )
     }else if(LIST$test == "zi_pv"){
         OUT <- list(
@@ -89,11 +102,11 @@ get_info <- function(LIST){
     }
 
     if(!is.null(LIST$parameter)) OUT$parameter <- LIST$parameter
-    if(is.null(LIST$statistic)){OUT$statistic <- c(T = NA)}else{OUT$statistic <- LIST$statistic}
+    if(is.null(LIST$statistic)){OUT$statistic <- c(S = NA)}else{OUT$statistic <- LIST$statistic}
     if(is.null(LIST$p.value)){OUT$p.value = NA}else{OUT$p.value <- LIST$p.value}
     if(is.null(LIST$data.name)){OUT$data.name = NA}else{OUT$data.name <- LIST$data.name}
 
-    class(OUT) <- "htest"
+    class(OUT) <- "INARtest"
     return(OUT)
 }
 

@@ -1,3 +1,15 @@
+# INAr 0.3.1
+
+* Implemented the Harris-McCabe bootstrap test.
+    * `HMCtest`: Main frontend function to perform the Harris-McCabe test.
+
+* Fixed some bugs in the C++ code for the bootstrap procedures.
+
+* Cleaning of the overall scripts from comments and debugging lines.
+
+* Implemented a generic function `print.INARtest` to print the results of all the test functions.
+
+
 # INAr 0.3.0
 
 * Overhaul of the package structure and code organization. The package is now organized into multiple R scripts, each dedicated to specific functionalities such as data generation, model fitting, statistical tests and utility functions. List of the main functions:
@@ -7,7 +19,7 @@
     * `ZItest`: Main frontend function to perform the Zero-Inflation test.
     * `ZIDItest`: Main frontend function to perform the combined Zero-Inflation and Dispersion Index test.
     * `SMCtest`: Main frontend function to perform the Sun-McCabe Score test.
-    * `HMCtest`: Main frontend function to perform the Harrison-McCabe test (under development).
+    * `HMCtest`: Main frontend function to perform the Harris-McCabe test (under development).
 
 * New function organization to improve scalability and maintainability. The function dependency structure is described in the readme file.
 

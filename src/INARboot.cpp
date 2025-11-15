@@ -80,11 +80,6 @@ using namespace Rcpp;
 
 
 
-//
-//  ----------------------------------------------------------------------------
-//  ----------------------------------------------------------------------------
-//  ----------------------------------------------------------------------------
-//
 
 // testing the possibility to use a parallel version of the bootstrap
 // WARNING: compilation error on Mac OS X
@@ -154,10 +149,6 @@ using namespace Rcpp;
 //  ----------------------------------------------------------------------------
 //
 
-
-//
-// PARTE Script Sun-McCabe, prima era in INARbootSMC.cpp -----
-//
 
 //' Sun-McCabe score statistic to test for dependence in an integer autoregressive process
 //' @param x NumericVector
@@ -598,47 +589,6 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 }
 
 
-
-//' Wrapper function for compution the Sun-McCabe bootstrap score test.
-//' @param X NumericVector
-//' @param arrival int
-//' @param type unsigned int
-//' @param B int
-//' @details
-//' This is an internal function, it will be excluded in future versions.
-//' @noRd
-// [[Rcpp::export]]
-List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B){
-    // int n = X.length();
-
-    double Smc = SMC_Cpp(X,arrival)[0];
-    double B_stat;
-    double B_pval;
-    NumericVector SmcB(B);
-
-    if(type == 1){
-        // SEMIPARAMETRIC
-        SmcB = SMC_semiparBOOT_Cpp(X,B,arrival);
-    }
-    else if(type == 2){
-        // PARAMETRIC
-        SmcB = SMC_parBOOT_Cpp(X,B,arrival);
-    }
-    else if(type == 3){
-        // PIT
-        SmcB = SMC_pitBOOT_Cpp(X,B,arrival);
-    }
-
-    B_stat = mean(SmcB);
-    B_pval = mean(abs(SmcB) > std::fabs(Smc));
-
-
-    return List::create(
-        _["stat"]  = B_stat,
-        _["pval"]  = B_pval
-    );
-}
-
 /*** R
 # x <- rpois(5000,2)
 # B <- 1000
@@ -648,10 +598,6 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
 # Sb <- SMC_semiparBOOT_Cpp(x,B,method)
 # mean(S[1] > Sb) # pval boot
 # S[2] # pval normale
-# # test 2: FUNZIONE FINALE WRAPPED
-# arrival <- 1
-# SMCtest_boot(x,arrival,method,B)
-#
 # x <- rpois(100,3)
 # Pb <- SMC_parBOOT_Cpp(x,99,3)
 */
@@ -659,7 +605,7 @@ List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int 
 
 
 //
-// PARTE Script Harris-McCabe, prima era in INARbootHMC.cpp -----
+// PARTE Script Harris-McCabe
 //
 
 
@@ -774,7 +720,7 @@ NumericVector HMC_Cpp(NumericVector x){
      // std::cout << eval << std::endl;
      DataFrame TAB = ecdfcpp(eval, x);
      NumericVector values = TAB["value"];
-     NumericVector relfreq = TAB["fallback"]; // improved estimatof probs. (check!)
+     NumericVector relfreq = TAB["fallback"]; // improved estimate of probs. (check!)
 
      NumericVector pi_hat(n-1);
      NumericVector pi_hat_L1(n-1);
@@ -815,7 +761,6 @@ NumericVector HMC_Cpp(NumericVector x){
 
 
 //' Bootstrap version of the Harris-McCabe score test.
-//' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 //' @param x NumericVector
 //' @param B int
 //' @details
@@ -833,7 +778,6 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
          niter = 0;
          // print(xb);
 
-         // check!
          LogicalVector id(n);
          do {
              id = xb==xb[0];
@@ -845,65 +789,51 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
 
              s_temp[i] = HMC_Cpp(xb)[0];
 
-             if(!std::isfinite(s_temp[i])){
-                 s_temp[i] = sign(s_temp[i])*pow(n,10);
-             };
-
-             // asd = std::isnan(s_temp[i]);
-             // if(asd){
-             //     std::cout << std::isnan(s_temp[i]) << std::endl;
-             //     // Rprintf("condition is: %d \n", asd);
-             //     // Rprintf("s_temp is: %f \n", s_temp[i]);
-             // }
-
              niter += 1;
-             // con false esce, con true resta
-             // check for whether a value is finite, e.g. not NaN,Inf, or -Inf, by using arma::is_finite()
-         } while (!std::isfinite(s_temp[i]) & (niter < 10) );
 
+             // con false esce, con true resta
+         } while ( std::isnan(s_temp[i]) & (niter < 10) );
      }
+
+
+     // for(int i = 0; i < B; i++){
+     //
+     //     NumericVector xb(n);
+     //     niter = 0;
+     //     // print(xb);
+     //
+     //     // check!
+     //     LogicalVector id(n);
+     //     do {
+     //         id = xb==xb[0];
+     //
+     //         while(Rcpp::all(id).is_true()) {
+     //             xb = RcppArmadillo::sample(x,n,true);
+     //             id = xb==xb[0];
+     //         }
+     //
+     //         s_temp[i] = HMC_Cpp(xb)[0];
+     //
+     //         if(!std::isfinite(s_temp[i])){
+     //             s_temp[i] = sign(s_temp[i])*pow(n,10);
+     //         };
+     //
+     //         // asd = std::isnan(s_temp[i]);
+     //         // if(asd){
+     //         //     std::cout << std::isnan(s_temp[i]) << std::endl;
+     //         //     // Rprintf("condition is: %d \n", asd);
+     //         //     // Rprintf("s_temp is: %f \n", s_temp[i]);
+     //         // }
+     //
+     //         niter += 1;
+     //         // con false esce, con true resta
+     //         // check for whether a value is finite, e.g. not NaN,Inf, or -Inf, by using std::is_finite()
+     //     } while (!std::isfinite(s_temp[i]) & (niter < 10) );
+     //
+     // }
+
      // std::cout << s_temp << std::endl;
      return s_temp;
-}
-
-//' Wrapper function for compution the Harris-McCabe bootstrap score test.
-//' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
-//' @param X NumericVector
-//' @param B int
-//' @details
-//' This is an internal function, it will be excluded in future versions.
-//' @noRd
-// [[Rcpp::export]]
-List HMCtest_boot(NumericVector X, int B){
-    // old input: unsigned int type
-    // int n = X.length();
-
-    double Smc = HMC_Cpp(X)[0];
-    double B_stat;
-    double B_pval;
-    NumericVector SmcB(B);
-
-    unsigned int type = 1;
-    if(type == 1){
-        SmcB = HMC_BOOT_Cpp(X,B);
-    }
-    // else if(type == 2){
-    //     // PARAMETRIC
-    //     SmcB = HMC_parBOOT_Cpp(X,B,arrival);
-    // }
-    // else if(type == 3){
-    //     // PIT
-    //     SmcB = HMC_pitBOOT_Cpp(X,B,arrival);
-    // }
-
-    B_stat = mean(SmcB);
-    B_pval = mean(abs(SmcB) > std::fabs(Smc));
-
-
-    return List::create(
-        _["stat"]  = B_stat,
-        _["pval"]  = B_pval
-    );
 }
 
 

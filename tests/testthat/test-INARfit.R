@@ -1,4 +1,4 @@
-# SOSPESO PER ADESSO IN quanto sto generando nuoe function di stima
+# SOSPESO PER ADESSO IN quanto sto generando nuove function di stima
 # test_that("estimate identical values", {
 #     set.seed(1245)
 #     s1 <- genINAR(500, a = 0.5, par = 2, inn = "poi")$X

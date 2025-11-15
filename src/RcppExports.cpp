@@ -75,20 +75,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// SMCtest_boot
-List SMCtest_boot(NumericVector X, unsigned int arrival, unsigned int type, int B);
-RcppExport SEXP _INAr_SMCtest_boot(SEXP XSEXP, SEXP arrivalSEXP, SEXP typeSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type arrival(arrivalSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(SMCtest_boot(X, arrival, type, B));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sortunique
 NumericVector sortunique(NumericVector v);
 RcppExport SEXP _INAr_sortunique(SEXP vSEXP) {
@@ -132,18 +118,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
     rcpp_result_gen = Rcpp::wrap(HMC_BOOT_Cpp(x, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// HMCtest_boot
-List HMCtest_boot(NumericVector X, int B);
-RcppExport SEXP _INAr_HMCtest_boot(SEXP XSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(HMCtest_boot(X, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -229,12 +203,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
     {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
     {"_INAr_SMC_pitBOOT_Cpp", (DL_FUNC) &_INAr_SMC_pitBOOT_Cpp, 3},
-    {"_INAr_SMCtest_boot", (DL_FUNC) &_INAr_SMCtest_boot, 4},
     {"_INAr_sortunique", (DL_FUNC) &_INAr_sortunique, 1},
     {"_INAr_ecdfcpp", (DL_FUNC) &_INAr_ecdfcpp, 2},
     {"_INAr_HMC_Cpp", (DL_FUNC) &_INAr_HMC_Cpp, 1},
     {"_INAr_HMC_BOOT_Cpp", (DL_FUNC) &_INAr_HMC_BOOT_Cpp, 2},
-    {"_INAr_HMCtest_boot", (DL_FUNC) &_INAr_HMCtest_boot, 2},
     {"_INAr_YW_cpp", (DL_FUNC) &_INAr_YW_cpp, 1},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},

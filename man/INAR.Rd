@@ -2,15 +2,12 @@
 % Please edit documentation in R/INARfit.R, R/genericfuns.R
 \name{INAR}
 \alias{INAR}
-\alias{print.INAR}
 \alias{summary.INAR}
 \alias{plot.INAR}
 \alias{fitted.INAR}
 \title{Fitting INAR(p) Models}
 \usage{
 INAR(X, p, inn = "poi", method = "CLS")
-
-\method{print}{INAR}(x, digits = max(3L, getOption("digits") - 3L), se = TRUE, ...)
 
 \method{summary}{INAR}(object, ...)
 
@@ -27,15 +24,9 @@ INAR(X, p, inn = "poi", method = "CLS")
 
 \item{method}{estimation method, one of "YW" (Yule-Walker), "CLS" (Conditional Least Squares), "CML" (Conditional Maximum Likelihood), "SP" (Saddlepoint Approximation)}
 
-\item{x, }{an \code{INAR} object.}
-
-\item{digits, }{number of digits.}
-
-\item{se, }{whether to show standard error or not.}
+\item{object, }{an \code{INAR} object}
 
 \item{..., }{additional options}
-
-\item{object, }{an \code{INAR} object}
 }
 \value{
 The fitted model, an object of class \code{INAR}

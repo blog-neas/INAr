@@ -1,50 +1,74 @@
-#' Fitting INAR(p) Models
+#' Print the results of INAR tests.
 #'
-#' @rdname INAR
-#' @method print INAR
+#' This is a modified version of the print function for class `htest` from the package `stats`.
+#' @rdname INARtest
+#' @method print INARtest
 #'
-#' @param x, an `INAR` object.
+#' @param x, an `INARtest` object.
 #' @param digits, number of digits.
-#' @param se, whether to show standard error or not.
-#' @param ..., additional options
+#' @param prefix, prefix for the output.
+#' @param ..., additional options.
 #' @export
-print.INAR <- function (x, digits = max(3L, getOption("digits") - 3L), se = TRUE, ...) {
-    #
-    #
-    # TO DO:
-    # - add the mean ( = intercept) into the parameter estimates
-
-    cat(x$call0,"\nCall:", deparse(x$call, width.cutoff = 75L),"", sep = "\n")
-    if (length(x$coef)) {
-        cat("Thinning Parameters:\n")
-        alphas <- round(x$coef$alphas, digits = digits)
-        if (se && NROW(x$var.coef$alphas)) {
-            ses <- rep.int(0, length(alphas))
-            ses[x$mask$alphas] <- round(sqrt(diag(x$var.coef$alphas)), digits = digits)
-            alphas <- matrix(alphas, 1L, dimnames = list(NULL, names(alphas)))
-            alphas <- rbind(alphas, s.e. = ses)
-        }
-        print.default(alphas, print.gap = 2)
-
-        cat("\nInnovation Parameters,",toupper(x$inn),"Distribution:\n")
-        pars <- round(x$coef$pars, digits = digits)
-        if (se && NROW(x$var.coef$pars)) {
-            ses <- rep.int(0, length(pars))
-            ses[x$mask$pars] <- round(sqrt(diag(x$var.coef$pars)), digits = digits)
-            pars <- matrix(pars, 1L, dimnames = list(NULL, names(pars)))
-            pars <- rbind(pars, s.e. = ses)
-        }
-        print.default(pars, print.gap = 2)
+print.INARtest <- function (x, digits = getOption("digits"), prefix = "\t", ...){
+    cat("\n")
+    cat(strwrap(x$method, prefix = prefix), sep = "\n")
+    cat("\n")
+    cat("data:  ", x$data.name, "\n", sep = "")
+    out <- character()
+    out2 <- character()
+    if (!is.null(x$statistic))
+        out <- c(out, paste(names(x$statistic), "=", format(x$statistic,
+                                                            digits = max(1L, digits - 2L))))
+    if (!is.null(x$parameter))
+        out <- c(out, paste(names(x$parameter), "=", format(x$parameter,
+                                                            digits = max(1L, digits - 2L))))
+    if (!is.null(x$p.value)) {
+        fp <- format.pval(x$p.value, digits = max(1L, digits -
+                                                      3L))
+        out <- c(out, paste("p-value", if (startsWith(fp, "<")) fp else paste("=",
+                                                                              fp)))
+    }
+    if (!is.null(x$statistic.boot))
+        out2 <- c(out2, paste(names(x$statistic.boot), "=", format(x$statistic.boot,
+                                                            digits = max(1L, digits - 2L))))
+    if (!is.null(x$parameter.boot))
+        out2 <- c(out2, paste(names(x$parameter.boot), "=", format(x$parameter.boot,
+                                                            digits = max(1L, digits - 2L))))
+    if (!is.null(x$p.value.boot)) {
+        fp.boot <- format.pval(x$p.value.boot, digits = max(1L, digits -
+                                                      3L))
+        out2 <- c(out2, paste("p-value bootstrap", if (startsWith(fp.boot, "<")) fp.boot else paste("=",
+                                                                              fp.boot)))
     }
 
-    # QUESTA PARTE ANDRA' MESSA IN SUMMARY:
-    cat("\n - sigma^2 estimated as ", format(x$momentsINN["sigma2"], digits = digits),
-        ":  log likelihood = ", format(round(x$loglik, 2L)),
-        ",  aic = ", format(round(x$aic, 2L)),",  bic = ", format(round(x$bic, 2L)),"\n",sep = "")
-    if (length(x$SMCtest)) {
-            cat(" - SMC Significance test = ",x$SMCtest$stat,
-                "\n      p-value = ",x$SMCtest$pval,", bootstrap p-value = ",x$SMCtest$pvalboot,"\n",sep = "")
+    cat(strwrap(paste(out, collapse = ", ")),strwrap(paste(out2, collapse = ", ")), sep = "\n")
+
+    if (!is.null(x$alternative)) {
+        cat("alternative hypothesis: ")
+        if (!is.null(x$null.value)) {
+            if (length(x$null.value) == 1L) {
+                alt.char <- switch(x$alternative, two.sided = "not equal to",
+                                   less = "less than", greater = "greater than")
+                cat("true ", names(x$null.value), " is ", alt.char,
+                    " ", x$null.value, "\n", sep = "")
+            }
+            else {
+                cat(x$alternative, "\nnull values:\n", sep = "")
+                print(x$null.value, digits = digits, ...)
+            }
+        }
+        else cat(x$alternative, "\n", sep = "")
     }
+    if (!is.null(x$conf.int)) {
+        cat(format(100 * attr(x$conf.int, "conf.level")), " percent confidence interval:\n",
+            " ", paste(format(x$conf.int[1:2], digits = digits),
+                       collapse = " "), "\n", sep = "")
+    }
+    if (!is.null(x$estimate)) {
+        cat("sample estimates:\n")
+        print(x$estimate, digits = digits, ...)
+    }
+    cat("\n")
     invisible(x)
 }
 
@@ -55,6 +79,7 @@ print.INAR <- function (x, digits = max(3L, getOption("digits") - 3L), se = TRUE
 #' @method summary INAR
 #'
 #' @param object, an `INAR` object
+#' @param ..., additional options
 #' @export
 summary.INAR <- function (object, ...){
     #
@@ -159,7 +184,8 @@ summary.INAR <- function (object, ...){
     #     ans$na.action <- z$na.action
     # class(ans) <- "summary.lm"
     # ans
-    object
+    warning("summary.INAR is not yet implemented. Returning the original object.")
+    invisible(object)
 }
 
 #' Plotting INAR(p) Models
@@ -170,11 +196,8 @@ summary.INAR <- function (object, ...){
 #'
 #' @param object, an `INAR` object
 plot.INAR <- function (object){
-    object
-    #
-    #
-    #
-    #
+    warning("plot.INAR is not yet implemented. Returning the original object.")
+    invisible(object)
 }
 # methods(summary)
 
@@ -185,11 +208,11 @@ plot.INAR <- function (object){
 #' @method fitted INAR
 #'
 #' @param object, an `INAR` object
+#' @param ..., additional options
 #' @export
 fitted.INAR <- function(object, ...){
-    # fitted <- genINAR(object$n, a = object$coef$alphas, par = object$coef$pars, inn = object$inn, burnout = 500)$X
-    # return(fitted)
-    object
+    warning("fitted.INAR is not yet implemented. Returning the original object.")
+    invisible(object)
 }
 
 

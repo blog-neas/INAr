@@ -15,8 +15,8 @@
 #'   \insertAllCited{}
 #' @noRd
 estimSP <- function(X, p, inn = "poi", control = list()){
-    stopifnot(p==1)
-    stopifnot(inn == "poi")
+    stopifnot(p==1) # to remove when implemented for p>1
+    stopifnot(inn == "poi") # to remove when implemented for other inn
 
     if (is.null(control$init)) {
         YW <- estimYW(X, p, inn)

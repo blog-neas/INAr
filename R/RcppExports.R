@@ -49,18 +49,6 @@ SMC_pitBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_pitBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
 }
 
-#' Wrapper function for compution the Sun-McCabe bootstrap score test.
-#' @param X NumericVector
-#' @param arrival int
-#' @param type unsigned int
-#' @param B int
-#' @details
-#' This is an internal function, it will be excluded in future versions.
-#' @noRd
-SMCtest_boot <- function(X, arrival, type, B) {
-    .Call('_INAr_SMCtest_boot', PACKAGE = 'INAr', X, arrival, type, B)
-}
-
 #' Sort and remove duplicates from a numeric vector
 #' @param v NumericVector
 #' @details
@@ -90,7 +78,6 @@ HMC_Cpp <- function(x) {
 }
 
 #' Bootstrap version of the Harris-McCabe score test.
-#' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
 #' @param x NumericVector
 #' @param B int
 #' @details
@@ -98,17 +85,6 @@ HMC_Cpp <- function(x) {
 #' @noRd
 HMC_BOOT_Cpp <- function(x, B) {
     .Call('_INAr_HMC_BOOT_Cpp', PACKAGE = 'INAr', x, B)
-}
-
-#' Wrapper function for compution the Harris-McCabe bootstrap score test.
-#' !!!WARNING!!! Still under development, do not use! It will be replaced by INARtest() in future versions.
-#' @param X NumericVector
-#' @param B int
-#' @details
-#' This is an internal function, it will be excluded in future versions.
-#' @noRd
-HMCtest_boot <- function(X, B) {
-    .Call('_INAr_HMCtest_boot', PACKAGE = 'INAr', X, B)
 }
 
 YW_cpp <- function(r) {
