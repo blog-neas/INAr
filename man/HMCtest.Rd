@@ -22,8 +22,7 @@ Perform Harris-McCabe INAR(1) test.
 }
 \details{
 The function performs the Harris-McCabe (HMC) tests for the INAR
-model. It is possible to run an exact (B = 0) or a bootstrap (B > 0) test.
-It is possible to perform the exact test using the original data (B=0)
+model. It is possible to perform the exact test using the original data (B=0)
 or using bootstrap samples (B > 0).
 }
 \examples{

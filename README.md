@@ -1,16 +1,18 @@
 
 # INAr R Project <img src="man/img/hexlogo.png" align="right" height="138.5" />
-Generation, estimation and testing of Integer Autoregressive models
-
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/INAr?color=orange)](https://cran.r-project.org/package=INAr)
-[![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml)
-[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: Active - The project is being actively developed](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![codecov](https://codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg?token=0XHCFZZYN8)](https://codecov.io/gh/blog-neas/INAr)
 [![License: GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 <!-- badges: end -->
+
+Generation, estimation and testing of Integer Autoregressive models
+
+<!-- [![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml) -->
+<!-- [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) -->
+<!-- [![codecov](https://codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg?token=0XHCFZZYN8)](https://codecov.io/gh/blog-neas/INAr) -->
+
 
 
 ## Overview
@@ -84,7 +86,6 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] with p = 1 and Negative Binomial innovations
 	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
 	- [ ] with p > 1
-- [ ] Forecasting INAR(p) processes
 
 
 3. **Testing for the presence of INAR structure** 
@@ -95,10 +96,8 @@ Some functionalities are already available, while others are planned for the fut
 	- [x] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
 - [ ] Harris & McCabe Test
-	- [ ] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
-	- [ ] Semiparametric Bootstrap test
-	- [ ] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
-	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
+	- [X] Exact test for different distributions of the innovations
+	- [ ] Bootstrap test
 - [x] Zero Inflation Test
 	- [x] Puig and Valero (2006)
 	- [x] van den Broek (1995)
@@ -133,7 +132,18 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] Releasing to CRAN
 	- [ ] Lifecycle
 	- [ ] References
-- [ ] Further steps and developments
+
+#### Further steps and developments
+
+In future developments, the package can include (but is not limited to) the following aspects:
+
+- Forecasting INAR(p) processes 
+
+- New types of INAR models (e.g., threshold INAR, MINAR, INHAR, etc.)
+
+- Additional estimation methods (e.g., Bayesian estimation, etc.)
+
+- More advanced diagnostic tools and tests
 
 
 # Contributing to INAr development

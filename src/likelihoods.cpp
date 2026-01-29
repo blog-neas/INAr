@@ -21,7 +21,10 @@ double inar1_poi_loglik_cpp(const IntegerVector& x, double alpha, double lambda)
             double lchoose_val = R::lchoose(xprev, k);
             // log densità Poisson (x_t - k)
             int diff = xt - k;
-            if (diff < 0) { log_p[k] = -INFINITY; continue; }
+            if (diff < 0) {
+                log_p[k] = -INFINITY;
+                continue;
+            }
 
             double lp = lchoose_val + k * log(alpha) +
                 (xprev - k) * log(1.0 - alpha) +
@@ -44,10 +47,11 @@ double inar1_poi_loglik_cpp(const IntegerVector& x, double alpha, double lambda)
 
 // Poisson INAR(1) log-likelihood computation for SP estimation
 // [[Rcpp::export]]
-double saddle_nll_cpp(const IntegerVector& x, double alpha, double lambda) {
+double saddle_nll_cpp(const IntegerVector& x, double alpha, double lambda){
     int n = x.size();
     if (n < 2) return NA_REAL;
     double ll = 0.0;
+    double eps = 1e10;
 
     for (int t = 1; t < n; t++) {
         int xt = x[t];
@@ -64,7 +68,7 @@ double saddle_nll_cpp(const IntegerVector& x, double alpha, double lambda) {
         double b = (xprev - xt) * alpha + lambda * (1.0 - alpha);
         double c = - (double)xt * (1.0 - alpha);
         double D = b * b - 4.0 * a * c;
-        if (D < 0.0) return 1e10; // invalid discriminant
+        if (D < 0.0) return eps; // invalid discriminant
 
         double sqrtD = sqrt(D);
         double z1 = (-b + sqrtD) / (2.0 * a);
@@ -73,16 +77,16 @@ double saddle_nll_cpp(const IntegerVector& x, double alpha, double lambda) {
         double z = NAN;
         if (z1 > 0.0 && R_finite(z1)) z = z1;
         else if (z2 > 0.0 && R_finite(z2)) z = z2;
-        if (!R_finite(z) || z <= 0.0) return 1e10;
+        if (!R_finite(z) || z <= 0.0) return eps;
 
         double u = log(z);
         double Ae = alpha * z + (1.0 - alpha);
         double K = xprev * log(Ae) + lambda * (z - 1.0);
         double K2 = xprev * (alpha * (1.0 - alpha) * z) / (Ae * Ae) + lambda * z;
-        if (K2 <= 0.0 || !R_finite(K2)) return 1e10;
+        if (K2 <= 0.0 || !R_finite(K2)) return eps;
 
         double logf_t = -0.5 * log(2.0 * M_PI * K2) + K - u * xt;
-        if (!R_finite(logf_t)) return 1e10;
+        if (!R_finite(logf_t)) return eps;
 
         ll += logf_t;
     }

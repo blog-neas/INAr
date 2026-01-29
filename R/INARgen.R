@@ -53,33 +53,27 @@
 #'
 #' @export
 genINAR <- function(n, a, par, inn="poi", burnout=500){
-    stopifnot(is.vector(a))
-    stopifnot(all(a >= 0))
-    stopifnot(sum(a) < 1)
+    stopifnot(is.vector(a) ,all(a >= 0), sum(a) < 1)
     lags <- length(a)
     inn <- tolower(inn)
     s <- n + burnout
     resid_ <- rep(NA,s)
 
-    # CHECK CONDIZ DI STAZIONARIETà
+    # Check for stationarity
     mat <- matrix(0, nrow = lags, ncol = lags)
     mat[row(mat) - 1 == col(mat)] <- 1
     mat[1,] <- a
     ev <- eigen(mat)$values
     stopifnot(all(abs(ev) < 1))
 
-    # -9999 = valori NA che saranno sovrascritti!
-    sim_X <- rep(-99,s)
-
     # Poisson marginal
-    if(inn=="poi"){
-        stopifnot(length(par)==1)
+    if(inn == "poi"){
+        stopifnot(length(par) == 1)
         l_ <- unname(par)
-        resid_ <- rpois(s,l_)
-
+        resid_ <- rpois(s, l_)
     }
-    else if(inn=="overdisp_poisson"){
-        stopifnot(length(par)==2)
+    else if(inn == "overdisp_poisson"){
+        stopifnot(length(par) == 2)
 
         l_ <- unname(par[1])
         d_ <- unname(par[2])
@@ -87,7 +81,7 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
 
         resid_ <- rnbinom(s, size=(l_/(d_-1)), mu=l_)
     }
-    else if(inn=="zip"){
+    else if(inn == "zip"){
         stopifnot(length(par)==2)
 
         l_ <- unname(par[1])
@@ -96,7 +90,7 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         # gamlss.dist::rZIP
         resid_ <- rZIP(s, mu = l_, sigma = sig_)
     }
-    else if(inn=="bimodal_poisson"){
+    else if(inn == "bimodal_poisson"){
         stopifnot(length(par)==3)
 
         lam1_ <- unname(par[1])
@@ -105,12 +99,12 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
 
         u_rand <- runif(s)
 
-        selettore <- u_rand < mixp_
-        resid_[selettore] <- rpois(sum(selettore),lam1_)
-        resid_[!selettore] <- rpois(sum(!selettore),lam2_)
+        sel <- u_rand < mixp_
+        resid_[sel] <- rpois(sum(sel),lam1_)
+        resid_[!sel] <- rpois(sum(!sel),lam2_)
     }
-    else if(inn=="negbin"){
-        stopifnot(length(par)==2)
+    else if(inn == "negbin"){
+        stopifnot(length(par) == 2)
 
         # # VECCHIA PARAMETRIZZAZIONE, CON GAMMA E BETA
         # g_ <- unname(par[1]) # size, gamma
@@ -128,38 +122,39 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         resid_ <- rnbinom(s,g_,p.compl_)
 
     }
-    else if(inn=="geom"){
-        stopifnot(length(par)==2)
+    else if(inn == "geom"){
+        stopifnot(length(par) == 2)
 
         pi_ <- unname(par[1])
-        stopifnot(0 < pi_ & pi_ < 1)
+        stopifnot(pi_ > 0, pi_ < 1)
 
-        resid_ <- rgeom(s,pi_)
+        resid_ <- rgeom(s, pi_)
     }
-    else if(inn=="disc_unif"){
-        stopifnot(length(par)==1)
+    # else if(inn == "disc_unif"){
+    #     stopifnot(length(par) == 1)
+    #
+    #     max_ <- unname(par[1])
+    #
+    #     resid_ <- sample(0:max_,s,replace = TRUE)
+    # }
+    else if(inn == "binomial"){
+    stopifnot(length(par) == 2)
 
-        max_ <- unname(par[1])
-
-        resid_ <- sample(0:max_,s,replace = TRUE)
-    }
-    else if(inn=="binomial"){
-    stopifnot(length(par)==2)
-
-    enne_ <- unname(par[1]) # size
-    p_ <- unname(par[2]) # prob
+    enne_ <- unname(par[1])
+    p_ <- unname(par[2])
 
     resid_ <- rbinom(s,enne_,p_)
     }
-    else if(inn=="genpoi"){
-        stopifnot(length(par)==2)
+    else if(inn == "genpoi"){
+        stopifnot(length(par) == 2)
 
-        l_ <- unname(par[1]) # lambda, come in sunmccabe
-        k_ <- unname(par[2]) # kappa, come in sunmccabe
+        # lambda and kappa as in Sun and McCabe
+        l_ <- unname(par[1])
+        k_ <- unname(par[2])
 
 
         stopifnot(l_ > 0)
-        stopifnot(k_ < 1 & k_ > -1)
+        stopifnot(k_ > -1, k_ < 1)
 
         # if(k_ < 0){
         #     m <- l_ + 4:1000*k_
@@ -175,32 +170,33 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         # "Branching" only works when lambda is positive. When theta is less than 10, the "Normal-Approximation" may not be reliable.
 
         # attenzione al metodo utilizzato!
+        # HMMpa::rgenpois
         # RNGforGPD::GenUniGpois
         # resid_ <- GenUniGpois(theta = l_, lambda = k_,s, method = "Branching",...)$data
-
-        # HMMpa::rgenpois
+        # RNGforGPD::GenUniGpois
         resid_ <- GenUniGpois(l_, k_, s, method = ifelse(l_ > 10, "Normal-Approximation", "Inversion"), details = FALSE)$data
     }
     else if(inn=="katz"){
-    #
-    # come fare???
-    # resid_ <-
-    #
-  }
-  else if(inn=="truncnorm"){
-    mu_ <- unname(par[1])
-    sig_ <- unname(par[2])
+        stopifnot(length(par) == 2)
+        a_ <- unname(par[1])
+        b_ <- unname(par[2])
 
-    vals <- round(rnorm(s,mu_,sig_),0)
-    resid_ <- ifelse(vals < 0,0,vals)
+        resid_ <- rkatz(s, a_, b_)
   }
-  else if(inn=="truncskel"){
+  else if(inn == "truncnorm"){
+        mu_ <- unname(par[1])
+        sig_ <- unname(par[2])
+
+        vals <- round(rnorm(s, mu_, sig_),0)
+        resid_ <- ifelse(vals < 0, 0, vals)
+  }
+  else if(inn == "truncskel"){
     lam1_ <- unname(par[1])
     lam2_ <- unname(par[2])
 
     # skellam::rskellam
     vals <- rskellam(s, lam1_, lam2_)
-    resid_ <- ifelse(vals < 0,0,vals)
+    resid_ <- ifelse(vals < 0, 0, vals)
   }
     # good package is not available anymore
     # else if(inn=="good"){

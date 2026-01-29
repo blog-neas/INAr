@@ -68,20 +68,25 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
 
 #' Transformed log-likelihood for MLE
 #'
+#' Internal function
+#'
+#' @param data, observed series
+#' @param theta, transformed parameters
+#'
 #' @description
 #' Transformed negative log-likelihood for INAR(1)-Poisson
-#'
 #'
 #' @keywords internal
 #' @noRd
 nll_transformed_inar1_poi_ml <- function(data, theta) {
     X <- data
+    eps <- 1e10
     par_b <- par_back(theta, inn = "poi")
     alpha <- par_b$alphas
     lambda <- par_b$par
-    if (alpha <= 0 || alpha >= 1 || lambda <= 0) return(1e10)
+    if (alpha <= 0 || alpha >= 1 || lambda <= 0) return(eps)
     ll <- inar1_poi_loglik_cpp(X, alpha, lambda)
-    if (!is.finite(ll)) return(1e10)
+    if (!is.finite(ll)) return(eps)
     return(-ll)
 }
 

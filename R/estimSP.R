@@ -50,12 +50,13 @@ estimSP <- function(X, p, inn = "poi", control = list()){
 #' @noRd
 nll_transformed_inar1_poi_sp <- function(data, theta) {
     X <- data
+    eps <- 1e10
     par_b <- par_back(theta, inn = "poi")
     alpha <- par_b$alphas
     lambda <- par_b$par
-    if (alpha <= 0 || alpha >= 1 || lambda <= 0 || lambda > 1000) return(1e10)
+    if (alpha <= 0 || alpha >= 1 || lambda <= 0 || lambda > 1000) return(eps)
     ll <- saddle_nll_cpp(X, alpha, lambda)
-    if (!is.finite(ll)) return(1e10)
+    if (!is.finite(ll)) return(eps)
     return(-ll)
 }
 

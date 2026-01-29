@@ -882,4 +882,3 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
 # RHO_BOOT_Cpp_Parallel(x,99,4)
 
 */
-

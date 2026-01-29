@@ -13,8 +13,6 @@
 #' SMC tests are based on Poisson, negative binomial and generalized Poisson
 #' distributions, in all the considered cases, both parametric and semiparametric
 #' methods are available.
-#' It is possible to perform the exact tests using the original data (B=0) or
-#' using bootstrap samples (B > 0).
 #' @examples
 #' # ....... examples .....
 #' # SMCtest(X = rpois(100,2), type = "semiparametric", B = 0)
@@ -100,7 +98,7 @@ DItest <- function(X){ # , inn = "poi"
     OUT <- get_info(list(
         data.name = deparse1(substitute(X)),
         test = "di",
-        statistic = c(T = unname(DIstat)),
+        statistic = c(S = unname(DIstat)),
         parameter = c("a1" = unname(alpha)),
         p.value = pval,
         method = NA,
@@ -156,7 +154,7 @@ ZItest <- function(X,type = "pv"){ # , inn = "poi"
     OUT <- get_info(list(
         data.name = deparse1(substitute(X)),
         test = paste("zi",type,sep="_"),
-        statistic = c(T = unname(stat)),
+        statistic = c(S = unname(stat)),
         p.value = pval,
         parameter = c("a1" = unname(alpha)),
         inn = "none",
@@ -226,7 +224,7 @@ ZIDItest <- function(X, type = "pv"){
     OUT <- get_info(list(
         data.name = deparse1(substitute(X)),
         test = paste("zidi",type,sep="_"),
-        statistic = c(T = stat),
+        statistic = c(S = stat),
         p.value = pval,
         parameter = c("a1" = unname(alpha)),
         inn = "none",
@@ -256,8 +254,7 @@ ZIDItest <- function(X, type = "pv"){
 #'
 #' @details
 #' The function performs the Harris-McCabe (HMC) tests for the INAR
-#' model. It is possible to run an exact (B = 0) or a bootstrap (B > 0) test.
-#' It is possible to perform the exact test using the original data (B=0)
+#' model. It is possible to perform the exact test using the original data (B=0)
 #' or using bootstrap samples (B > 0).
 #' @examples
 #' # ....... examples .....

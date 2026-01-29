@@ -29,8 +29,6 @@ It is possible to run an exact (B = 0) or a bootstrap (B > 0) test.
 SMC tests are based on Poisson, negative binomial and generalized Poisson
 distributions, in all the considered cases, both parametric and semiparametric
 methods are available.
-It is possible to perform the exact tests using the original data (B=0) or
-using bootstrap samples (B > 0).
 }
 \examples{
 # ....... examples .....
