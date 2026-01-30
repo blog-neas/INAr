@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # INAr R Project <img src="man/img/hexlogo.png" align="right" height="138.5" />
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
@@ -368,6 +366,3 @@ There are several ways you can contribute to this project.
 
 Please note that this project is released with a [Contributor Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
 By contributing to this project, you agree to abide by its terms.
-
-
->>>>>>> 088a4128c16b1fed8490e8b395d619cafab1c2da
