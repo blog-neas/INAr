@@ -5,7 +5,7 @@
 #'
 #' @param X data vector
 #' @param p the order of the INAR(p) process
-#' @param inn distribution of the innovation process
+#' @param inn distribution of the innovation process, one of "poi" (Poisson), "negbin" (Negative Binomial), "genpoi" (Generalized Poisson), "katz" (Katz)
 #' @param method estimation method, one of "YW" (Yule-Walker), "CLS" (Conditional Least Squares), "CML" (Conditional Maximum Likelihood), "SP" (Saddlepoint Approximation)
 #'
 #' @return The fitted model, an object of class `INAR`
