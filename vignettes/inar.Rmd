@@ -172,24 +172,24 @@ $$
 N <- 500
 lambda <- 2
 # Poisson INAR(1) with innovations Poi(2)
-pinar1 <- genINAR(N,0.3,par = lambda, inn = "poi")$X
+pinar1 <- genINAR(N,0.3,par = lambda,arrival = "poisson")$X
 
 # Poisson INAR(2) with innovations Poi(2)
-pinar2 <- genINAR(N,c(0.1,0.3),par = lambda, inn = "poi")$X
+pinar2 <- genINAR(N,c(0.1,0.3),par = lambda,arrival = "poisson")$X
 
 # Poisson INAR(5) with innovations Poi(2)
-pinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = lambda, inn = "poi")$X
+pinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = lambda,arrival = "poisson")$X
 
 gamma <- 2
 pi <- 0.33
 # Negative Binomial INAR(1) with innovations NB(2,0.33)
-nbinar1 <- genINAR(N,0.3,par = c(gamma,pi), inn = "negbin")$X
+nbinar1 <- genINAR(N,0.3,par = c(gamma,pi),arrival = "negbin")$X
 
 # Negative Binomial INAR(2) with innovations NB(2,0.33)
-nbinar2 <- genINAR(N,c(0.1,0.3),par = c(gamma,pi), inn = "negbin")$X
+nbinar2 <- genINAR(N,c(0.1,0.3),par = c(gamma,pi),arrival = "negbin")$X
 
 # Negative Binomial INAR(5) with innovations NB(2,0.33)
-nbinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = c(gamma,pi),inn = "negbin")$X
+nbinar5 <- genINAR(N,c(0.1,0.15,0.2,0.1,0.2),par = c(gamma,pi),arrival = "negbin")$X
 
 plot(pinar1,type = "l", main = "P-INAR(1)")
 plot(pinar2,type = "l", main = "P-INAR(2)")
