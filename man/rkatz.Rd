@@ -20,5 +20,5 @@ A vector of random samples from the Katz distribution.
 This function generates random samples from the Katz distribution.
 }
 \examples{
-katz_rnd(10, a = 2, b = 3)
+rkatz(10, a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 }

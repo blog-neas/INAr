@@ -20,5 +20,5 @@ A vector of quantiles corresponding to the input probabilities.
 This function computes the quantile function for the Katz distribution.
 }
 \examples{
-katz_quantile(c(0.1, 0.5, 0.9), a = 2, b = 3)
+qkatz(c(0.1, 0.5, 0.9), a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 }

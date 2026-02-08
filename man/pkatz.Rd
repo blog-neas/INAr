@@ -20,5 +20,5 @@ A vector of cumulative probabilities corresponding to the input values.
 This function computes the cumulative distribution function for the Katz distribution.
 }
 \examples{
-katz_cdf(0:10, a = 2, b = 3)
+pkatz(0:10, a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 }

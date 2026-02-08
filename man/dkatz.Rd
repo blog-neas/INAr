@@ -20,5 +20,5 @@ A vector of probabilities corresponding to the input values.
 This function computes the probability mass function for the Katz distribution.
 }
 \examples{
-dkatz(0:10, a = 2, b = 0.5)
+dkatz(0:10, a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 }
