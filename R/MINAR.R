@@ -5,8 +5,9 @@
 #' Experimental function
 #'
 #' @param n integer, number of observations, length of the series.
-#' @param a vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
-#' @param par vector, parameters related with the model, see the details section.
+#' @param m integer, number of series, dimension of the process.
+#' @param A_list vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
+#' @param lambdas vector, parameters of the innovation distribution.
 #' @param inn character, innovation distribution. Default value is `"poi"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
 #' @param burnout integer, number of starting observations to discard. Set to 500 by default.
 #'
