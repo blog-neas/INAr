@@ -2,8 +2,10 @@
 #'
 #' Internal function
 #'
-#' @param x, observed series
+#' @param X, observed series
 #' @param p, number of lags
+#' @param inn, distribution of the innovation process
+#' @param ..., additional parameters
 #'
 #' @importFrom stats acf
 #' @importFrom stats var
@@ -42,7 +44,6 @@ estimYW <- function(X, p, inn = "poi", ...) {
                 "par"=par$par,
                 "meanX" =  mean(X), "varX" = var(X)
                 # "meanINN" = mINN, "varINN" = vINN
-                )
+    )
     return(OUT)
 }
-

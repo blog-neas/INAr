@@ -14,18 +14,18 @@ using namespace Rcpp;
 NumericVector INARp_cpp(NumericVector resid, DoubleVector a) {
 
     unsigned int n = resid.length();
-    unsigned int lags = a.length();
+    unsigned int p = a.length();
     int vals = 0;
     NumericVector sim(n);
 
     sim = clone(resid);
-    for (unsigned int i = lags; i < n; i++) {
+    for (unsigned int t = p; t < n; t++) {
         vals = 0;
-        for(unsigned int j = 0 ; j < lags; j++) {
-            // vals += R::rbinom(sim[i - lags + j],a[j]); // c'e' un errore!
-            vals += R::rbinom(sim[i - j - 1],a[j]);
+        for(unsigned int k = 0 ; k < p; k++) {
+            // vals += R::rbinom(sim[t - p + k],a[k]); // c'e' un errore!
+            vals += R::rbinom(sim[t - k - 1],a[k]);
         }
-        sim[i] = vals + resid[i];
+        sim[t] = vals + resid[t];
         // sim[i] = R::rbinom(sim[i-1],a) + resid[i];
     }
 
@@ -33,7 +33,7 @@ NumericVector INARp_cpp(NumericVector resid, DoubleVector a) {
 }
 
 /*** R
-# # check INAR(p)
+# check INAR(p)
 # aa <- c(0.1,0.3,0.1,0.2,0.2)
 # x <- rpois(1000,2)
 # y <- INARp_cpp(x,aa)

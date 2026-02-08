@@ -20,7 +20,7 @@ INAR(X, p, inn = "poi", method = "CLS")
 
 \item{p}{the order of the INAR(p) process}
 
-\item{inn}{distribution of the innovation process}
+\item{inn}{distribution of the innovation process, one of "poi" (Poisson), "negbin" (Negative Binomial), "genpoi" (Generalized Poisson), "katz" (Katz)}
 
 \item{method}{estimation method, one of "YW" (Yule-Walker), "CLS" (Conditional Least Squares), "CML" (Conditional Maximum Likelihood), "SP" (Saddlepoint Approximation)}
 

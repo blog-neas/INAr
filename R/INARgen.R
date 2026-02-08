@@ -138,12 +138,12 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
     #     resid_ <- sample(0:max_,s,replace = TRUE)
     # }
     else if(inn == "binomial"){
-    stopifnot(length(par) == 2)
+        stopifnot(length(par) == 2)
 
-    enne_ <- unname(par[1])
-    p_ <- unname(par[2])
+        enne_ <- unname(par[1])
+        p_ <- unname(par[2])
 
-    resid_ <- rbinom(s,enne_,p_)
+        resid_ <- rbinom(s,enne_,p_)
     }
     else if(inn == "genpoi"){
         stopifnot(length(par) == 2)
@@ -182,22 +182,22 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         b_ <- unname(par[2])
 
         resid_ <- rkatz(s, a_, b_)
-  }
-  else if(inn == "truncnorm"){
+    }
+    else if(inn == "truncnorm"){
         mu_ <- unname(par[1])
         sig_ <- unname(par[2])
 
         vals <- round(rnorm(s, mu_, sig_),0)
         resid_ <- ifelse(vals < 0, 0, vals)
-  }
-  else if(inn == "truncskel"){
-    lam1_ <- unname(par[1])
-    lam2_ <- unname(par[2])
+    }
+    else if(inn == "truncskel"){
+        lam1_ <- unname(par[1])
+        lam2_ <- unname(par[2])
 
-    # skellam::rskellam
-    vals <- rskellam(s, lam1_, lam2_)
-    resid_ <- ifelse(vals < 0, 0, vals)
-  }
+        # skellam::rskellam
+        vals <- rskellam(s, lam1_, lam2_)
+        resid_ <- ifelse(vals < 0, 0, vals)
+    }
     # good package is not available anymore
     # else if(inn=="good"){
     #     z_ <- unname(par[1])
@@ -257,17 +257,17 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         resid_[!selettore] <- rnbinom(sum(!selettore),g_,p.compl_)
     }
     else{
-    stop("please specify one of the available distributions", call. = FALSE)
-  }
+        stop("please specify one of the available distributions", call. = FALSE)
+    }
 
-  # generazione del campione
-  a_ <- unname(a) # alpha
+    # generazione del campione
+    a_ <- unname(a) # alpha
 
-  ##### VERSIONE C++ #####
-  sim_X <- INARp_cpp(resid_,a_)
+    ##### VERSIONE C++ #####
+    sim_X <- INARp_cpp(resid_,a_)
 
-  dati_sim <- data.frame(X=sim_X[(burnout+1):s],res=resid_[(burnout+1):s])
-  return(dati_sim)
+    dati_sim <- data.frame(X=sim_X[(burnout+1):s],res=resid_[(burnout+1):s])
+    return(dati_sim)
 }
 
 # veloce esempio --------------------------------------------------------

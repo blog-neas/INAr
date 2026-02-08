@@ -1,3 +1,13 @@
+# INAr 0.3.2
+
+* Fixed minor bugs in the test functions, some tests were not showing the alternative hypothesis in the output.
+
+* Implemented some *experimental* functions to work with multidimensional INAR processes, in particular:
+    * `genMINAR` (in MINAR.R): Frontend function to generate MINAR(p) models.
+    * `estimMYW` (in MINAR.R): Function to fit MINAR(p) models by using the Yule-Walker procedure.
+    * `MINARp_gen_cpp` (in MINARp_gen.cpp): C++ routine to generate MINAR(p) processes.
+
+
 # INAr 0.3.1
 
 * Implemented the Harris-McCabe bootstrap test.

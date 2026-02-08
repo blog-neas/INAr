@@ -66,16 +66,20 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "zi_pv"){
         OUT <- list(
-            method = paste("Test for zero-inflation in INAR(1) models - PV version."), # with", innovation, "innovations."),
+            method = paste("Test for zero-inflation in INAR(1) models - Puig & Valero."), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
+            alternative = "two.sided",
+            null.value = c(ZI = 0),
             check = TRUE
         )
     }else if(LIST$test == "zi_vdb"){
         OUT <- list(
-            method = paste("Test for zero-inflation in INAR(1) models - VDB version."), # with", innovation, "innovations."),
+            method = paste("Test for zero-inflation in INAR(1) models - van den Broek"), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
+            alternative = "two.sided",
+            null.value = c(ZI = 0),
             check = TRUE
         )
     }else if(LIST$test == "di"){
@@ -83,6 +87,8 @@ get_info <- function(LIST){
             method = paste("Test for dispersion in INAR(1) models."), #  with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
+            alternative = "two.sided",
+            null.value = c(DI = 1),
             check = TRUE
         )
     }else if(LIST$test == "zidi_pv"){
@@ -90,6 +96,8 @@ get_info <- function(LIST){
             method = paste("Chi-squared test for joint zero-inflation and dispersion in INAR(1) models - PV version."), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
+            alternative = "greater",
+            null.value = c(S = 0),
             check = TRUE
         )
     }else if(LIST$test == "zidi_vdb"){
@@ -97,6 +105,8 @@ get_info <- function(LIST){
             method = paste("Chi-squared test for joint zero-inflation and dispersion in INAR(1) models - VDB version."), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
+            alternative = "greater",
+            null.value = c(S = 0),
             check = TRUE
         )
     }
