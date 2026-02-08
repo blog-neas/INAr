@@ -12,7 +12,7 @@
 #' @param burnout integer, number of starting observations to discard. Set to 500 by default.
 #'
 #' @examples
-#'
+#' # example
 #' @export
 genMINAR <- function(n, m, A_list, lambdas, inn="poi", burnout=500){
     stopifnot(inn %in% c("poi"))
@@ -91,6 +91,7 @@ genMINAR <- function(n, m, A_list, lambdas, inn="poi", burnout=500){
 #' @importFrom RcppML nnls
 #'
 #' @examples
+#' # example
 #'
 #' @export
 estimMYW <- function(X, p, inn = "poi", ...) {

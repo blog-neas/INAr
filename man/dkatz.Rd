@@ -20,5 +20,5 @@ A vector of probabilities corresponding to the input values.
 This function computes the probability mass function for the Katz distribution.
 }
 \examples{
-katz_pmf(0:10, a = 2, b = 3)
+dkatz(0:10, a = 2, b = 0.5)
 }

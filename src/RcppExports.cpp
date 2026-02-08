@@ -144,6 +144,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MINARp_gen_cpp
+NumericMatrix MINARp_gen_cpp(NumericMatrix resid, NumericMatrix A);
+RcppExport SEXP _INAr_MINARp_gen_cpp(SEXP residSEXP, SEXP ASEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type resid(residSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
+    rcpp_result_gen = Rcpp::wrap(MINARp_gen_cpp(resid, A));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Xresid
 Rcpp::List Xresid(NumericVector X, NumericVector alphas, double mINN, double vINN);
 RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP, SEXP mINNSEXP, SEXP vINNSEXP) {
@@ -209,6 +221,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_HMC_BOOT_Cpp", (DL_FUNC) &_INAr_HMC_BOOT_Cpp, 2},
     {"_INAr_YW_cpp", (DL_FUNC) &_INAr_YW_cpp, 1},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
+    {"_INAr_MINARp_gen_cpp", (DL_FUNC) &_INAr_MINARp_gen_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
     {"_INAr_inar1_poi_loglik_cpp", (DL_FUNC) &_INAr_inar1_poi_loglik_cpp, 3},

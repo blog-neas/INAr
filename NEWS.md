@@ -7,6 +7,11 @@
     * `estimMYW` (in MINAR.R): Function to fit MINAR(p) models by using the Yule-Walker procedure.
     * `MINARp_gen_cpp` (in MINARp_gen.cpp): C++ routine to generate MINAR(p) processes.
 
+* Initial development of the Katz distribution computation, in particular:
+    * `dKatz` (in Katz.R): Function to compute the Katz distribution probability mass function.
+    * `pKatz` (in Katz.R): Function to compute the Katz distribution cumulative distribution function.
+    * `qKatz` (in Katz.R): Function to compute the Katz distribution quantile function.
+    * `rKatz` (in Katz.R): Function to generate random numbers from the Katz distribution.
 
 # INAr 0.3.1
 
