@@ -1,10 +1,10 @@
 ---
-title: "Real-data Example: Basic INAR(1) Poisson Model for Cryptosporidiosis infections"
+title: "NAR(1) Poisson Model for Cryptosporidiosis infections"
 date: "`r Sys.Date()`"
 bibliography: bibliography.bib
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{INAr package, Real-data Example: Basic INAR(1) Poisson Model for Cryptosporidiosis infections}
+  %\VignetteIndexEntry{INAR(1) Poisson Model for Cryptosporidiosis infections}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignetteKeyword{PDF}
@@ -31,11 +31,8 @@ set.seed(6)
 ## Read data from txt
 
 ```{r warning=FALSE}
-data <- read.table("Cryptosporidiosis_02-08.txt",
-                   header = TRUE,    
-                   sep = "",         
-                   stringsAsFactors = FALSE)
-X <- as.numeric(data$X4)
+data(cryptosporidiosis)
+X <- cryptosporidiosis$X
 ```
 
 Before fitting any model, we inspect basic descriptive statistics and the empirical distribution to understand dispersion, zero frequency, and overall behaviour. 
@@ -117,7 +114,7 @@ We apply several diagnostic tests to assess the presence of INAR‑type dependen
 Tests the null hypothesis of no INAR-type dependence. A small p-value indicates that the thinning parameter alpha is significantly greater than zero, confirming the presence of serial dependence.
 
 ```{r warning=FALSE}
-HMCtest(data$X, B = 0, saveboot = FALSE)
+HMCtest(X, B = 0, saveboot = FALSE)
 ```
 
 The Harris–McCabe test rejects the null hypothesis of no INAR‑type dependence, indicating that the thinning parameter is significantly greater than zero.
@@ -127,7 +124,7 @@ The Harris–McCabe test rejects the null hypothesis of no INAR‑type dependenc
 A more powerful score test for detecting INAR(1) dependence under different innovation distributions (Poisson, Negative Binomial, Generalized Poisson). Again, a small p-value supports the presence of autoregressive structure.
 
 ```{r warning=FALSE}
-SMCtest(data$X, B = 0, saveboot = FALSE)
+SMCtest(X, B = 0, saveboot = FALSE)
 ```
 
 The Sun–McCabe test yields an extremely small p‑value, confirming strong first‑order dependence unde innovations.
@@ -137,7 +134,7 @@ The Sun–McCabe test yields an extremely small p‑value, confirming strong fir
 Evaluates whether the data exhibit more zeros than expected under a standard count distribution. Zero inflation is common in real-world count data and may influence the choice of innovation distribution.
 
 ```{r warning=FALSE}
-ZItest(data$X, type = "pv")
+ZItest(X, type = "pv")
 ```
 
 The zero‑inflation test strongly rejects the null of no excess zeros. The data contain significantly more zeros than expected under standard count models, suggesting that zero‑inflated innovation distributions may be more appropriate.
@@ -147,7 +144,7 @@ The zero‑inflation test strongly rejects the null of no excess zeros. The data
 The dispersion test evaluates whether the variance of the count data significantly differs from the mean. In the context of INAR models, evidence of overdispersion typically motivates the use of more flexible innovations such as Negative Binomial.
 
 ```{r warning=FALSE}
-DItest(data$X)
+DItest(X)
 ```
 
 The dispersion test indicates substantial overdispersion, with variance far exceeding the mean. This strongly contradicts the Poisson assumption, which requires equality of mean and variance. The result motivates the use of more flexible innovations such as Negative Binomial.
@@ -157,7 +154,7 @@ The dispersion test indicates substantial overdispersion, with variance far exce
 Assesses both zero inflation and overdispersion simultaneously.
 
 ```{r warning=FALSE}
-ZIDItest(data$X, type = "pv")
+ZIDItest(X, type = "pv")
 ```
 
 # Model fit
@@ -165,7 +162,7 @@ ZIDItest(data$X, type = "pv")
 Fit of an INAR(1) model using conditional least squares (CLS). The Poisson-INAR(1) model is estimated first, but if the data show substantial overdispersion or zero inflation, a Negative Binomial-INAR(1) model may provide a better fit.
 
 ```{r warning=FALSE}
-fit_pois <- INAR(data$X, p = 1, inn = "poi", method = "CLS")
+fit_pois <- INAR(X, p = 1, inn = "poi", method = "CLS")
 
 fit_pois
 ```

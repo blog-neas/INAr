@@ -1,3 +1,10 @@
+# INAr 0.3.3
+
+* [MTR] Added some vignettes *in development phase* to show how to use the package and to illustrate the main features of the INAR processes.
+
+* Added the cryptosporidiosis infection count data.
+
+
 # INAr 0.3.2
 
 * Fixed minor bugs in the test functions, some tests were not showing the alternative hypothesis in the output.
