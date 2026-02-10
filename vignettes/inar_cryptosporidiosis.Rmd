@@ -1,0 +1,224 @@
+---
+title: "Real-data Example: Basic INAR(1) Poisson Model for Cryptosporidiosis infections"
+date: "`r Sys.Date()`"
+bibliography: bibliography.bib
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{INAr package, Real-data Example: Basic INAR(1) Poisson Model for Cryptosporidiosis infections}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteKeyword{PDF}
+  %\VignetteKeyword{HTML}
+---
+
+
+This vignette illustrates how to analyse the Cryptosporidiosis_02–08 dataset that consists of 365 weekly counts of newly reported Cryptosporidiosis infections in Germany between 2002 and 2008.
+
+# Load the library
+
+Load INAr library, then the libraries stats and lattice were used for basis functions (mean, acf, pacf etc.) and plots (density etc.)
+
+```{r warning=FALSE}
+library(INAr)
+library(stats)
+library(lattice)
+
+set.seed(6)
+```
+
+# Data exploration
+
+## Read data from txt
+
+```{r warning=FALSE}
+data <- read.table("Cryptosporidiosis_02-08.txt",
+                   header = TRUE,    
+                   sep = "",         
+                   stringsAsFactors = FALSE)
+X <- as.numeric(data$X4)
+```
+
+Before fitting any model, we inspect basic descriptive statistics and the empirical distribution to understand dispersion, zero frequency, and overall behaviour. 
+
+## Empirical distribution
+
+```{r fig.height=5, fig.width=7, warning=FALSE}
+brks <- seq(min(X) - 0.5, max(X) + 0.5, by = 1)
+
+h <- hist(
+  X,
+  breaks = brks,
+  col = "darkgreen",
+  border = "black",
+  xlab = "Cryptosporidiosis",
+  ylab = "Frequency",
+  main = "Cryptosporidiosis density")
+
+
+d <- density(X)
+
+d$y <- d$y * max(h$counts) / max(d$y)
+lines(d$x, d$y, col = "darkred", lwd = 3)
+```
+
+The distribution is clearly right‑skewed, with most observations concentrated at lower case counts and a long tail toward higher values. The smooth density curve highlights this asymmetry and the presence of occasional large spikes.
+
+## Descriptive statistics
+
+To assess whether an INAR(1) structure is plausible, we examine the mean–variance relationship and compute the dispersion index. For count data, overdispersion (variance > mean) suggests that Poisson innovations may be inadequate and that more flexible distributions (e.g., Negative Binomial) might be required.
+
+```{r warning=FALSE}
+mean_X <- mean(X)
+var_X  <- var(X)
+disp_index <- var_X / mean_X
+
+cat("Mean:", mean_X,
+    "\nVariance:", var_X,
+    "\nDispersion Index:", disp_index)
+```
+
+The Dispersion Index shows strong overdispersion relative to the Poisson benchmark, where mean and variance coincide. Such behaviour suggests that Poisson innovations may be too restrictive and that more flexible distributions could provide a better fit.
+
+## Time series plot 
+
+The time series plot shows the evolution of daily Cryptosporidiosis.
+
+```{r fig.height=5, fig.width=7, warning=FALSE}
+xyplot(
+  X ~ seq_along(X),
+  type = "l",
+  col = "darkgreen",
+  xlab = "Week",
+  ylab = "Cryptosporidiosis infection",
+  main = "Cryptosporidiosis infection Counts")
+```
+
+The series displays pronounced week‑to‑week variability, with recurrent peaks that hint at a seasonal infection cycle. The alternating surges and declines suggest structured temporal dependence rather than random fluctuation. This behaviour is typical of epidemiological count data and aligns well with an INAR‑type modelling framework.
+
+# Model identification
+
+## Inspect autocorrelation structure
+
+The ACF and PACF plots help identify the order of the autoregressive structure. For INAR processes, the ACF usually decreases geometrically, while the PACF shows a single significant spike at lag 1. A slowly decaying ACF and a significant first lag in the PACF typically indicate AR(1)-type dependence, supporting the use of an INAR(1) model.
+
+```{r fig.height=4, fig.width=7, warning=FALSE}
+acf(X, main = "Sample ACF") 
+pacf(X, main = "Sample PACF") 
+```
+
+The ACF exhibits a slow geometric decay, indicating persistent serial dependence in the series. The PACF shows a dominant spike at lag 1, with subsequent lags falling within the confidence bounds. This pattern is characteristic of AR(1)‑type dynamics and provides strong support for modelling the data with an INAR(1) structure.
+
+## Preliminary tests
+
+We apply several diagnostic tests to assess the presence of INAR‑type dependence, overdispersion, and zero inflation. In these tests, setting B = 0 instructs the function to use the asymptotic distribution of the test statistic rather than a bootstrap approximation. Given the relatively large sample size in this dataset, the asymptotic p‑value is accurate and computationally efficient. Bootstrap resampling (B > 0) is typically reserved for small samples or highly irregular count distributions, where simulation-based inference provides additional robustness.
+
+### Harris–McCabe test (HMC)  
+
+Tests the null hypothesis of no INAR-type dependence. A small p-value indicates that the thinning parameter alpha is significantly greater than zero, confirming the presence of serial dependence.
+
+```{r warning=FALSE}
+HMCtest(data$X, B = 0, saveboot = FALSE)
+```
+
+The Harris–McCabe test rejects the null hypothesis of no INAR‑type dependence, indicating that the thinning parameter is significantly greater than zero.
+
+### Sun–McCabe test (SMC) 
+
+A more powerful score test for detecting INAR(1) dependence under different innovation distributions (Poisson, Negative Binomial, Generalized Poisson). Again, a small p-value supports the presence of autoregressive structure.
+
+```{r warning=FALSE}
+SMCtest(data$X, B = 0, saveboot = FALSE)
+```
+
+The Sun–McCabe test yields an extremely small p‑value, confirming strong first‑order dependence unde innovations.
+
+### Zero-Inflation test (ZItest) 
+
+Evaluates whether the data exhibit more zeros than expected under a standard count distribution. Zero inflation is common in real-world count data and may influence the choice of innovation distribution.
+
+```{r warning=FALSE}
+ZItest(data$X, type = "pv")
+```
+
+The zero‑inflation test strongly rejects the null of no excess zeros. The data contain significantly more zeros than expected under standard count models, suggesting that zero‑inflated innovation distributions may be more appropriate.
+
+### Dispersion test (DItest)
+
+The dispersion test evaluates whether the variance of the count data significantly differs from the mean. In the context of INAR models, evidence of overdispersion typically motivates the use of more flexible innovations such as Negative Binomial.
+
+```{r warning=FALSE}
+DItest(data$X)
+```
+
+The dispersion test indicates substantial overdispersion, with variance far exceeding the mean. This strongly contradicts the Poisson assumption, which requires equality of mean and variance. The result motivates the use of more flexible innovations such as Negative Binomial.
+
+### Zero-Inflated Dispersion Index test (ZIDItest)
+
+Assesses both zero inflation and overdispersion simultaneously.
+
+```{r warning=FALSE}
+ZIDItest(data$X, type = "pv")
+```
+
+# Model fit
+
+Fit of an INAR(1) model using conditional least squares (CLS). The Poisson-INAR(1) model is estimated first, but if the data show substantial overdispersion or zero inflation, a Negative Binomial-INAR(1) model may provide a better fit.
+
+```{r warning=FALSE}
+fit_pois <- INAR(data$X, p = 1, inn = "poi", method = "CLS")
+
+fit_pois
+```
+
+# Model diagnostics
+
+## Residuals
+
+Residual analysis helps assess whether the fitted INAR(1) model adequately captures the dependence structure. If the model is appropriate, residuals should show no remaining autocorrelation and should fluctuate randomly around zero.
+
+```{r warning=FALSE}
+alpha_hat <- fit_pois$alphas[1]  
+mu_hat    <- fit_pois$par[1]      
+
+res <- X[-1] - (alpha_hat * X[-length(X)] + mu_hat)
+```
+
+### Autocorrelation plot for residuals
+
+```{r fig.height=5, fig.width=7, warning=FALSE}
+xyplot(
+  res ~ seq_along(res),
+  type = "h",
+  col = "darkblue",
+  lwd = 1.2,
+  xlab = "Time",
+  ylab = "Residuals",
+  main = "Residuals from Poisson-INAR(1)")
+```
+
+The residuals oscillate around zero without forming any systematic pattern, which indicates that the model captures part of the temporal structure. The presence of several large spikes, however, reveals episodes of unexplained variability.
+
+## Observed vs fitted
+
+We compare the observed series with the fitted series.
+
+```{r fig.height=5, fig.width=7, warning=FALSE}
+fitted_cls <- alpha_hat * X[-length(X)] + mu_hat   # length 266
+
+
+xyplot(
+  X[-1] + fitted_cls ~ seq_along(fitted_cls),
+  type = "l",
+  col = c("grey50", "darkred"),
+  lwd = 1.2,
+  auto.key = list(
+    lines = TRUE,
+    points = FALSE,
+    columns = 2,
+    text = c("Observed", "Fitted")),
+  xlab = "week",
+  ylab = "Cryptosporidiosis infections",
+  main = "Observed vs Fitted Values Poisson-INAR(1)")
+```
+
+The fitted series tracks the broad movements of the observed counts but consistently smooths out the sharpest peaks and troughs. This attenuation reflects the limited flexibility of Poisson innovations when faced with highly variable epidemiological data. The mismatch during high‑incidence episodes suggests that a more dispersed innovation distribution would yield a closer fit.

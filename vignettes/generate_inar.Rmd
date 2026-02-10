@@ -1,0 +1,52 @@
+---
+title: "Generate INAR(1) process"
+date: "`r Sys.Date()`"
+bibliography: bibliography.bib
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{INAr package, Generate INAR(1) process}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteKeyword{PDF}
+  %\VignetteKeyword{HTML}
+---
+
+# Load library
+
+```{r warning=FALSE}
+library(INAr)
+library(ggplot2)
+
+set.seed(6)
+```
+
+# Simulate an INAR(1) process
+
+The following chunk generates a univariate INAR(1) time series using Poisson innovations.  
+The thinning parameter \(a = 0.45\) controls the autocorrelation, while `burnout = 500` ensures the process reaches stationarity before recording the final 200 observations.
+
+```{r warning=FALSE}
+X <- genINAR(
+  n       = 200,      # length of the series
+  a       = 0.45,     # thinning parameter (autocorrelation)
+  par     = 3,        # parameter of the innovation distribution
+  inn     = "poi",    # Poisson innovations
+  burnout = 500)      # burn-in to reach stationarity
+```
+
+# Visualise the simulated series
+
+This final chunk constructs a simple data frame and plots the INAR(1) trajectory using a clean ggplot line graph.
+
+```{r warning=FALSE}
+df <- data.frame(time = 1:200, value = X)
+
+ggplot(df, aes(time, value.X)) +
+  geom_line(color = "darkorange", linewidth = 1) +
+  theme_minimal() +
+  labs(title = "Simulated INAR(1) Time Series",
+       x = "Time", 
+       y = "Counts")
+
+```
+
