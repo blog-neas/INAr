@@ -45,12 +45,12 @@ for \eqn{k \in \mathbb{N}}. The positive real number \eqn{\gamma} is the size an
 
 \strong{Generalized Poisson}. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 \itemize{
-\item \code{par} = ...
+\item \code{par} = c(\eqn{\lambda,\kappa}) ...
 }
 
 \strong{Katz}. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 \itemize{
-\item \code{par} = ...
+\item \code{par} =  c(\eqn{\alpha,\beta}).. alpha and beta ...
 }
 
 By the way, gatto gatto miao miao \code{\link[=genINAR]{genINAR()}}.

@@ -1,3 +1,25 @@
+# INAr 0.3.3
+
+* [MTR] Added some vignettes *in development phase* to show how to use the package and to illustrate the main features of the INAR processes.
+
+* Added the cryptosporidiosis infection count data.
+
+
+# INAr 0.3.2
+
+* Fixed minor bugs in the test functions, some tests were not showing the alternative hypothesis in the output.
+
+* Implemented some *experimental* functions to work with multidimensional INAR processes, in particular:
+    * `genMINAR` (in MINAR.R): Frontend function to generate MINAR(p) models.
+    * `estimMYW` (in MINAR.R): Function to fit MINAR(p) models by using the Yule-Walker procedure.
+    * `MINARp_gen_cpp` (in MINARp_gen.cpp): C++ routine to generate MINAR(p) processes.
+
+* Initial development of the Katz distribution computation, in particular:
+    * `dKatz` (in Katz.R): Function to compute the Katz distribution probability mass function.
+    * `pKatz` (in Katz.R): Function to compute the Katz distribution cumulative distribution function.
+    * `qKatz` (in Katz.R): Function to compute the Katz distribution quantile function.
+    * `rKatz` (in Katz.R): Function to generate random numbers from the Katz distribution.
+
 # INAr 0.3.1
 
 * Implemented the Harris-McCabe bootstrap test.

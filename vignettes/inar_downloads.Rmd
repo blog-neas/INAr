@@ -1,10 +1,10 @@
 ---
-title: "Real-data Example: Basic INAR(1) Poisson Model for Download Counts"
+title: "Real-data Example: INAR(1) Poisson Model for Download Counts"
 date: "`r Sys.Date()`"
 bibliography: bibliography.bib
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{INAr package, Real-data Example: Basic INAR(1) Poisson Model for Download Counts}
+  %\VignetteIndexEntry{Real-data Example: INAR(1) Poisson Model for Download Counts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignetteKeyword{PDF}

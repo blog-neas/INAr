@@ -7,12 +7,11 @@
 #' @param b A positive parameter of the Katz distribution.
 #' @return A vector of probabilities corresponding to the input values.
 #' @examples
-#' katz_pmf(0:10, a = 2, b = 3)
+#' dkatz(0:10, a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 #' @export
 dkatz <- function(x, a, b) {
     stopifnot(x >= 0, x%%1 == 0)
     stopifnot(a > 0, b < 1)
-    # if(x < 0) return(0)
 
     pmf <- ifelse(x < 0,0,choose(a/b + x - 1, x) * (1-b)^(a/b) * (b)^x)
     return(pmf)
@@ -26,8 +25,10 @@ dkatz <- function(x, a, b) {
 #' @param a A positive parameter of the Katz distribution.
 #' @param b A positive parameter of the Katz distribution.
 #' @return A vector of cumulative probabilities corresponding to the input values.
+#'
+#' @importFrom utils tail
 #' @examples
-#' katz_cdf(0:10, a = 2, b = 3)
+#' pkatz(0:10, a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 #' @export
 pkatz <- function(x, a, b){
     stopifnot(x >= 0, x%%1 == 0)
@@ -48,7 +49,7 @@ pkatz <- function(x, a, b){
 #' @param b A positive parameter of the Katz distribution.
 #' @return A vector of random samples from the Katz distribution.
 #' @examples
-#' katz_rnd(10, a = 2, b = 3)
+#' rkatz(10, a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 #' @export
 rkatz <- function(n, a, b){
     stopifnot(n > 0, n%%1 == 0)
@@ -78,7 +79,7 @@ rkatz <- function(n, a, b){
 #'
 #' @return A vector of quantiles corresponding to the input probabilities.
 #' @examples
-#' katz_quantile(c(0.1, 0.5, 0.9), a = 2, b = 3)
+#' qkatz(c(0.1, 0.5, 0.9), a = 2, b = 0.5) # prima era b = 3 (check dominion parameters)
 #' @export
 qkatz <- function(p, a, b){
     stopifnot(all(p >= 0 & p <= 1))

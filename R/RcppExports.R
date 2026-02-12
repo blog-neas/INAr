@@ -95,6 +95,18 @@ INARp_cpp <- function(resid, a) {
     .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
 
+#' Generate a MINAR(p) series
+#'
+#' Experimental function
+#'
+#' @param resid Numeric matrix of size n x m, where n is the number of time points and m is the number of series.
+#' @param A Numeric matrix of size m x m*p, where m is the number of series. Each column of A contains the autoregressive parameters for the corresponding lag.
+#' @details
+#' This is an internal function.
+MINARp_gen_cpp <- function(resid, A) {
+    .Call('_INAr_MINARp_gen_cpp', PACKAGE = 'INAr', resid, A)
+}
+
 Xresid <- function(X, alphas, mINN, vINN) {
     .Call('_INAr_Xresid', PACKAGE = 'INAr', X, alphas, mINN, vINN)
 }
