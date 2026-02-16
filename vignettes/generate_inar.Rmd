@@ -27,11 +27,12 @@ The thinning parameter \(a = 0.45\) controls the autocorrelation, while `burnout
 
 ```{r warning=FALSE}
 X <- genINAR(
-  n       = 200,      # length of the series
+  n       = 20,      # length of the series
   a       = 0.45,     # thinning parameter (autocorrelation)
   par     = 3,        # parameter of the innovation distribution
   inn     = "poi",    # Poisson innovations
-  burnout = 500)      # burn-in to reach stationarity
+  burnout = 500       # burn-in to reach stationarity
+)$X
 ```
 
 # Visualise the simulated series
@@ -39,9 +40,9 @@ X <- genINAR(
 This final chunk constructs a simple data frame and plots the INAR(1) trajectory using a clean ggplot line graph.
 
 ```{r warning=FALSE}
-df <- data.frame(time = 1:200, value = X)
+df <- data.frame(time = 1:20, value = X)
 
-ggplot(df, aes(time, value.X)) +
+ggplot(df, aes(time, X)) +
   geom_line(color = "darkorange", linewidth = 1) +
   theme_minimal() +
   labs(title = "Simulated INAR(1) Time Series",
@@ -49,4 +50,71 @@ ggplot(df, aes(time, value.X)) +
        y = "Counts")
 
 ```
+# Tests
+
+Bootstrap versions of the tests already seen in *inar_downloads* and *inar_cryptosporidiosis* are particularly useful because the null distribution of the test statistic is not always well approximated by its asymptotic counterpart when the sample size is small.  
+In such settings, bootstrap replications provide empirical critical values that better reflect the finite‑sample behaviour of the test statistic, leading to more reliable inference.
+
+## Harris–McCabe test (HMC)  
+
+Tests the null hypothesis of no INAR-type dependence. A high p-value indicates that the thinning parameter alpha is not significantly different than zero, suggesting the absence of serial dependence.
+
+```{r warning=FALSE}
+HMCtest(X, B = 500, saveboot = FALSE)
+```
+
+The Harris–McCabe test rejects the null hypothesis of no INAR‑type dependence, indicating that the thinning parameter is significantly greater than zero.
+
+## Sun–McCabe test (SMC) 
+
+A more powerful score test for detecting INAR(1) dependence under different innovation distributions (Poisson, Negative Binomial, Generalized Poisson). Again, a small p-value supports the presence of autoregressive structure. However, the p-value is very close to 0.05.
+
+```{r warning=FALSE}
+SMCtest(X, B = 500, method = 'par', saveboot = FALSE)
+```
+
+# Utility of Bootstrap replications
+
+## Generate INAR(1) 
+Fit an INAR(1) model and generate bootstrap replications by simulating new series under the estimated parameters.
+Bootstrap replications are particularly useful in INAR(1) modelling because the finite‑sample distribution of the estimators is analytically intractable. By repeatedly regenerating series under the fitted model, we obtain empirical measures of uncertainty—such as standard errors and confidence intervals—without relying on asymptotic approximations. 
+
+```{r, warning=FALSE}
+B <- 500
+boot_a <- numeric(B)
+
+for (b in 1:B) {
+  
+  # Simulate bootstrap series
+  Xb <- genINAR(
+    n       = 20,
+    a       = 0.45,
+    par     = 3,
+    inn     = "poi",
+    burnout = 200
+  )$X
+  
+  # Fit INAR(1) model on bootstrap sample
+  boot_fit <- INAR(Xb, p = 1, inn = "poi", method = "CLS")
+  
+  # Extract correct parameter
+  boot_a[b] <- boot_fit$alphas
+}
+
+summary(boot_a)
+```
+
+
+```{r,warning=FALSE}
+df_boot <- data.frame(a_hat = boot_a)
+
+ggplot(df_boot, aes(a_hat)) +
+  geom_histogram(fill = "darkorange", alpha = 0.4) +
+  theme_minimal() +
+  labs(title = "Density of Bootstrap Estimates for a",
+       x = "a (bootstrap)",
+       y = "Density")
+
+```
+
 
