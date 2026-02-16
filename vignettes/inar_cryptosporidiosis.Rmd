@@ -31,7 +31,7 @@ set.seed(6)
 ## Read data from txt
 
 ```{r warning=FALSE}
-data(cryptosporidiosis)
+cryptosporidiosis
 X <- cryptosporidiosis$X
 ```
 
