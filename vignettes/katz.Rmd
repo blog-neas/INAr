@@ -1,0 +1,140 @@
+---
+title: "Working with the Katz Distribution in R"
+author: "Mariateresa Russo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with the Katz Distribution in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r warning=FALSE}
+library(INAr)
+library(ggplot2)
+```
+
+# Katz distribution
+
+The Katz distribution is a flexible two‑parameter family for modelling count data.
+It generalizes the Poisson distribution and can accommodate both overdispersion
+and underdispersion. This vignette introduces the four core functions for working with the Katz distribution.
+
+The parameters a and b jointly determine the shape and dispersion of the
+distribution. 
+
+## Probability mass function
+
+Compute the probability mass function for a = 2 and b = 0.5
+
+```{r warning=FALSE}
+x <- 0:10
+pmf <- dkatz(x, a = 2, b = 0.5)
+
+cbind(x, pmf = round(pmf, 4))
+```
+
+```{r}
+df_pmf <- data.frame(x = x, pmf = pmf)
+
+ggplot(df_pmf, aes(x, pmf)) +
+  geom_col(fill = "steelblue") +
+  geom_point(size = 2) +
+  labs(title = "Katz pmf (a = 2, b = 0.5)",
+       x = "x", y = "P(X = x)") +
+  theme_minimal()
+```
+
+
+## Cumulative distribution function
+
+Compute the cumulative distribution function for a = 2 and b = 0.5
+
+```{r, warning=FALSE}
+cdf <- pkatz(x, a = 2, b = 0.5)
+cbind(x, cdf = round(cdf, 4))
+```
+
+```{r,warning=FALSE}
+df_cdf <- data.frame(x = x, cdf = cdf)
+
+ggplot(df_cdf, aes(x, cdf)) +
+  geom_step(direction = "hv", linewidth = 1.2, color = "darkred") +
+  labs(title = "Katz cdf (a = 2, b = 0.5)",
+       x = "x", y = "P(X ≤ x)") +
+  theme_minimal()
+
+```
+
+## Quantile function
+
+Compute the quantile function for a = 2 and b = 0.5
+```{r, warning=FALSE}
+p <- c(0.1, 0.25, 0.5, 0.75, 0.9)
+q <- qkatz(p, a = 2, b = 0.5)
+cbind(p, q)
+```
+# Using Katz distribution to fit data
+
+## Random generation of data
+
+Generate 500 random observations from a Katz distribution (any distribution can be used)
+
+```{r, warning=FALSE}
+set.seed(6)
+sim <- rkatz(500, a = 2, b = 0.5)
+
+mean(sim)
+var(sim)
+```
+
+```{r,warning=FALSE}
+df_sim <- data.frame(sim = sim)
+
+ggplot(df_sim, aes(sim)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "black") +
+  labs(title = "Histogram of simulated Katz data",
+       x = "Value", y = "Frequency") +
+  theme_minimal()
+
+```
+
+## Compute Katz distribution
+
+```{r}
+tab <- table(sim)
+x_vals <- as.integer(names(tab))
+emp <- as.numeric(tab) / length(sim)
+theo <- dkatz(x_vals, a = 2, b = 0.5)
+
+cbind(x = x_vals,
+      empirical = round(emp, 4),
+      theoretical = round(theo, 4))[1:10, ]
+```
+
+## Empirical vs theoretical
+
+Compare empirical frequencies with theoretical pmf
+
+```{r, warning=FALSE, width=8, height=8}
+barplot(emp, names.arg = x_vals,
+        main = "Empirical vs theoretical probability mass function",
+        xlab = "x", ylab = "Probability",
+        col = "lightsteelblue")
+points(x_vals, theo, pch = 16, col = "darkred")
+lines(x_vals, theo, col = "darkred", lwd = 2)
+legend("topright", legend = c("Empirical", "Theoretical"),
+       pch = c(15, 20), col = c("lightsteelblue", "darkred"), bty = "n")
+
+```
+
+
+```{r, warning=FALSE}
+```
+
