@@ -144,6 +144,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// INARfitted_cpp
+NumericVector INARfitted_cpp(NumericVector X, double resid, DoubleVector a);
+RcppExport SEXP _INAr_INARfitted_cpp(SEXP XSEXP, SEXP residSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type resid(residSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(INARfitted_cpp(X, resid, a));
+    return rcpp_result_gen;
+END_RCPP
+}
 // MINARp_gen_cpp
 NumericMatrix MINARp_gen_cpp(NumericMatrix resid, NumericMatrix A);
 RcppExport SEXP _INAr_MINARp_gen_cpp(SEXP residSEXP, SEXP ASEXP) {
@@ -221,6 +234,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_HMC_BOOT_Cpp", (DL_FUNC) &_INAr_HMC_BOOT_Cpp, 2},
     {"_INAr_YW_cpp", (DL_FUNC) &_INAr_YW_cpp, 1},
     {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
+    {"_INAr_INARfitted_cpp", (DL_FUNC) &_INAr_INARfitted_cpp, 3},
     {"_INAr_MINARp_gen_cpp", (DL_FUNC) &_INAr_MINARp_gen_cpp, 2},
     {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
     {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},

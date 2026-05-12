@@ -38,12 +38,39 @@ estimYW <- function(X, p, inn = "poi", ...) {
 
     names(alphas) <- paste0("a",1:p)
 
-    par <- estimPAR(alphas, mean(X), var(X), inn = inn)
+    mINN <- (1 - sum(alphas))*mean(X)
+    vINN <- var(X)*(1 - sum(alphas^2)) - mean(X)*sum(alphas*(1-alphas))
+
+    if(inn == "poi"){
+        par <- c("lambda" = mINN)
+    }else if(inn == "negbin"){
+        diffvarmu <- abs(vINN - mINN)
+        gamma <- (mINN^2)/diffvarmu
+        pi <- diffvarmu/vINN
+
+        par <- c("gamma" = gamma, "pi" = pi)
+    }else if(inn == "genpoi"){
+        kappa <- 1 - sqrt(mINN/vINN)
+        lambda <- mINN*sqrt(mINN/vINN)
+
+        par <- c("lambda" = lambda, "kappa" = kappa)
+    }else if(inn == "katz"){
+        # TO DO
+    }else{
+        stop("Innovation distribution not implemented yet.")
+    }
 
     OUT <- list("alphas" = alphas,
-                "par"=par$par,
+                "par"=par,
                 "meanX" =  mean(X), "varX" = var(X)
-                # "meanINN" = mINN, "varINN" = vINN
     )
     return(OUT)
 }
+
+
+# generiamo un esempio, tipo unit root test
+library(INAR)
+xx <- genINAR(1000, a = 0.5, par = 2, inn = "poisson")$X
+estimYW(xx, p = 1)
+
+
