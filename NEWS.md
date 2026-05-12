@@ -215,5 +215,5 @@
 
 * [LP]: Lucio Palazzo
 
-* [MTR]: Maria Teresa Russo
+* [MTR]: Mariateresa Russo
 

@@ -82,25 +82,26 @@ estimPAR <- function(est, inn = "poi"){
     if(is.na(mINN)) mINN <- (1 - sum(alphas))*mX
     if(is.na(vINN)) vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas))
 
-    if(inn == "poi"){
-        par <- c("lambda" = mINN)
-    }else if(inn == "negbin"){
-        diffvarmu <- abs(vINN - mINN)
-        gamma <- (mINN^2)/diffvarmu
-        pi <- diffvarmu/vINN
-
-        par <- c("gamma" = gamma, "pi" = pi)
-    }else if(inn == "genpoi"){
-        # CHECK
-        kappa <- 1 - sqrt(mINN/vINN)
-        lambda <- mINN*sqrt(mINN/vINN)
-
-        par <- c("lambda" = lambda, "kappa" = kappa)
-    }else if(inn == "katz"){
-        # TO DO
-    }else{
-        stop("Innovation distribution not implemented yet.")
-    }
+    # OLD
+    # if(inn == "poi"){
+    #     par <- c("lambda" = mINN)
+    # }else if(inn == "negbin"){
+    #     diffvarmu <- abs(vINN - mINN)
+    #     gamma <- (mINN^2)/diffvarmu
+    #     pi <- diffvarmu/vINN
+    #
+    #     par <- c("gamma" = gamma, "pi" = pi)
+    # }else if(inn == "genpoi"){
+    #     # CHECK
+    #     kappa <- 1 - sqrt(mINN/vINN)
+    #     lambda <- mINN*sqrt(mINN/vINN)
+    #
+    #     par <- c("lambda" = lambda, "kappa" = kappa)
+    # }else if(inn == "katz"){
+    #     # TO DO
+    # }else{
+    #     stop("Innovation distribution not implemented yet.")
+    # }
 
     OUT <- list("mINN" = mINN, "vINN" = vINN,
                 "par" = par)
