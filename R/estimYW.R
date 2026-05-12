@@ -17,7 +17,7 @@
 #'   \insertAllCited{}
 #' @noRd
 estimYW <- function(X, p, inn = "poi", ...) {
-    stopifnot(inn %in% c("poi"))
+    stopifnot(inn %in% info_inn$inn)
 
     n <- length(X)
     err <- NULL
@@ -68,9 +68,17 @@ estimYW <- function(X, p, inn = "poi", ...) {
 }
 
 
-# generiamo un esempio, tipo unit root test
-library(INAR)
-xx <- genINAR(1000, a = 0.5, par = 2, inn = "poisson")$X
-estimYW(xx, p = 1)
+# esempio, tipo unit root test
+# library(INAr)
+# xx <- genINAR(10000, a = 0.5, par = 2, inn = "poi")$X
+# INAr:::estimYW(xx, p = 1, inn = "poi")
+# yy <- genINAR(10000, a = c(0.5,0.1), par = c(2,0.5), inn = "genpoi")$X
+# INAr:::estimYW(yy, p = 2, inn = "genpoi")
+# zz <- genINAR(10000, a = c(0.5,0.2), par = c(4,0.333), inn = "negbin")$X
+# INAr:::estimYW(zz, p = 2, inn = "negbin")
+# zz <- genINAR(10000, a = 0.4, par = c(5,0.333), inn = "negbin")$X
+# INAr:::estimYW(zz, p = 1, inn = "negbin")
+#
+
 
 

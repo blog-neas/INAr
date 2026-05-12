@@ -35,7 +35,25 @@ estimCLS <- function(X, p, inn){
     mINN <- mod[1]
     vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
 
-    par_hat <- estimPAR(alphas, mean(X), var(X), mINN, vINN, inn = inn)
+    if(inn == "poi"){
+        par <- c("lambda" = mINN)
+    }else if(inn == "negbin"){
+        # CHECK!
+        diffvarmu <- abs(vINN - mINN)
+        gamma <- (mINN^2)/diffvarmu
+        pi <- diffvarmu/vINN
+
+        par <- c("gamma" = gamma, "pi" = pi)
+    }else if(inn == "genpoi"){
+        kappa <- 1 - sqrt(mINN/vINN)
+        lambda <- mINN*sqrt(mINN/vINN)
+
+        par <- c("lambda" = lambda, "kappa" = kappa)
+    }else if(inn == "katz"){
+        # TO DO
+    }else{
+        stop("Innovation distribution not implemented yet.")
+    }
 
     OUT <- list("alphas" = alphas,
                 "par" = par_hat$par,
