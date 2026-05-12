@@ -12,7 +12,7 @@
 
 # INAr 0.3.2
 
-* Fixed minor bugs in the test functions, some tests were not showing the alternative hypothesis in the output.
+* [LP] Fixed minor bugs in the test functions, some tests were not showing the alternative hypothesis in the output.
 
 * [LP] Implemented some *experimental* functions to work with multidimensional INAR processes, in particular:
     * `genMINAR` (in MINAR.R): Frontend function to generate MINAR(p) models.
