@@ -38,13 +38,20 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 
     a_hat <- est$alphas
     par_hat <- est$par
+    par_inn <- estimPAR(est, inn)
 
     # resid <- Xresid(X = X, alphas = a_hat, mINN = est$meanINN, vINN = est$varINN)
     # RMSE <- sqrt(mean(resid$resid^2,na.rm = TRUE))
+    # mean innovations
+
+    fitted <- INARfitted_cpp(X, par_inn$mINN, a_hat)
+    residuals <- X - fitted
 
     OUT <- list(
         "alphas" = a_hat,
-        "par" = par_hat
+        "par" = par_hat,
+        "residuals" = residuals,
+        "fitted.values" = fitted
     )
     # class(OUT) <- "INAR" # structure(OUT, class = "INAR")
     return(OUT)
@@ -54,11 +61,7 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 #'
 #' Internal function
 #'
-#' @param alphas vector, estimated alphas
-#' @param mX numeric, estimated mean of the observed series
-#' @param vX numeric, estimated variance of the observed series
-#' @param mINN numeric, estimated mean of the innovation process
-#' @param vINN numeric, estimated variance of the innovation process
+#' @param est list, output of a method of estimation (e.g. YW, CLS, CML, SP) containing the estimated alphas and the moments of the observed series.
 #' @param inn character, distribution of the innovation process
 #'
 #' @details
@@ -67,8 +70,13 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 #' within some estimation procedures (YW, CLS).
 #'
 #' @noRd
-estimPAR <- function(alphas, mX, vX, mINN = NA, vINN = NA, inn = "poi"){
+estimPAR <- function(est, inn = "poi"){
+    # est = output di un metodo di stima (es. YW, CLS, CML, SP)
     stopifnot(inn %in% info_inn$inn)
+
+    alphas <- est$alphas
+    mX <- est$meanX
+    vX <- est$varX
 
     # innovation moments from X moments and alphas
     if(is.na(mINN)) mINN <- (1 - sum(alphas))*mX
@@ -77,10 +85,8 @@ estimPAR <- function(alphas, mX, vX, mINN = NA, vINN = NA, inn = "poi"){
     if(inn == "poi"){
         par <- c("lambda" = mINN)
     }else if(inn == "negbin"){
-        # CHECK
-        diffvarmu <- abs(vINN - mINN) # trick
+        diffvarmu <- abs(vINN - mINN)
         gamma <- (mINN^2)/diffvarmu
-        # pi <- mINN/vINN # old
         pi <- diffvarmu/vINN
 
         par <- c("gamma" = gamma, "pi" = pi)
@@ -89,17 +95,17 @@ estimPAR <- function(alphas, mX, vX, mINN = NA, vINN = NA, inn = "poi"){
         kappa <- 1 - sqrt(mINN/vINN)
         lambda <- mINN*sqrt(mINN/vINN)
 
-        pars <- c("lambda" = lambda, "kappa" = kappa)
+        par <- c("lambda" = lambda, "kappa" = kappa)
     }else if(inn == "katz"){
         # TO DO
     }else{
         stop("Innovation distribution not implemented yet.")
     }
 
-    OUT <- list("par" = par)
+    OUT <- list("mINN" = mINN, "vINN" = vINN,
+                "par" = par)
     return(OUT)
 }
-
 
 # TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------

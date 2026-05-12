@@ -13,7 +13,7 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimCLS <- function(X, p, inn = "poi"){
+estimCLS <- function(X, p, inn){
     n <- length(X)
 
     Yreg <- X[(p+1):n]
