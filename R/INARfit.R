@@ -57,7 +57,7 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
     return(OUT)
 }
 
-#' INAR(p) parameter estimation procedures
+#' INAR(p) innovation moments estimation procedures
 #'
 #' Internal function
 #'
