@@ -10,6 +10,8 @@
 
 * [LP] Updating package metadata (DESCRIPTION/NEWS/NAMESPACE) for the new release and vignette dependencies.
 
+* [LP] Updating github actions.
+
 
 # INAr 0.3.3
 
