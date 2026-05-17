@@ -36,7 +36,7 @@ estimCLS <- function(X, p, inn) {
     mINN <- mod[1]
 
     # OLD, MA ERRATO, VARIANCE INNOVAZIONI != VARIANCE RESIDUI
-    vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
+    # vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
 
 
     # residui
