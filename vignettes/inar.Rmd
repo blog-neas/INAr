@@ -12,61 +12,83 @@ vignette: >
   %\VignetteKeyword{HTML}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
     fig.width = 7,
     out.height = "\\textheight",
     out.width = "\\textwidth")
-```
 
-```{r setup}
 library(INAr)
 ```
 
+## INAR Model 
 
-## Introduction 
+Esempio citazioni: [@alzaid1990integer], @alzaid1990integer
 
-Esempio citazioni: [@alzaid1990integer], @alzaid1990integer 
+The integer autoregressive (INAR) model is a class of time series models designed to handle count data, where the observations are non-negative integers. 
+The INAR model is an extension of the traditional autoregressive (AR) model, which is typically used for continuous data. 
+The intrinsic mechanism that allows to extend the autoregressive modeling framework to count data is the thinning operator. The thinning operator is a probabilistic operation that reduces the number of events in a given time period:
 
+$$
+\alpha * X = \sum_{i=1}^{X} Y_i,
+$$
+where, in general, $Y_i$ are independent and identically distributed random variables that are independent of $X$, and $\alpha \in [0,1]$ is a parameter that regulates the probability of "thinning" or "survival" of each event $Y_i$. Then, the thinning operator is a random sum of $X$ independent and identically distributed random variables $Y_i$, then the number of terms in the sum is itself a random variable.
 
-## Some theoretical results
+The usual application of the thinning operator in the INAR model is to assume that $Y_i \sim Ber(\alpha)$ i.i.d. Bernoulli random variables, which means that each event has a probability $\alpha$ of being "thinned" or "surviving". This allows the INAR model to capture the temporal dependence structure in count data while accounting for the discrete nature of the observations.
+By incorporating the binomial thinning operator additively, the INAR model accounts for the discrete nature of the data and allows for the modelling of temporal dependence in count data.
 
-DEF. INAR(p)
+An INAR(p) process $\{X_t\}$ can be defined as a solution of the following equation:
 
-\begin{equation}\label{eq:inarp}
+$$
 X_t = \alpha_1 * X_{t-1} + \cdots + \alpha_p * X_{t-p} + \varepsilon_t
-\end{equation}
-
-where the Binomial thinning operator ${*}$ .......
-is ...
-
 $$
-\alpha * X = \sum_{i=1}^{X} Y_i, \qquad \text{ where } Y_i \sim Ber(\alpha)
-$$
-Moments 
 
+where the symbol ${*}$ represents the binomial thinning operator, $\alpha_i \in [0,1]$ are the thinning parameters, and $\varepsilon_t$ is the innovation process, which is typically assumed to be a sequence of independent and identically distributed (i.i.d.) non-negative integer-valued random variables that are independent of the past values of the process.
+SImilarly to an AR model, the parameters $\alpha_i$ control the strength of the dependence on past values, while the distribution of the innovations $\varepsilon_t$ determines the marginal distribution of the process.
+
+The moments of the INAR(p) process can be derived from the definition of the model and the properties of the thinning operator. The first two moments of the process are given by:
 $$
 \begin{align}
 \text{E}(X_t) = \mu_X = & \dfrac{\mu_\varepsilon}{1 - \sum_{i=1}^{p}\alpha_i} \\
-\text{Var}(X_t) = \gamma_0 = \sigma_X^2 = & \dfrac{\mu_X\sum_{i=1}^{p} \alpha_i(1-\alpha_i) + \sigma_\varepsilon}{1-\sum_{i=1}^{p} \alpha_i^2} \\
+\text{Var}(X_t) = \gamma_0 = \sigma_X^2 = & \dfrac{\mu_X\sum_{i=1}^{p} \alpha_i(1-\alpha_i) + \sigma_\varepsilon}{1-\sum_{i=1}^{p} \alpha_i^2} 
+\end{align}
+$$
+while the conditional mean and variance of $X_t$ given the past values are:
+
+$$
+\begin{align}
 \text{E}(X_t| \Im_{t-1}) = & \sum_{i=1}^{p} \alpha_i X_{t-i} + \mu_\varepsilon \\
 \text{Var}(X_t| \Im_{t-1}) = & \sum_{i=1}^{p} \alpha_i (1- \alpha_i) X_{t-i} + \sigma_\varepsilon^2
 \end{align}
 $$
 
-Then the first two moments for the innovation process are:
+The first two moments of the process depend on the parameters of the model, including the thinning parameters $\alpha_i$ and the moments of the innovation process $\varepsilon_t$. In particular, the mean of the process is determined by the mean of the innovations and the sum of the thinning parameters, while the variance depends on both the mean and variance of the innovations as well as the thinning parameters.
+
+The moments of the innovation process $\varepsilon_t$ can be expressed in terms of the moments of the observed process $X_t$ and the thinning parameters $\alpha_i$ as follows:
+
 $$
 \begin{align}
 \text{E}(\varepsilon_t) = \mu_\varepsilon = & \left(1 - \sum_{i=1}^{p}\alpha_i \right) \mu_X \\
 \text{Var}(\varepsilon_t) = \sigma_\varepsilon^2 = &
-\sigma_X^2 \left( 1-\sum_{i=1}^{p} \alpha_i^2 \right) - \mu_X \sum_{i=1}^{p} \alpha_i(1-\alpha_i)
+\gamma_0 \left( 1-\sum_{i=1}^{p} \alpha_i^2 \right) - \mu_X \sum_{i=1}^{p} \alpha_i(1-\alpha_i)
 \end{align}
 $$
 
 Variance, autocovariance and autocorrelation functions of INAR$(p)$ can be also derived by applying Yule-Walker equations.
+
+Autocorrelation function of an INAR(p) process is a linear combination of the thinning parameters $\alpha_i$ and the autocorrelations at lags less than $p$. The autocorrelation at lag $k$ can be expressed as:
+
+$$
+\begin{align}
+\rho_k = & \dfrac{\gamma_k}{\gamma_0} = \dfrac{\sum_{i=1}^{p} \alpha_i \gamma_{k-i}}{\gamma_0} = \sum_{i=1}^{p} \alpha_i \rho_{k-i}, \qquad k > 0
+\end{align}
+$$
+
+where $\gamma_k = Cov(X_t, X_{t-k})$ is the autocovariance at lag $k$ and $\gamma_0$ is the variance of the process. The autocorrelation function of an INAR(p) process typically exhibits a decaying pattern, with the strength of dependence decreasing as the lag increases.
 Partial autocorrelation is defined as conditional correlation between two variables under the assumption that we know and take into account the values of some other set of variables, analytically it can be expressed as
+
 \begin{equation*}
 	\phi_k = \mbox{Cov}\big( X_{t} - \mbox{E}(X_t | X_{t-1}, \ldots, X_{t + k-1}),  X_{t-k} - \mbox{E}(X_{t-k} | X_{t-1}, \ldots, X_{t + k-1})\big) = \frac{|\mathbf{Q}_k|}{|\mathbf{P}_k|}
 \end{equation*}
@@ -87,76 +109,118 @@ where $\mathbf{P}_k$ is the $k$--th order Toeplitz matrix, with $k \geq 1$, of a
 	\rho_{k-1} & \rho_{k-2} & \cdots & 1 \\ 
 \end{pmatrix}
 \end{equation*}
-and $\mathbf{Q}_k$ is the same matrix obtained substituting last column with vector $(\rho_1, \ldots, \rho_k )$.\par\medskip
+
+and $\mathbf{Q}_k$ is the same matrix obtained substituting last column with vector $(\rho_1, \ldots, \rho_k )$.
+
+<!-- The autocorrelation function of an INAR(p) process is a linear combination of the thinning parameters $\alpha_i$ and the autocorrelations at lags less than $p$. The autocorrelation at lag $k$ can be expressed as: -->
 
 
-### Poisson innovations 
+Depending on the distribution of the innovations $\varepsilon_t$, the INAR model can exhibit different properties and behaviours. For this reason, the distribution of the innovations $\varepsilon_t$ plays a crucial role in determining the properties of the INAR process, including its marginal distribution, moments, and dependence structure.
 
-Poisson distribution $\lambda >0$,
+When the innovations $\varepsilon_t$ follow a Poisson distribution, also the marginal distribution of the INAR process is Poisson, due to the closure property of the Poisson distribution under thinning. In this case, the INAR model is often referred to as a Poisson-INAR model. In general, if the innovations follow a distribution that is closed under thinning, then the marginal distribution of the INAR process will be the same as the distribution of the innovations. This is because the thinning operation preserves the distributional properties of the innovations, allowing for a consistent and tractable modeling framework for count data with temporal dependence.
+
+But unfortunately, this closure property does not hold for all distributions, then in general the marginal distribution of the INAR process differs from the distribution of the innovations. In such cases, the marginal distribution of the INAR process can be more complex and the parameter estimation and inference may require additional analysis to characterize its properties.
+
+In the following sections we describe the properties of the INAR processes considered in this package under different assumptions on the distribution of the innovations $\varepsilon_t$.
+
+The choice of innovation distribution should be guided by the characteristics of the observed data, such as the presence of overdispersion or zero inflation, to ensure an appropriate fit and accurate inference.
+While the Poisson distribution is suitable for modeling count data that exhibit equidispersion, and the Negative Binomial distribution is appropriate for overdispersed count data, neither of these distributions can handle underdispersion, where the variance is less than the mean. In such cases, alternative distributions such as the Generalized Poisson or Katz family may be more appropriate for modeling count data with underdispersion.
+
+### Poisson innovations
+
+The Poisson distribution describes the number of events occurring in a fixed interval of time or space, given a constant average rate of occurrence. Let define $\varepsilon \sim Poi(\lambda)$, the probability mass function of $\varepsilon$ is given by:
 
 $$
-\text{P}(\varepsilon = s)= \frac{\lambda^s e^{-\lambda}}{s!}, \qquad s = 0, 1, 2, \ldots
+\text{P}(\varepsilon = x)= \frac{\lambda^x e^{-\lambda}}{x!}, \qquad x = 0, 1, 2, \ldots
 $$
-where $e$ is Euler's number.
+wehere $\lambda > 0$ is the rate parameter, and the mean and variance of the Poisson distribution are both equal to $E(\varepsilon) = Var(\varepsilon) = \lambda$, which is a key property that makes it suitable for modeling count data that exhibit equidispersion.
 
-Estimation: the parameter is equal to the expected value of the process and also to its variance
-$$
-\begin{align}
-\text{E}(\varepsilon) = & \lambda \\
-\text{Var}(\varepsilon) = & \lambda  
-\end{align}
-$$
-
-{\displaystyle \lambda =\operatorname {E} (X)=\operatorname {Var} (X).}\lambda =\operatorname {E} (X)=\operatorname {Var} (X).
+The Poisson INAR model is a special case of the INAR model where the innovations $\varepsilon_t$ follow a Poisson distribution with parameter $\lambda$. In this case, the marginal distribution of the INAR process is also Poisson with mean $\mu_X = \lambda / (1 - \sum_{i=1}^{p} \alpha_i)$, due to the closure property of the Poisson distribution under thinning. The Poisson INAR model is often used to model count data that exhibit equidispersion, where the mean and variance are approximately equal.
 
 
 ### Negative Binomial innovations 
 
-support $\mathbb{N}$
+The negative binomial distribution is a discrete probability distribution that models the number of failures before a specified number of successes occurs in a sequence of independent and identically distributed Bernoulli trials. Let define $\varepsilon \sim NB(r, p)$, the probability mass function of $\varepsilon$ is given by:
+
+$$
+\text{P}(\varepsilon = x) = \binom{x + r - 1}{x} p^r (1-p)^x, \qquad x = 0, 1, 2, \ldots
+$$
+
+where $r > 0$ is the number of successes, $p \in (0,1)$ is the probability of success on an individual trial, and the mean and variance of the distribution are $E(\varepsilon) = r(1-p)/p$ and $Var(\varepsilon) = r(1-p)/p^2$, respectively. The negative binomial distribution allows for overdispersion, meaning that the variance can be greater than the mean, which makes it suitable for modeling count data that exhibit overdispersion, but not underdispersion.
+
 <!-- parameters $\gamma \in \mathbb{N}$ and $\beta > 0$ -->
 <!-- $$  -->
 <!-- \text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \left( \frac{\beta}{1+\beta}\right)^\gamma \left(\frac{1}{1+\beta}\right)^k, \qquad k = 0, 1, 2, \ldots -->
 <!-- $$ -->
 <!-- this equation expresses the probability of having $k$ successes before $\gamma$ failures and $\beta$ expresses the ratio between the number of failures until the experiment is stopped and the expectation of the process. -->
 
-support $\mathbb{N}$
-$$ 
-\text{P}(\varepsilon = s) = \dfrac{\Gamma(s + \gamma)}{\Gamma(\gamma) s!} \pi^s \left(1-\pi \right)^\gamma, \qquad s = 0, 1, \ldots
-$$
-This distribution describes the number of failures in a sequence of independent and identically distributed Bernoulli trials before a given number of failures $\gamma$ occurs. In this case the parameter $\pi$ is the probability of success of the event.
+<!-- support $\mathbb{N}$ -->
+<!-- $$  -->
+<!-- \text{P}(\varepsilon = s) = \dfrac{\Gamma(s + \gamma)}{\Gamma(\gamma) s!} \pi^s \left(1-\pi \right)^\gamma, \qquad s = 0, 1, \ldots -->
+<!-- $$ -->
+<!-- This distribution describes the number of failures in a sequence of independent and identically distributed Bernoulli trials before a given number of failures $\gamma$ occurs. In this case the parameter $\pi$ is the probability of success of the event. -->
 
-Estimation
-$$
-\begin{align}
-\text{E}(\varepsilon) = & \gamma\dfrac{\pi}{1- \pi} \\
-\text{Var}(\varepsilon) = &\gamma\dfrac{\pi}{(1- \pi)^2}
-\end{align}
-$$
+<!-- Estimation -->
+<!-- $$ -->
+<!-- \begin{align} -->
+<!-- \text{E}(\varepsilon) = & \gamma\dfrac{\pi}{1- \pi} \\ -->
+<!-- \text{Var}(\varepsilon) = &\gamma\dfrac{\pi}{(1- \pi)^2} -->
+<!-- \end{align} -->
+<!-- $$ -->
 
 
 ### Generalized Poisson innovations 
 
-Support $\mathbb{N}$.
-Parameters $\lambda >0$ and $\kappa < 1$ such that $\max(-1,-\lambda /m) < \kappa < 1$, and $m \geq 4$ is the largest positive integer to ensure $\lambda + \kappa m > 0$, when $\kappa < 0$.
+The generalized Poisson distribution is a flexible family of distributions that can model both underdispersion and overdispersion in count data. Let define $\varepsilon \sim GenPoi(\lambda, \kappa)$, the probability mass function of $\varepsilon$ is given by:
 
 $$ 
-\text{P}(\varepsilon = s) =
+\text{P}(\varepsilon = X) =
 \begin{cases}
-\lambda(\lambda + \kappa s )^{s-1}\dfrac{e^{-(\lambda + \kappa s)}}{k!},  & \text{ for } s = 0, 1, \ldots \\
-0, & \text{ for } s > m \text{ if } \kappa < 0 
+\lambda(\lambda + \kappa x )^{x-1}\dfrac{e^{-(\lambda + \kappa x)}}{k!},  & \text{ for } x = 0, 1, \ldots \\
+0, & \text{ for } x > m \text{ if } \kappa < 0 
 \end{cases}
 $$
-The generalized Poisson distribution reduces to Pois($\lambda$) if $\kappa = 0$.
 
-$$ 
-\text{P}(\varepsilon = k) = \dfrac{\Gamma(k + \gamma)}{\Gamma(\gamma) k!} \pi^k \left(1-\pi \right)^\gamma, \qquad k = 0, 1, \ldots
-$$
+where parameters $\lambda >0$ and $\kappa < 1$ are constrained such that $\max(-1,-\lambda /m) < \kappa < 1$, and $m \geq 4$ is the largest positive integer to ensure $\lambda + \kappa m > 0$, when $\kappa < 0$.
+The mean and variance of the generalized Poisson distribution are given by:
 
-Estimation
 $$
 \begin{align}
-\text{E}(\varepsilon) = &   \\
-\text{Var}(\varepsilon) = & 
+E(\varepsilon) = & \dfrac{\lambda}{1 - \kappa} \\
+Var(\varepsilon) = & \dfrac{\lambda}{(1 - \kappa)^3}
+\end{align}
+$$
+The generalized Poisson distribution reduces to Pois($\lambda$) if $\kappa = 0$, and to a zero-truncated Poisson distribution if $\kappa < 0$ and $\lambda = -\kappa m$. The generalized Poisson distribution can model a wide range of count data behaviours, including equidispersion, overdispersion, and underdispersion, depending on the value of the dispersion parameter $\kappa$.
+
+### Katz family innovations
+
+The Katz family is a broader class of distributions that includes the Poisson, Negative Binomial, and Generalized Poisson distributions as special cases. Let define $\varepsilon \sim Katz(\lambda, \kappa, \phi)$, the probability mass function of $\varepsilon$ is given by:
+
+$$
+\text{P}(\varepsilon = s) = \dfrac{\lambda (\lambda + \kappa s)^{s-1} e^{-(\lambda + \kappa s)}}{s!} \cdot \dfrac{\phi^s}{(1 + \phi)^s}, \qquad s = 0, 1, 2, \ldots
+$$
+
+where parameters $\lambda > 0$ is the mean parameter, $\kappa \in \mathbb{R}$ is the dispersion parameter, and $\phi > 0$ is an additional parameter that controls the tail behaviour of the distribution. The Katz family includes a range of distributions that can model various types of count data, including zero-inflated and hurdle models, depending on the values of the parameters.
+
+The mean and variance of the Katz distribution are more complex functions of the parameters $\lambda$, $\kappa$, and $\phi$, and do not have closed-form expressions in general. 
+As a special case, when $\kappa = 0$ and $\phi = 0$, the Katz distribution reduces to the Poisson distribution with mean $\lambda$. When $\kappa < 0$ and $\phi = 0$, the Katz distribution reduces to a zero-truncated Poisson distribution. When $\kappa > 0$ and $\phi = 0$, the Katz distribution reduces to a zero-inflated Poisson distribution. The flexibility of the Katz family allows it to model a wide range of count data behaviours, making it a useful tool for modeling count data with complex characteristics.
+
+## Estimation 
+
+### Poisson innovation
+
+**Yule-Walker** 
+
+$$
+\hat{\lambda} = 
+$$
+
+**Negative Binomial.**
+
+$$
+\begin{align}
+\hat{\gamma} = & \dfrac{\hat{\mu}_\varepsilon^2}{\hat{\sigma}_\varepsilon^2 - \hat{\mu}_\varepsilon} \\
+\hat{\pi} = & \dfrac{\hat{\mu}_\varepsilon}{\hat{\sigma}_\varepsilon^2} 
 \end{align}
 $$
 

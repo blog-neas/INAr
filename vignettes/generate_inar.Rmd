@@ -11,16 +11,56 @@ vignette: >
   %\VignetteKeyword{HTML}
 ---
 
-# Load library
+## Introduction
 
 ```{r warning=FALSE}
 library(INAr)
 library(ggplot2)
+library(patchwork)
 
 set.seed(6)
+
 ```
 
-# Simulate an INAR(1) process
+The INAr package provides the `genINAR()` function to simulate univariate INAR(p) processes with various innovation distributions. This vignette demonstrates how to use `genINAR()` to generate a univariate INAR(1) time series with different innovation processes, and visualise the results.
+
+## Innovation distributions
+
+Different distributions are available within the INAr package to model the innovations in the INAR process. When using the `genINAR()` function, you can specify the distribution of the innovations using the `inn` argument. The available options for `inn` are `"poi"` for the Poisson distribution, `"negbin"` for the Negative Binomial distribution, `"genpoi"` for the Generalized Poisson distribution and `"katz"` for the Katz family of distributions.
+
+The Poisson distribution is commonly used for count data and is characterised by a single parameter $\lambda$, the mean (or rate) of the distribution. The probability mass function of the Poisson distribution is given by:
+
+$$
+F(x; \lambda) = \frac{\lambda^x e^{-\lambda}}{x!}, \quad x = 0, 1, 2, \ldots
+$$
+where $\lambda >0$ and the mean and variance of the distribution are $E(X) = Var(X) = \lambda$. 
+
+<!-- This property makes the Poisson distribution suitable for modelling count data that exhibit equidispersion, where the mean and variance are approximately equal. However, in many real-world applications, count data may exhibit overdispersion (variance greater than the mean) or underdispersion (variance less than the mean), which is where alternative distributions like the Negative Binomial, Generalized Poisson, and Katz family can be useful. -->
+
+The Negative Binomial distribution is a count data distribution that allows for overdispersion, meaning that the variance can be greater than the mean. The probability mass function of the Negative Binomial distribution is given by:
+
+$$
+F(x; r, p) = \binom{x + r - 1}{x} p^r (1-p)^x, \quad x = 0, 1, 2, \ldots
+$$
+where $r > 0$ is the number of successes, $p \in (0,1)$ is the probability of success on an individual trial, and the mean and variance of the distribution are $E(X) = r(1-p)/p$ and $Var(X) = r(1-p)/p^2$, respectively.
+
+The Generalized Poisson distribution is a flexible family of distributions that can model both underdispersion and overdispersion in count data. The probability mass function of the Generalized Poisson distribution is given by:
+
+$$
+F(x; \lambda, \theta) = \frac{\lambda (\lambda + \theta x)^{x-1} e^{-(\lambda + \theta x)}}{x!}, \quad x = 0, 1, 2, \ldots
+$$
+where $\lambda > 0$ is the mean parameter, $\theta \in \mathbb{R}$ is the dispersion parameter, and the mean and variance of the distribution are $E(X) = \lambda / (1 - \theta)$ and $Var(X) = \lambda / (1 - \theta)^3$, respectively. The Generalized Poisson distribution can model a wide range of count data behaviours, including equidispersion, overdispersion, and underdispersion.
+
+The Katz family is a broader class of distributions that includes the Poisson, Negative Binomial, and Generalized Poisson distributions as special cases. The probability mass function of the Katz family is given by:
+
+$$
+F(x; \lambda, \theta, \phi) = \frac{\lambda (\lambda + \theta x)^{x-1} e^{-(\lambda + \theta x)}}{x!} \cdot \frac{\phi^x}{(1 + \phi)^x}, \quad x = 0, 1, 2, \ldots
+$$
+where $\lambda > 0$ is the mean parameter, $\theta \in \mathbb{R}$ is the dispersion parameter, $\phi > 0$ is an additional parameter that controls the tail behaviour of the distribution, and the mean and variance of the distribution are more complex functions of these parameters.
+The Katz family includes a range of distributions that can model various types of count data, including zero-inflated and hurdle models.
+
+
+## Simulate an INAR(p) process
 
 The following chunk generates a univariate INAR(1) time series using Poisson innovations.  
 The thinning parameter \(a = 0.45\) controls the autocorrelation, while `burnout = 500` ensures the process reaches stationarity before recording the final 200 observations.
@@ -31,22 +71,77 @@ X <- genINAR(
   a       = 0.45,     # thinning parameter (autocorrelation)
   par     = 3,        # parameter of the innovation distribution
   inn     = "poi",    # Poisson innovations
+  burnout = 500)      # burn-in data to reach stationarity
+```
+
+The output consists of a list of two vectors: `X`, which contains the simulated INAR(1) time series, and `eps`, which contains the corresponding innovations used to generate the series. The `genINAR()` function allows for flexible simulation of INAR processes with different innovation distributions by specifying the appropriate parameters for those distributions.
+
+Letting vary the `inn` argument allows you to simulate INAR(1) processes with different innovation distributions, such as Negative Binomial or Generalized Poisson, by specifying the appropriate parameters for those distributions.
+
+To simulate an INAR(p) model, one can provide a vector of thinning parameters `a` corresponding to each lag, and specify the desired innovation distribution and its parameters. For example an INAR(3) process with Poisson innovations is generated as follows:
+
+```{r}
+X <- genINAR(
+  n       = 200,      # length of the series
+  a       = c(0.3, 0.2, 0.1),     # thinning parameters for lags 1, 2, and 3
+  par     = 3,        # parameter of the innovation distribution
+  inn     = "poi",    # Poisson innovations
   burnout = 500)      # burn-in to reach stationarity
 ```
 
-# Visualise the simulated series
+
+
+## Visualise the simulated series
 
 This final chunk constructs a simple data frame and plots the INAR(1) trajectory using a clean ggplot line graph.
 
-```{r warning=FALSE}
-df <- data.frame(time = 1:200, value = X)
+```{r warning=FALSE, fig.height=5, fig.width=7}
+df <- data.frame(time = 1:200, value = X$X)
 
-ggplot(df, aes(time, value.X)) +
+gg1 <- ggplot(df, aes(time, value)) +
   geom_line(color = "darkorange", linewidth = 1) +
   theme_minimal() +
   labs(title = "Simulated INAR(1) Time Series",
        x = "Time", 
        y = "Counts")
+gg1
+```
+
+To better visualize the structure of the simulated INAR(1) process, we can also plot the autocorrelation function (ACF) and partial autocorrelation function (PACF) of the series. This will help us understand the dependence structure and confirm that the simulated series exhibits the expected autocorrelation pattern.
+
+```{r, fig.height=6, fig.width=7}
+gg2 <- ggacf(df$value, lag.max = 20) + theme_bw()
+gg3 <- ggpacf(df$value, lag.max = 20) + theme_bw()
+
+gg1 / (gg2 + gg3)
+```
+
+The PIT histogram and the ACF of the residuals can also be used for a more detailed graphical inspection of the model fitting and to check for any remaining autocorrelation in the residuals, which would indicate that the model may not have fully captured the dependence structure of the data.
+
+An example:
+```{r, fig.height=5, fig.width=7}
+X <- genINAR(
+  n       = 200,      # length of the series
+  a       = c(0.3, 0.2, 0.1),     # thinning parameters for lags 1, 2, and 3
+  par     = 3,        # parameter of the innovation distribution
+  inn     = "poi",    # Poisson innovations
+  burnout = 500)$X      # burn-in to reach stationarity
+
+fit <- INAR(X, p = 1, inn = "poi", method = "CLS")
+
+fit_res <- fit$residuals
+# PIT plot
+gg4 <- ggplot(data.frame(residuals = fit_res), aes(x = residuals)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightblue", color = "black") +
+  geom_density(color = "darkblue", size = 1) +
+  theme_minimal() +
+  labs(title = "PIT Histogram of Residuals",
+       x = "Residuals", 
+       y = "Density")
+gg4
 
 ```
+
+
+
 

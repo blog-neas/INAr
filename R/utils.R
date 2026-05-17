@@ -210,3 +210,5 @@ par_back <- function(theta, inn){
     }
     return(list("alphas"=a,"par"=par))
 }
+
+

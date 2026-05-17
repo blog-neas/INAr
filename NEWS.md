@@ -1,7 +1,10 @@
 # INAr 0.3.4
 
-* [LP] Experimental: updating the estimators
+* [LP] Updating estimation procedures. In particular, I am working on the extension of the Yule-Walker(YW) and Conditional Least Squares (CLS) estimation procedure from only INAR(1) to more general INAR(p) processes. Now the two procedures are available for the Poisson, Negative Binomial and Generalized Poisson cases, they will be extended to the Katz case in the next updates.
 
+* [LP] Some minor bug fixes in the estimation procedures and in the C++ code for the generation of INAR(p) processes.
+
+* [LP] Writing the main vignette to show how to use the package and to illustrate the main features of the INAR processes. The vignette is still in development phase, but it will be available in the next updates.
 
 # INAr 0.3.3
 

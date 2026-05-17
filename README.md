@@ -14,7 +14,6 @@ Generation, estimation and testing of Integer Autoregressive models
 <!-- [![codecov](https://codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg?token=0XHCFZZYN8)](https://codecov.io/gh/blog-neas/INAr) -->
 
 
-
 ## Overview
 
 The INAr is a package for the study of integer-valued autoregressive models, namely INAR(p), considered the counterpart to the conventional autoregressive models AR(p).
@@ -72,20 +71,20 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
 	- [ ] with p > 1 and additional innovations
 - [ ] CLS estimation of INAR(p) processes
-	- [x] with p = 1 and Poisson innovations
-	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
-	- [ ] with p > 1
+	- [x] with p >= 1 and Poisson innovations
+	- [x] with p >= 1 and Negative Binomial innovations
+	- [x] with p >= 1 and Generalized Poisson innovations
+	- [ ] with p >= 1 and additional innovations (Katz, Good, ...)
 - [ ] SP estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and Negative Binomial innovations
 	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
 	- [ ] with p > 1 and additional innovations
 - [ ] YW estimation of INAR(p) processes
-	- [x] with p = 1 and Poisson innovations
-	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
-	- [ ] with p > 1
+	- [x] with p >= 1 and Poisson innovations
+	- [x] with p >= 1 and Negative Binomial innovations
+	- [x] with p >= 1 and Generalized Poisson innovations
+	- [ ] with p >= 1 and additional innovations (Katz, Good, ...)
 
 
 3. **Testing for the presence of INAR structure** 

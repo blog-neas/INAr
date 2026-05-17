@@ -1,5 +1,5 @@
 ---
-title: "NAR(1) Poisson Model for Cryptosporidiosis infections"
+title: "INAR(1) Poisson Model for Cryptosporidiosis infections"
 date: "`r Sys.Date()`"
 bibliography: bibliography.bib
 output: rmarkdown::html_vignette

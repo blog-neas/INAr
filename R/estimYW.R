@@ -7,8 +7,7 @@
 #' @param inn, distribution of the innovation process
 #' @param ..., additional parameters
 #'
-#' @importFrom stats acf
-#' @importFrom stats var
+#' @importFrom stats acf var
 #' @importFrom RcppML nnls
 #'
 #' @details
@@ -34,31 +33,14 @@ estimYW <- function(X, p, inn = "poi", ...) {
         attr(alphas, "names") <- paste0("a",1:p)
     }else{
         alphas <- r
+        R <- 1
     }
 
     names(alphas) <- paste0("a",1:p)
 
-    mINN <- (1 - sum(alphas))*mean(X)
-    vINN <- var(X)*(1 - sum(alphas^2)) - mean(X)*sum(alphas*(1-alphas))
+    INN_par <- getMINN(list(alphas=alphas,meanX=mean(X),varX=var(X), R=R),inn)
+    par <- getPAR(INN_par$mINN, INN_par$vINN, inn)
 
-    if(inn == "poi"){
-        par <- c("lambda" = mINN)
-    }else if(inn == "negbin"){
-        diffvarmu <- abs(vINN - mINN)
-        gamma <- (mINN^2)/diffvarmu
-        pi <- diffvarmu/vINN
-
-        par <- c("gamma" = gamma, "pi" = pi)
-    }else if(inn == "genpoi"){
-        kappa <- 1 - sqrt(mINN/vINN)
-        lambda <- mINN*sqrt(mINN/vINN)
-
-        par <- c("lambda" = lambda, "kappa" = kappa)
-    }else if(inn == "katz"){
-        # TO DO
-    }else{
-        stop("Innovation distribution not implemented yet.")
-    }
 
     OUT <- list("alphas" = alphas,
                 "par"=par,
@@ -68,17 +50,47 @@ estimYW <- function(X, p, inn = "poi", ...) {
 }
 
 
-# esempio, tipo unit root test
 # library(INAr)
-# xx <- genINAR(10000, a = 0.5, par = 2, inn = "poi")$X
+# ii <- "negbin"
+# pp <- c(5, 0.8) # per negbin
+# aa <- genINAR(100000, a = 0.4, par = pp, inn = ii)$X
+# INAr:::estimYW(aa, p = 1, inn = ii)$par;pp
+# INAr:::estimCLS(aa, p = 1, inn = ii)$par;pp
+# bb <- genINAR(100000, a = c(0.4,0.2), par = pp, inn = ii)$X
+# INAr:::estimYW(bb, p = 2, inn = ii)$par;pp
+# INAr:::estimCLS(bb, p = 2, inn = ii)$par;pp
+# cc <- genINAR(100000, a = c(0.4,0.2,0.15), par = pp, inn = ii)$X
+# INAr:::estimYW(cc, p = 3, inn = ii)$par;pp
+# INAr:::estimCLS(cc, p = 3, inn = ii)$par;pp
+
+
+# library(INAr)
+# xx <- genINAR(100000, a = 0.5, par = 2, inn = "poi")$X
 # INAr:::estimYW(xx, p = 1, inn = "poi")
-# yy <- genINAR(10000, a = c(0.5,0.1), par = c(2,0.5), inn = "genpoi")$X
-# INAr:::estimYW(yy, p = 2, inn = "genpoi")
-# zz <- genINAR(10000, a = c(0.5,0.2), par = c(4,0.333), inn = "negbin")$X
-# INAr:::estimYW(zz, p = 2, inn = "negbin")
-# zz <- genINAR(10000, a = 0.4, par = c(5,0.333), inn = "negbin")$X
+# zz <- genINAR(100000, a = 0.4, par = c(5,0.8), inn = "negbin")$X
 # INAr:::estimYW(zz, p = 1, inn = "negbin")
-#
+# yy <- genINAR(100000, a = 0.3, par = c(2,0.5), inn = "genpoi")$X
+# INAr:::estimYW(yy, p = 1, inn = "genpoi")
+# #
+# xx <- genINAR(100000, a = c(0.5,0.2), par = 2, inn = "poi")$X
+# INAr:::estimYW(xx, p = 2, inn = "poi")
+# zz <- genINAR(100000, a = c(0.5,0.2), par = c(5,0.8), inn = "negbin")$X
+# INAr:::estimYW(zz, p = 2, inn = "negbin")
+# yy <- genINAR(100000, a = c(0.5,0.1), par = c(2,0.5), inn = "genpoi")$X
+# INAr:::estimYW(yy, p = 2, inn = "genpoi")
 
-
+# library(INAr)
+# xx <- genINAR(100000, a = 0.5, par = 2, inn = "poi")$X
+# INAr:::estimCLS(xx, p = 1, inn = "poi")
+# zz <- genINAR(100000, a = 0.4, par = c(5,0.8), inn = "negbin")$X
+# INAr:::estimCLS(zz, p = 1, inn = "negbin")
+# yy <- genINAR(100000, a = 0.3, par = c(2,0.5), inn = "genpoi")$X
+# INAr:::estimCLS(yy, p = 1, inn = "genpoi")
+# #
+# xx <- genINAR(100000, a = c(0.5,0.2), par = 2, inn = "poi")$X
+# INAr:::estimCLS(xx, p = 2, inn = "poi")
+# zz <- genINAR(100000, a = c(0.5,0.2), par = c(5,0.8), inn = "negbin")$X
+# INAr:::estimCLS(zz, p = 2, inn = "negbin")
+# yy <- genINAR(100000, a = c(0.5,0.1), par = c(2,0.5), inn = "genpoi")$X
+# INAr:::estimCLS(yy, p = 2, inn = "genpoi")
 
