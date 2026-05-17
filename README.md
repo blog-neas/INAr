@@ -29,6 +29,7 @@ INAr is not the only R package for the analysis of integer-valued time series, b
 
 - [tscount](https://r-packages.io/packages/tscount) by Tobias Liboschik
 
+
 ## Installation
 
 ``` r
@@ -68,7 +69,8 @@ Some functionalities are already available, while others are planned for the fut
 - [ ] CML estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
+	- [ ] with p = 1 and Generalized Poisson innovations
+	- [ ] with p = 1 and additional innovations (Katz, Good, ...)
 	- [ ] with p > 1 and additional innovations
 - [ ] CLS estimation of INAR(p) processes
 	- [x] with p >= 1 and Poisson innovations
@@ -78,7 +80,8 @@ Some functionalities are already available, while others are planned for the fut
 - [ ] SP estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
+	- [ ] with p = 1 and Generalized Poisson innovations
+	- [ ] with p = 1 and additional innovations (Katz, Good, ...)
 	- [ ] with p > 1 and additional innovations
 - [ ] YW estimation of INAR(p) processes
 	- [x] with p >= 1 and Poisson innovations
