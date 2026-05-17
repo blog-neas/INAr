@@ -13,7 +13,8 @@ vignette: >
 
 ## Introduction
 
-```{r warning=FALSE}
+```{r setup, warning=FALSE}
+knitr::opts_chunk$set(include = FALSE)
 library(INAr)
 library(ggplot2)
 library(patchwork)
@@ -124,8 +125,8 @@ In such settings, bootstrap replications provide empirical critical values that 
 
 Tests the null hypothesis of no INAR-type dependence. A high p-value indicates that the thinning parameter alpha is not significantly different than zero, suggesting the absence of serial dependence.
 
-```{r warning=FALSE}
-HMCtest(X, B = 500, saveboot = FALSE)
+```{r hmc, warning=FALSE}
+HMCtest(X$X, B = 500, saveboot = FALSE)
 ```
 
 The Harris–McCabe test rejects the null hypothesis of no INAR‑type dependence, indicating that the thinning parameter is significantly greater than zero.
@@ -134,8 +135,8 @@ The Harris–McCabe test rejects the null hypothesis of no INAR‑type dependenc
 
 A more powerful score test for detecting INAR(1) dependence under different innovation distributions (Poisson, Negative Binomial, Generalized Poisson). Again, a small p-value supports the presence of autoregressive structure. However, the p-value is very close to 0.05.
 
-```{r warning=FALSE}
-SMCtest(X, B = 500, method = 'par', saveboot = FALSE)
+```{r smc, warning=FALSE}
+SMCtest(X$X, B = 500, method = 'par', saveboot = FALSE)
 ```
 
 # Utility of Bootstrap replications

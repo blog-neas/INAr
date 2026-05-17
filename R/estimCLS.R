@@ -13,7 +13,7 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimCLS <- function(X, p, inn){
+estimCLS <- function(X, p, inn) {
     n <- length(X)
 
     Yreg <- X[(p+1):n]
@@ -53,10 +53,12 @@ estimCLS <- function(X, p, inn){
     vINN <- res_var - thinning_var
 
     if(!is.finite(vINN) || vINN <= 0){
-        stop("Estimated innovation variance must be finite and strictly positive.")
+        stop("Estimated innovation variance must be finite and
+             strictly positive.")
     }
     if(inn == "negbin" && (!is.finite(mINN) || vINN <= mINN)){
-        stop("Negative-binomial innovations require estimated variance to be finite and strictly greater than the estimated mean.")
+        stop("Negative-binomial innovations require estimated variance to be
+             finite and strictly greater than the estimated mean.")
     }
 
     par <- getPAR(mINN, vINN, inn)

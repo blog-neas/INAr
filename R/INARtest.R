@@ -109,7 +109,7 @@ DItest <- function(X){ # , inn = "poi"
 }
 
 # DItest(rpois(1000,2))
-# DItest(genINAR(1000,a = 0.5, par = 2,inn = "poisson")$X)
+# DItest(genINAR(1000,a = 0.5, par = 2,inn = "poi")$X)
 # DItest(genINAR(1000,a = 0.5, par = c(2,0.7),inn = "negbin")$X)
 
 
