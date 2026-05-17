@@ -37,18 +37,19 @@ NumericVector INARfitted_cpp(NumericVector X, double resid, DoubleVector a) {
 
     unsigned int n = X.length();
     unsigned int p = a.length();
-    int vals = 0;
+    double vals = 0.0;
+    NumericVector fitted = clone(X);
 
-    // sovrascrivo X
+    // calcolo i fitted senza sovrascrivere i lag osservati di X
     for (unsigned int t = p; t < n; t++) {
-        vals = 0;
+        vals = 0.0;
         for(unsigned int k = 0 ; k < p; k++) {
-            vals += X[t - k - 1]*a[k];
+            vals += X[t - k - 1] * a[k];
         }
-        X[t] = vals + resid;
+        fitted[t] = vals + resid;
     }
 
-    return X;
+    return fitted;
 }
 
 /*** R
