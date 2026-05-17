@@ -18,3 +18,21 @@
 #     mod6 <- INAR(s3, p = 1, inn = "poi", method = "YW")
 #     expect_equal(mod5, mod6)
 # })
+
+# Test stima INAR(1) Poisson
+# test_that("estimate INAR(1) Poisson", {
+#     set.seed(123)
+#     s <- genINAR(1000, a = 0.5, par = 2, inn = "poi")$X
+#     mod <- INAR(s, p = 1, inn = "poi", method = "YW")
+#     expect_equal(mod$alpha[1], 0.5, tolerance = 0.1)
+#     expect_equal(mod$par[1], 2, tolerance = 0.2)
+# })
+
+# Test stima INAR(1) Poisson
+# test_that("estimate INAR(1) Poisson CLS",{
+#     set.seed(123)
+#     s <- genINAR(1000, a = 0.5, par = 2, inn = "poi")$X
+#     mod <- INAR(s, p = 1, inn = "poi", method = "CLS")
+#     expect_equal(mod$alpha[1], 0.5, tolerance = 0.1)
+#     expect_equal(mod$par[1], 2, tolerance = 0.2)
+# })

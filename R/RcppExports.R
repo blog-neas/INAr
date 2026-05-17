@@ -95,6 +95,10 @@ INARp_cpp <- function(resid, a) {
     .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
 
+INARfitted_cpp <- function(X, resid, a) {
+    .Call('_INAr_INARfitted_cpp', PACKAGE = 'INAr', X, resid, a)
+}
+
 #' Generate a MINAR(p) series
 #'
 #' Experimental function

@@ -1,3 +1,4 @@
+
 # INAr R Project <img src="man/img/hexlogo.png" align="right" height="138.5" />
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
@@ -11,7 +12,6 @@ Generation, estimation and testing of Integer Autoregressive models
 <!-- [![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml) -->
 <!-- [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) -->
 <!-- [![codecov](https://codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg?token=0XHCFZZYN8)](https://codecov.io/gh/blog-neas/INAr) -->
-
 
 
 ## Overview
@@ -71,20 +71,20 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
 	- [ ] with p > 1 and additional innovations
 - [ ] CLS estimation of INAR(p) processes
-	- [x] with p = 1 and Poisson innovations
-	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
-	- [ ] with p > 1
+	- [x] with p >= 1 and Poisson innovations
+	- [x] with p >= 1 and Negative Binomial innovations
+	- [x] with p >= 1 and Generalized Poisson innovations
+	- [ ] with p >= 1 and additional innovations (Katz, Good, ...)
 - [ ] SP estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and Negative Binomial innovations
 	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
 	- [ ] with p > 1 and additional innovations
 - [ ] YW estimation of INAR(p) processes
-	- [x] with p = 1 and Poisson innovations
-	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
-	- [ ] with p > 1
+	- [x] with p >= 1 and Poisson innovations
+	- [x] with p >= 1 and Negative Binomial innovations
+	- [x] with p >= 1 and Generalized Poisson innovations
+	- [ ] with p >= 1 and additional innovations (Katz, Good, ...)
 
 
 3. **Testing for the presence of INAR structure** 
@@ -211,3 +211,5 @@ There are several ways you can contribute to this project, you can also open an 
 
 Please note that this project is released with a [Contributor Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
 By contributing to this project, you agree to abide by its terms.
+
+

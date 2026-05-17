@@ -14,7 +14,7 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimCML <- function(X, p, inn = "poi", control = list()) {
+estimCML <- function(X, p, inn, control = list()) {
     stopifnot(p==1)
     stopifnot(inn == "poi")
 
@@ -54,7 +54,6 @@ estimCML <- function(X, p, inn = "poi", control = list()) {
     OUT <- list("alphas" = par_hat$alphas,
                 "par" = par_hat$par,
                 "meanX" = mean(X), "varX" = var(X)
-                # "meanINN" = mINN, "varINN" = vINN
                 )
     return(OUT)
 }

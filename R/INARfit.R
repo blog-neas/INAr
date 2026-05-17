@@ -38,27 +38,89 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 
     a_hat <- est$alphas
     par_hat <- est$par
+    par_inn <- getMINN(list(alphas=a_hat,meanX=mean(X),varX=var(X)), inn)
 
     # resid <- Xresid(X = X, alphas = a_hat, mINN = est$meanINN, vINN = est$varINN)
     # RMSE <- sqrt(mean(resid$resid^2,na.rm = TRUE))
+    # mean innovations
+
+    fitted <- INARfitted_cpp(X, par_inn$mINN, a_hat)
+    residuals <- X - fitted
 
     OUT <- list(
         "alphas" = a_hat,
-        "par" = par_hat
+        "par" = par_hat,
+        "residuals" = residuals,
+        "fitted.values" = fitted
     )
     # class(OUT) <- "INAR" # structure(OUT, class = "INAR")
     return(OUT)
 }
 
-#' INAR(p) parameter estimation procedures
+#' INAR(p) innovation estimation
 #'
 #' Internal function
 #'
-#' @param alphas vector, estimated alphas
-#' @param mX numeric, estimated mean of the observed series
-#' @param vX numeric, estimated variance of the observed series
-#' @param mINN numeric, estimated mean of the innovation process
-#' @param vINN numeric, estimated variance of the innovation process
+#' @param est list, containing alphas, meanX and varX, output of a estimation procedure (YW, CLS, CML, SP)
+#' @param inn character, distribution of the innovation process
+#'
+#' @details
+#' Function that estimates the parameters of the innovation process given
+#' the estimated alphas and the moments of the observed series. It is used
+#' within the YW procedure to get the innovation parameters, and is also used
+#' as initial values for the other estimation procedures (CML, SP).
+#'
+#' @noRd
+getMINN <- function(est, inn){
+    # est = output di un metodo di stima (es. YW, CLS, CML, SP)
+    stopifnot(inn %in% info_inn$inn)
+
+    alphas <- est$alphas
+    mX <- est$meanX
+    vX <- est$varX
+    R <- est$R
+
+    # innovation moments from X moments and alphas
+    # if(is.na(mINN)) mINN <- (1 - sum(alphas))*mX
+    # if(is.na(vINN)) vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas))
+    mINN <- (1 - sum(alphas))*mX
+    if(length(alphas) > 1){
+        vINN <- vX*(1 - t(alphas)%*%R%*%alphas) - mX*sum(alphas*(1-alphas))
+    }else{
+        vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas))
+    }
+
+    # OLD
+    # if(inn == "poi"){
+    #     par <- c("lambda" = mINN)
+    # }else if(inn == "negbin"){
+    #     diffvarmu <- abs(vINN - mINN)
+    #     gamma <- (mINN^2)/diffvarmu
+    #     pi <- diffvarmu/vINN
+    #
+    #     par <- c("gamma" = gamma, "pi" = pi)
+    # }else if(inn == "genpoi"){
+    #     # CHECK
+    #     kappa <- 1 - sqrt(mINN/vINN)
+    #     lambda <- mINN*sqrt(mINN/vINN)
+    #
+    #     par <- c("lambda" = lambda, "kappa" = kappa)
+    # }else if(inn == "katz"){
+    #     # TO DO
+    # }else{
+    #     stop("Innovation distribution not implemented yet.")
+    # }
+
+    OUT <- list("mINN" = mINN, "vINN" = vINN)
+    return(OUT)
+}
+
+#' INAR(p) innovation parameters estimation procedures
+#'
+#' Internal function
+#'
+#' @param mINN numeric, mean of the innovation process
+#' @param vINN numeric, variance of the innovation process
 #' @param inn character, distribution of the innovation process
 #'
 #' @details
@@ -67,39 +129,33 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 #' within some estimation procedures (YW, CLS).
 #'
 #' @noRd
-estimPAR <- function(alphas, mX, vX, mINN = NA, vINN = NA, inn = "poi"){
-    stopifnot(inn %in% info_inn$inn)
-
-    # innovation moments from X moments and alphas
-    if(is.na(mINN)) mINN <- (1 - sum(alphas))*mX
-    if(is.na(vINN)) vINN <- vX*(1 - sum(alphas^2)) - mX*sum(alphas*(1-alphas))
-
+getPAR <- function(mINN, vINN, inn){
     if(inn == "poi"){
         par <- c("lambda" = mINN)
     }else if(inn == "negbin"){
-        # CHECK
-        diffvarmu <- abs(vINN - mINN) # trick
+        diffvarmu <- abs(vINN - mINN)
         gamma <- (mINN^2)/diffvarmu
-        # pi <- mINN/vINN # old
-        pi <- diffvarmu/vINN
+        # pi <- diffvarmu/vINN
+        # gamma <- mINN^2/abs(vINN - mINN)
+        pi <- mINN/vINN
+
+        # p = mu/s2
+        # r = mu^2/ (s2 - mu)
+
 
         par <- c("gamma" = gamma, "pi" = pi)
     }else if(inn == "genpoi"){
-        # CHECK
         kappa <- 1 - sqrt(mINN/vINN)
         lambda <- mINN*sqrt(mINN/vINN)
 
-        pars <- c("lambda" = lambda, "kappa" = kappa)
+        par <- c("lambda" = lambda, "kappa" = kappa)
     }else if(inn == "katz"){
         # TO DO
     }else{
         stop("Innovation distribution not implemented yet.")
     }
-
-    OUT <- list("par" = par)
-    return(OUT)
+    return(par)
 }
-
 
 # TENERE SEMPRE COMMENTATO!
 # veloce esempio --------------------------------------------------------

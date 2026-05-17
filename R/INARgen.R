@@ -118,8 +118,10 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         g_ <- unname(par[1]) # size, gamma
         p_ <- unname(par[2]) # prob successo
 
-        p.compl_ <- 1-p_
-        resid_ <- rnbinom(s,g_,p.compl_)
+        # provado ad usare altra riparametrizzazione
+        # p.compl_ <- 1-p_
+        # resid_ <- rnbinom(s,g_,p.compl_)
+        resid_ <- rnbinom(s,g_,p_)
 
     }
     else if(inn == "geom"){
