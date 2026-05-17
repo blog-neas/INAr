@@ -6,6 +6,11 @@
 
 * [LP] Writing the main vignette to show how to use the package and to illustrate the main features of the INAR processes. The vignette is still in development phase, but it will be available in the next updates.
 
+* [LP] Adding ggacf() / ggpacf() ggplot-based ACF/PACF helpers.
+
+* [LP] Updating package metadata (DESCRIPTION/NEWS/NAMESPACE) for the new release and vignette dependencies.
+
+
 # INAr 0.3.3
 
 * [MTR] Added some vignettes *in development phase* to show how to use the package and to illustrate the main features of the INAR processes.
