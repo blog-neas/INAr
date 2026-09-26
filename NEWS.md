@@ -4,8 +4,6 @@
     * `genINAR()`, to generate INAR(p) processes with Katz, Geometric, Binomial and Double Poisson innovations;
     * `getPAR()`, to retrieve YW and CLS estimation parameters for the Katz, Geometric, Binomial and Double Poisson cases.
 
-* [LP] Added the `getPAR()` function to retrieve YW and CLS estimation parameters for the Katz, Geometric, Binomial and Double Poisson cases.
-
 * [LP] Added the `predict.INAR()` function to compute h-step ahead predictions from an INAR(p) model. The function is still in development phase, but it will be available in the next updates. 
 
 # INAr 0.3.5
