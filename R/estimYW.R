@@ -44,6 +44,7 @@ estimYW <- function(X, p, inn = "poi", ...) {
 
     OUT <- list("alphas" = alphas,
                 "par"=par,
+                "R" = R,
                 "meanX" =  mean(X), "varX" = var(X)
     )
     return(OUT)

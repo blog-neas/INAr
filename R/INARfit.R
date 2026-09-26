@@ -19,8 +19,9 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
     stopifnot(inn %in% info_inn$inn)
 
     stopifnot(all(X == as.integer(X)))
+    stopifnot(all(X >= 0))
     stopifnot(p < n)
-    if(inn == "negbin" & var(X) <= mean(X)){ stop( "Data are underdispersed. Only overdispersed data allowed for the negbin case" ) }
+    if(inn == "negbin" & var(X) <= mean(X)){ stop( "Data are underdispersed. Only overdispersed data allowed for the Negative Binomial case.", "Consider consider using the katz distribution." ) }
 
     if(method == "YW"){
         est <- estimYW(X, p, inn = inn)
@@ -38,7 +39,7 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 
     a_hat <- est$alphas
     par_hat <- est$par
-    par_inn <- getMINN(list(alphas=a_hat,meanX=mean(X),varX=var(X)), inn)
+    par_inn <- getMINN(list(alphas=a_hat,meanX=mean(X),varX=var(X), R = est$R), inn)
 
     # resid <- Xresid(X = X, alphas = a_hat, mINN = est$meanINN, vINN = est$varINN)
     # RMSE <- sqrt(mean(resid$resid^2,na.rm = TRUE))
@@ -46,14 +47,23 @@ INAR <- function(X, p, inn="poi", method = "CLS"){
 
     fitted <- INARfitted_cpp(X, par_inn$mINN, a_hat)
     residuals <- X - fitted
+    # CHECK
+    stdresiduals <- residuals/sqrt(as.numeric(par_inn$vINN))
+
 
     OUT <- list(
+        "call" = match.call(),
         "alphas" = a_hat,
         "par" = par_hat,
         "residuals" = residuals,
-        "fitted.values" = fitted
+        "stdresiduals" = stdresiduals,
+        "fitted.values" = fitted,
+        "data" = X,
+        "inn" = inn,
+        "mINN" = par_inn$mINN,
+        "vINN" = par_inn$vINN
     )
-    # class(OUT) <- "INAR" # structure(OUT, class = "INAR")
+    class(OUT) <- "INAR" # structure(OUT, class = "INAR")
     return(OUT)
 }
 
@@ -122,6 +132,7 @@ getMINN <- function(est, inn){
 #' @param mINN numeric, mean of the innovation process
 #' @param vINN numeric, variance of the innovation process
 #' @param inn character, distribution of the innovation process
+#' @param eps numeric, small positive value to avoid numerical issues
 #'
 #' @details
 #' Function that estimates the parameters of the innovation process given
@@ -129,10 +140,10 @@ getMINN <- function(est, inn){
 #' within some estimation procedures (YW, CLS).
 #'
 #' @noRd
-getPAR <- function(mINN, vINN, inn){
+getPAR <- function(mINN, vINN, inn, eps = 1e-8) {
     if(inn == "poi"){
         par <- c("lambda" = mINN)
-    }else if(inn == "negbin"){
+    }else if(inn == "negbin") {
         diffvarmu <- abs(vINN - mINN)
         gamma <- (mINN^2)/diffvarmu
         # pi <- diffvarmu/vINN
@@ -144,13 +155,88 @@ getPAR <- function(mINN, vINN, inn){
 
 
         par <- c("gamma" = gamma, "pi" = pi)
-    }else if(inn == "genpoi"){
+    }else if(inn == "genpoi") {
         kappa <- 1 - sqrt(mINN/vINN)
         lambda <- mINN*sqrt(mINN/vINN)
 
         par <- c("lambda" = lambda, "kappa" = kappa)
-    }else if(inn == "katz"){
-        # TO DO
+    }else if(inn == "katz") {
+        #
+        if (mINN == 0) {
+            return(c(a = 0, b = 0))
+        }
+        if (vINN == 0) {
+            stop("A non-degenerate Katz distribution cannot have positive mean and zero variance.")
+        }
+
+        a <- mINN^2 / vINN
+        b <- 1 - mINN / vINN
+
+        if (b < 0) {
+            m_raw <- -a / b
+            m <- round(m_raw)
+
+            if (m < 1 || abs(m_raw - m) > tol) {
+                # Projection to the closest binomial-type Katz distribution.
+                #
+                # For Bin(m, p):
+                # mean = m p
+                # var  = m p (1 - p)
+                #
+                # Katz parameters:
+                # a = m p / (1 - p)
+                # b = -p / (1 - p)
+                #
+                # From moments:
+                # var / mean = 1 - p
+                # p = 1 - var / mean
+                #
+                # m = mean / p
+
+                p <- 1 - vINN / mINN
+                p <- min(max(p, tol), 1 - tol)
+
+                m <- max(1L, round(mINN / p))
+
+                p <- min(max(mINN / m, tol), 1 - tol)
+
+                a <- m * p / (1 - p)
+                b <- -p / (1 - p)
+            }
+        }
+
+        par <- c("a" = a, "b" = b)
+    }else if(inn == "dpoi"){
+        mu <- max(mINN, eps)
+        sigma <- max(vINN / mINN, eps)
+
+        par <- c("mu" = mu, "sigma" = sigma)
+    }else if (inn == "geom") {
+        # Geometrica con supporto {0,1,2,...}: mean = (1-pi)/pi
+        # Allora: pi = 1 / (1 + mean)
+        pi <- 1 / (1 + mINN)
+
+        par <- c("pi" = pi)
+    }else if (inn == "bin") {
+        # binomiale con supporto {0,1,...,n}: mean = n*pi
+        # Binomial(size, prob): mean = size*prob, variance = size*prob*(1-prob)
+        # From moments: prob = 1 - variance/mean, size = mean/prob.
+
+        if (vINN < 0 || vINN > mINN) {
+            stop("Binomial innovations require overdispersed data: estimated variance between 0 and the estimated mean.")
+        }
+
+        # For rbinom() size must be an integer.
+        # Moment estimates will generally not give an exact integer.
+        pi <- 1 - vINN / mINN
+        enne <- mINN / pi
+
+        # CORREZIONI:
+        # enne_adj <- max(1L, as.integer(round(mINN / pi)))
+        # # Refit prob after rounding size, keeping mean approximately equal.
+        # pi_adj <- min(max(mINN / enne_adj, 0), 1)
+
+        par <- c("n" = enne, "p" = pi)
     }else{
         stop("Innovation distribution not implemented yet.")
     }
@@ -158,13 +244,71 @@ getPAR <- function(mINN, vINN, inn){
 }
 
 # TENERE SEMPRE COMMENTATO!
+# library(INAr)
+# N <-10000
+# y <- genINAR(N,0.6,par=c(2,0.5),inn="dpoi")$X
+# mod <- INAR(X=y, p=2, inn="dpoi", method = "YW")
+# plot(y,type = "b")
+# mod$par
+# y <- genINAR(N,c(0.4,0.2),par=c(2,0.5),inn="dpoi")$X
+# mod <- INAR(X=y, p=2, inn="dpoi", method = "CLS")
+# plot(y,type = "b")
+# mod$par
+# y <- genINAR(N,c(0.4,0.2),par=c(2,0.5),inn="katz")$X
+# mod <- INAR(X=y, p=2, inn="katz", method = "CLS")
+# plot(y,type = "b")
+# mod$par
+# y <- genINAR(N,c(0.4,0.2),par=0.5,inn="geom")$X
+# mod <- INAR(X=y, p=2, inn="geom", method = "CLS")
+# plot(y,type = "b")
+# mod$par
+# y <- genINAR(N,c(0.4,0.2),par=c(2,0.5),inn="bin")$X
+# mod <- INAR(X=y, p=2, inn="bin", method = "CLS")
+# plot(y,type = "b")
+# mod$par
 # veloce esempio --------------------------------------------------------
-# N <- 500
-# y <- genINAR(N,0.1,par=1.2,inn="poisson")$X
-# INAR(y, p=1)
-# y <- genINAR(N,c(0.9,0.01),par=2,inn="poisson")$X
-# INARfit(y, p=2)
-# y <- genINAR(N,0.1,par=c(1,0.5),inn="negbin")$X
-# INARfit(y, p=1, inn="negbin)
-# y <- genINAR(N,c(0.9,0.01),par=c(2,0.66),inn="poisson")$X
-# INARfit(y, p=2, inn="negbin)
+# library(INAr)
+# N <-100
+# y <- genINAR(N,c(0.2,0.4,0.1),par=1.5,inn="poi")$X
+# # mod <- INAR(X=y, p=3, inn="poi", method = "YW")
+# # p1 <- predict(mod,200, type = "mean")
+# # p2 <- predict(mod,200, type = "boot")
+# # # plot:
+# # plot(c(y,rep(NA,200)),type = "b")
+# # abline(h = mean(y), lty=2)
+# # lines(c(rep(NA,N),p1$forecast), col = "blue")
+# # lines(c(rep(NA,N),p2$forecast), col = "red")
+# # lines(c(rep(NA,N),p2$lower), col = "green")
+# # lines(c(rep(NA,N),p2$upper), col = "green")
+# #
+# library(INAr)
+# N <-100
+# y <- genINAR(N,c(0.2,0.4,0.1),par=1.5,inn="poi")$X
+# z <- rep(NA,N)
+# zb <- rep(NA,N)
+# zb2 <- rep(NA,N)
+# for(i in 80:99){
+#     mod <- INAR(X=y[1:i], p=1, inn="poi", method = "YW")
+#     z[i+1] <- predict(mod,1, type = "mean")$forecast
+#     zb[i+1] <- predict(mod,1, type = "boot", B = 4999)$forecastmedian
+#     zb2[i+1] <- predict(mod,1, type = "boot", B = 4999)$forecast
+# }
+# plot(y,type = "b")
+# abline(h = mean(y), lty=2)
+# lines(z, col = "blue")
+# lines(zb, col = "red")
+# lines(zb2, col = "green")
+#
+# mean(abs(y[81:100] - z[81:100]), na.rm = TRUE)
+# mean(abs(y[81:100] - zb[81:100]), na.rm = TRUE)
+# mean(abs(y[81:100] - zb2[81:100]), na.rm = TRUE)
+#
+# y <- genINAR(N,c(0.9,0.01),par=2,inn="poi")$X
+# INAR(y, p=2)
+# y <- genINAR(N,c(0.6,0.2),par=c(2,0.7),inn="negbin")$X
+# mod <- INAR(y, p=2, inn="negbin")
+# predict(mod,5)
+# y <- genINAR(N,c(0.8,0.01),par=2,inn="poi")$X
+# mod < INAR(y, p=2, inn="negbin")
+# predict(mod,5)
+

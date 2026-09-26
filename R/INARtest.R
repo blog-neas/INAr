@@ -109,7 +109,7 @@ DItest <- function(X){ # , inn = "poi"
 }
 
 # DItest(rpois(1000,2))
-# DItest(genINAR(1000,a = 0.5, par = 2,inn = "poisson")$X)
+# DItest(genINAR(1000,a = 0.5, par = 2,inn = "poi")$X)
 # DItest(genINAR(1000,a = 0.5, par = c(2,0.7),inn = "negbin")$X)
 
 
@@ -215,7 +215,6 @@ ZIDItest <- function(X, type = "pv"){
     }
     Sigma[2,1] <- Sigma[1,2]
     Sigma[2,2] <- 2 * (1 + alpha^2)/(1 - alpha^2)
-    solve(Sigma)
 
     Ic <- matrix(c(ZIc, DIc), ncol = 1)
     stat <- n*t(Ic)%*%solve(Sigma)%*%Ic
@@ -235,6 +234,66 @@ ZIDItest <- function(X, type = "pv"){
     return(OUT)
 }
 
+
+
+#' Poissonity test for the presence of P-INAR(1) models based on the comparison of the  parametric and semiparametric bootstrap distributions of the SMC statistic.
+#'
+#' @param X vector, a series.
+#' @param B1 integer, the number of bootstrap samples to be generated in the first step of the test.
+#' @param B2 integer, the number of bootstrap samples to be generated in the second
+#' @param inn character, the innovation distribution to be used in the test. The options are "poi", "negbin" and "genpoi".
+#' @param saveboot logical, if TRUE the bootstrap replicates are saved in the output object (only if B1 > 0 and B2 > 0).
+#'
+#' @return ........
+#'
+#' @importFrom stats ks.test
+#' @details
+#' This function performs the Sun-McCabe (SMC) test for the presence of P-INAR(1) models.
+#' The test is based on a double bootstrap procedure, where:
+#'   - in the first step B1 bootstrap samples are generated under the null hypothesis of a P-INAR(1) model,
+#'   - in the second step B2 bootstrap samples are generated under the alternative hypothesis of a general INAR(1) model.
+#' The test statistic is computed performing KS tests between the distribution of the test statistic under the null and the alternative hypothesis, obtained from the two bootstrap steps.
+#' @examples
+#' # ....... examples .....
+#' # IPtest(X = rpois(100,2), B1 = 399, B2 = 99, inn = "poi")
+#'
+#' @export
+IPtest <- function(X, B1 = 399, B2 = 399, inn = "poi", saveboot = FALSE) {
+    if(!all(X == as.integer(X))) X <- as.integer(X)
+
+    n <- length(X)
+    OUT <- get_info(list(
+        test = "ip",
+        inn = inn,
+        method = NA,
+        B = c(B1,B2)
+        ))
+    OUT$data.name = deparse1(substitute(X))
+
+
+    smc_est <- SMC_Cpp(X, OUT$inn_num)
+    OUT$statistic <- c(S = smc_est[1])
+    OUT$p.value <- smc_est[2]
+
+    Sdb <- SMC_doubleBOOT_Cpp(X,B1, B2, OUT$inn_num)
+    OUT$statistic.boot <- c(Sb = mean(Sdb$z))
+    # EXPERIMENTAL: the test statistic is not well-posed, TO DO FROM SCRATCH!
+    OUT$p.value.boot <- mean(abs(Sdb$z) > abs(smc_est[1]), na.rm = TRUE)
+    if(saveboot) OUT$bootvec <- Sdb
+
+    # OUT$statistic <- c("mean(D)" = mean(apply(Sb$S_comb, 1, function(x)suppressWarnings(ks.test(x,Sb$s1)$stat))))
+    # OUT$p.value <- mean(apply(Sb$S_comb, 1, function(x)suppressWarnings(ks.test(x,Sb$s1)$p.value)) < 0.05)
+    #
+    # the test statistic is not well-posed, TO DO!
+    # add Boot results to OUT
+    # OUT$statistic.boot <- c(Sb = mean(smc_boot))
+    # OUT$p.value.boot <- mean(abs(smc_boot) > abs(smc_est[1]), na.rm = TRUE)
+    # if(saveboot) OUT$bootvec <- smc_boot
+
+     if(saveboot) OUT$bootvec <- list("z" = Sdb$z,"s1" = Sdb$s1,"s2" = Sdb$S_comb)
+     return(OUT)
+}
+
 # ZIDItest(rpois(1000,2),"pv")
 # ZIDItest(rpois(1000,2),"vdb")
 #
@@ -242,7 +301,12 @@ ZIDItest <- function(X, type = "pv"){
 # ZIDItest(genINAR(1000,a = 0.5, par = 2,inn = "poisson")$X,"vdb")
 # ZIDItest(genINAR(1000,a = 0.5, par = c(2,0.9),inn = "negbin")$X,"pv")
 # ZIDItest(genINAR(1000,a = 0.5, par = c(2,0.1),inn = "negbin")$X,"vdb")
-
+#
+# IPtest(X = rpois(1000,2), B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = rnbinom(1000,21,0.5), B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = genINAR(1000,0.4,2,"poi")$X, B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = genINAR(1000,0.4,c(2,0.5),"negbin")$X, B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = genINAR(1000,0.4,c(2,0.5),"bin")$X, B1 = 399, B2 = 99, inn = "poi")
 
 #' Perform Harris-McCabe INAR(1) test.
 #'

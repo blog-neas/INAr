@@ -1,5 +1,6 @@
 ---
-title: "INAr package, integer autoregressive models for time series of counts"
+title: "INAr package"
+subtitle: "Integer autoregressive models for time series of counts"
 author: "Lucio Palazzo and Riccardo Ievoli"
 date: "`r Sys.Date()`"
 bibliography: bibliography.bib
@@ -121,10 +122,15 @@ When the innovations $\varepsilon_t$ follow a Poisson distribution, also the mar
 
 But unfortunately, this closure property does not hold for all distributions, then in general the marginal distribution of the INAR process differs from the distribution of the innovations. In such cases, the marginal distribution of the INAR process can be more complex and the parameter estimation and inference may require additional analysis to characterize its properties.
 
+## Innovation distributions
+
 In the following sections we describe the properties of the INAR processes considered in this package under different assumptions on the distribution of the innovations $\varepsilon_t$.
 
 The choice of innovation distribution should be guided by the characteristics of the observed data, such as the presence of overdispersion or zero inflation, to ensure an appropriate fit and accurate inference.
 While the Poisson distribution is suitable for modeling count data that exhibit equidispersion, and the Negative Binomial distribution is appropriate for overdispersed count data, neither of these distributions can handle underdispersion, where the variance is less than the mean. In such cases, alternative distributions such as the Generalized Poisson or Katz family may be more appropriate for modeling count data with underdispersion.
+Other integer-valued distributions can also be used as innovation distributions in INAR models, depending on the specific characteristics of the data being modeled.
+The choice of innovation distribution should be guided by the characteristics of the observed data, such as the presence of overdispersion or zero inflation, to ensure an appropriate fit and accurate inference.
+
 
 ### Poisson innovations
 
@@ -171,10 +177,10 @@ where $r > 0$ is the number of successes, $p \in (0,1)$ is the probability of su
 
 ### Generalized Poisson innovations 
 
-The generalized Poisson distribution is a flexible family of distributions that can model both underdispersion and overdispersion in count data. Let define $\varepsilon \sim GenPoi(\lambda, \kappa)$, the probability mass function of $\varepsilon$ is given by:
+The generalized Poisson distribution [@consul1973generalization] is a flexible family of distributions that can model both underdispersion and overdispersion in count data. Let define $\varepsilon \sim GenPoi(\lambda, \kappa)$, the probability mass function of $\varepsilon$ is given by:
 
 $$ 
-\text{P}(\varepsilon = X) =
+\text{P}(\varepsilon = x) =
 \begin{cases}
 \lambda(\lambda + \kappa x )^{x-1}\dfrac{e^{-(\lambda + \kappa x)}}{k!},  & \text{ for } x = 0, 1, \ldots \\
 0, & \text{ for } x > m \text{ if } \kappa < 0 
@@ -194,38 +200,185 @@ The generalized Poisson distribution reduces to Pois($\lambda$) if $\kappa = 0$,
 
 ### Katz family innovations
 
-The Katz family is a broader class of distributions that includes the Poisson, Negative Binomial, and Generalized Poisson distributions as special cases. Let define $\varepsilon \sim Katz(\lambda, \kappa, \phi)$, the probability mass function of $\varepsilon$ is given by:
+The Katz family is a flexible two-parameter family of discrete distributions that includes the Binomial, Poisson, and Negative Binomial distributions as special cases. Following @sun2013score, let $\varepsilon \sim Katz(a,b)$. The distribution is defined recursively by
 
 $$
-\text{P}(\varepsilon = s) = \dfrac{\lambda (\lambda + \kappa s)^{s-1} e^{-(\lambda + \kappa s)}}{s!} \cdot \dfrac{\phi^s}{(1 + \phi)^s}, \qquad s = 0, 1, 2, \ldots
+\frac{p_{x+1}}{p_x} = \frac{a+bx}{x+1}, \qquad x = 0,1,2,\ldots,
 $$
 
-where parameters $\lambda > 0$ is the mean parameter, $\kappa \in \mathbb{R}$ is the dispersion parameter, and $\phi > 0$ is an additional parameter that controls the tail behaviour of the distribution. The Katz family includes a range of distributions that can model various types of count data, including zero-inflated and hurdle models, depending on the values of the parameters.
+where $p_x = P(\varepsilon=x)$, $a>0$, and $b<1$. If $x$ becomes large enough such that $a+bx<0$, all subsequent probabilities are set equal to zero, yielding a finite-support distribution.
 
-The mean and variance of the Katz distribution are more complex functions of the parameters $\lambda$, $\kappa$, and $\phi$, and do not have closed-form expressions in general. 
-As a special case, when $\kappa = 0$ and $\phi = 0$, the Katz distribution reduces to the Poisson distribution with mean $\lambda$. When $\kappa < 0$ and $\phi = 0$, the Katz distribution reduces to a zero-truncated Poisson distribution. When $\kappa > 0$ and $\phi = 0$, the Katz distribution reduces to a zero-inflated Poisson distribution. The flexibility of the Katz family allows it to model a wide range of count data behaviours, making it a useful tool for modeling count data with complex characteristics.
+The Katz family contains the following special cases:
 
-## Estimation 
+- if $b<0$, the distribution is Binomial-type with finite support;
+- if $b=0$, the distribution reduces to a Poisson distribution with mean $a$;
+- if $0<b<1$, the distribution is Negative-Binomial-type with infinite support.
 
-### Poisson innovation
-
-**Yule-Walker** 
-
-$$
-\hat{\lambda} = 
-$$
-
-**Negative Binomial.**
+The mean and variance are
 
 $$
 \begin{align}
-\hat{\gamma} = & \dfrac{\hat{\mu}_\varepsilon^2}{\hat{\sigma}_\varepsilon^2 - \hat{\mu}_\varepsilon} \\
-\hat{\pi} = & \dfrac{\hat{\mu}_\varepsilon}{\hat{\sigma}_\varepsilon^2} 
+E(\varepsilon) = & \dfrac{a}{1-b} \\
+Var(\varepsilon) = & \dfrac{a}{(1-b)^2}
 \end{align}
 $$
 
+Therefore, the dispersion index is $I_{\varepsilon} = \frac{1}{1-b}$. Hence, the Katz family can model underdispersion when $b<0$, equidispersion when $b=0$, and overdispersion when $0<b<1$. This makes it suitable as an innovation distribution in INAR models when the dispersion status of the count process is not known in advance.
 
-## Generating INAR processes
+### Geometric innovations 
+
+The geometric distribution is a discrete probability distribution that models the number of trials needed to get the first success in a sequence of independent and identically distributed Bernoulli trials. Let define $\varepsilon \sim Geom(p)$, the probability mass function of $\varepsilon$ is given by:
+
+$$
+\text{P}(\varepsilon = x) = p (1-p)^{x-1}, \qquad x = 1, 2, \ldots
+$$
+
+where $p \in (0,1)$ is the probability of success on an individual trial, and the mean and variance of the distribution are $E(\varepsilon) = 1/p$ and $Var(\varepsilon) = (1-p)/p^2$, respectively. The geometric distribution allows for overdispersion, which makes it suitable for modeling count data that exhibit overdispersion, but not underdispersion.
+
+
+### Binomial innovations 
+
+Binomial distribution is a discrete probability distribution that models the number of successes in a fixed number of independent and identically distributed Bernoulli trials. Let define $\varepsilon \sim Bin(n, p)$, the probability mass function of $\varepsilon$ is given by:
+
+$$
+\text{P}(\varepsilon = x) = \binom{n}{x} p^x (1-p)^{n-x}, \qquad x = 0, 1, \ldots, n
+$$
+
+where $n$ is the number of trials, $p \in (0,1)$ is the probability of success on an individual trial, and the mean and variance of the distribution are $E(\varepsilon) = np$ and $Var(\varepsilon) = np(1-p)$, respectively. The binomial distribution allows for underdispersion, which makes it suitable for modeling count data that exhibit underdispersion, but not overdispersion.
+
+### Double Poisson innovations 
+
+The double Poisson distribution, introduced in @efron1986double, is a discrete probability distribution that models count data with overdispersion. Let define $\varepsilon \sim DPoi(\mu, \sigma)$, the probability mass function of $\varepsilon$ is given by:
+
+$$
+\text{P}(\varepsilon = x) = \left (\frac{1}{\sigma}\right)^{1/2} e^{-\mu/\sigma} \cdot \frac{e^{-x} x^x}{x!}
+\left(\frac{e \cdot \mu}{x}\right)^{x / \sigma} \cdot
+C(\mu, \sigma) \qquad x = 0, 1, 2, \ldots,
+$$
+
+where $\mu > 0$ is the mean parameter, $\sigma > 0$ is the dispersion parameter, and $C(\mu, \sigma)$ is a normalizing constant that ensures that the probabilities sum to one. The mean and variance of the double Poisson distribution are $E(\varepsilon) = \mu$ and $Var(\varepsilon) = \sigma \mu$, respectively.
+
+The double Poisson distribution is computed by using the `DPO` distribution of the `gamlss.dist` package. The double Poisson distribution allows for overdispersion, which makes it suitable for modeling count data that exhibit overdispersion, but not underdispersion. In particular:
+
+- $\sigma < 1$ indicates underdispersion;
+- $\sigma = 1$ indicates equidispersion, and the distribution reduces to a Poisson with mean $\mu$;
+- $\sigma > 1$ indicates overdispersion.
+
+
+## Estimation 
+
+Different estimation methods are available to estimate parameters of INAR models. The choice of estimation method depends on the specific characteristics of the data and the model being fitted, as well as computational considerations.
+The first considered model is the Yule-Walker (YW) estimator, which is a method of moments estimator that relies on the autocorrelation structure of the process. The second considered model is the conditional least squares (CLS) estimator, which minimizes the sum of squared differences of the residuals, where the residuals are defined as the difference between the observed values and the conditional mean of the process given the past values. The third considered model is the maximum likelihood (ML) estimator, which maximizes the likelihood function of the observed data given the model parameters. The fourth considered model is the saddlepoint maximum likelihood (SP) estimator, which is an approximation to the ML estimator that can be computationally more efficient in certain cases.
+
+<!-- The fifth considered model is the generalized method of moments (GMM) estimator, which is a flexible estimation method that can be used when the likelihood function is difficult to specify or maximize. -->
+
+The YW estimator is based on the autocorrelation function of the process and can be computed by solving a system of equations derived from the Yule-Walker equations. Let be $\{X_t\}$ a realization of an INAR(p) process, with $\varepsilon_t$ innovations, and $\Gamma = (\alpha_1, \ldots, \alpha_p, \omega_1, \ldots, \omega_m)$ is set of parameters of the model, where $\alpha_i$ are the thinning parameters and $\phi_j$ are the parameters of the innovation distribution. The YW estimator can be expressed as:
+
+!!!! CONTROLLA EQUAZIONI !!!!
+$$
+\begin{align}
+\hat{\alpha}_i = \dfrac{\gamma_i - \sum_{j=1}^{i-1} \hat{\alpha}_j \gamma_{i-j}}{\gamma_0}, & \qquad i = 1, \ldots, p \\
+\hat{\mu}_\varepsilon = & \left(1 - \sum_{i=1}^{p} \hat{\alpha}_i \right) \hat{\mu}_X \\
+\hat{\sigma}_\varepsilon^2 = & \hat{\gamma}_0 \left( 1-\sum_{i=1}^{p} \hat{\alpha}_i^2 \right) - \hat{\mu}_X \sum_{i=1}^{p} \hat{\alpha}_i(1-\hat{\alpha}_i)
+\end{align}
+$$
+.... where .... ..... . The unknown innovations parameters $\omega_j$ can be estimated as function of the innovations $\hat{\alpha}_i$ and the estimated moments $\hat{\mu}_\varepsilon$, $\hat{\sigma}_\varepsilon^2$ of the innovations, which can be obtained by inverting the moment equations of the INAR process.
+
+
+The CLS estimator is based on minimizing the sum of squared residuals, where the residuals are defined as the difference between the observed values and the conditional mean of the process given the past values. 
+The CLS estimator can be expressed as:
+
+$$
+\hat{\Gamma} = \arg \min_{\Gamma} \sum_{t=p+1}^{T} \left( X_t - \sum_{i=1}^{p} \alpha_i X_{t-i} - \mu_\varepsilon \right)^2,
+$$
+
+while the variance of the innovations can be estimated as $\hat{\sigma}_\varepsilon^2 = \frac{1}{T-p} \sum_{t=p+1}^{T} \left( X_t - \sum_{i=1}^{p} \hat{\alpha}_i X_{t-i} - \hat{\mu}_\varepsilon \right)^2$.
+The innovations parameters $\omega_j$ can be estimated as function of the innovations $\hat{\alpha}_i$ and the estimated moments $\hat{\mu}_\varepsilon$, $\hat{\sigma}_\varepsilon^2$ of the innovations, which can be obtained by inverting the moment equations of the INAR process.
+
+
+Both YW and CLS estimator are simple and computationally efficient methods that can provide consistent estimates of the model parameters under certain conditions, especially when the sample size is large. However, it may not be as efficient as the ML and SP estimators, which can provide more accurate estimates of the parameters.
+
+The ML estimator is based on maximizing the likelihood function of the observed data given the model parameters, which typically requires numerical optimization techniques:
+
+!!!! CONTROLLA EQUAZIONI !!!!
+$$
+\hat{\Gamma}_{ML} = \max_\Gamma \sum_{t=p+1}^{T} \log f(X_t | X_{t-1}, \ldots, X_{t-p}; \Gamma)
+$$
+
+The SP estimator is an approximation to the ML estimator that can be computationally more efficient in certain cases, especially when the likelihood function is complex or difficult to maximize. The SP estimator can be expressed as:
+
+!!!! CONTROLLA EQUAZIONI !!!!
+$$
+\hat{\Gamma}_{SP} = \arg \max_\Gamma \sum_{t=p+1}^{T} \log f_{SP}(X_t | X_{t-1}, \ldots, X_{t-p}; \Gamma)
+$$
+where $f_{SP}$ is the saddlepoint approximation to the likelihood function, which is derived from the cumulant generating function of the process and can provide a more accurate approximation to the likelihood function than other methods, such as the normal approximation.
+
+The ML and SP procedures usually require the use of iterative optimization algorithms, since the closed form solutions are not available. For this reason, a potential drawback of the ML and SP estimators is that they can be computationally intensive, especially for complex models (i.e., $p > 1$) or large datasets. Moreover, both ML and SP require the choice of starting values for the parameters and a bad choice can negatively affect the convergence of the estimates. In this regard, the YW and CLS estimators can provide reasonable starting values for the ML and SP procedures.
+
+The YW and CLS estimators are simple and computationally efficient methods that can provide consistent estimates of the model parameters under certain conditions, especially when the sample size is large. Their use is particularly convenient when the distribution of the innovations is complex, since they do not require the specification of the likelihood function nor of its higher order derivatives.
+However, they may not be as efficient as the ML and SP estimators, which can provide more accurate estimates of the parameters, especially in small samples or when the model is misspecified.
+
+The estimation of process parameters in the case of $p=1$ is relatively straightforward with all the considered procedures, since the model is simpler and the likelihood function is easier to maximize.
+However, when $p > 1$, the estimation of the parameters can be more challenging, especially when the model is misspecified or when the sample size is small. 
+
+In such cases, the ML and SP estimators can provide more accurate estimates of the parameters, since they are based on maximizing the likelihood function, which incorporates all the information in the data about the parameters.
+But, while YW and CLS are naturally implemented for the estimation of the thinning parameters $\alpha_i$ when the number of lags is greater than one, CML and SP require the specification of a more complex likelihood function, resulting in a more complex optimization problem that can be computationally intensive and may require more careful consideration of starting values and convergence criteria.
+
+In the following table are summarized the main characteristics of the considered estimation methods for INAR models:
+
+| Estimation method | Max Lags | Available innovations | Computational complexity | Efficiency |
+|:------------------|:--------:|:-----------------------:|:------------------------:|:----------:|
+| Yule-Walker (YW) | $p \geq 1$ | any | low | low to moderate |
+| Conditional Least Squares (CLS) | $p \geq 1$ | any | low | low to moderate |
+| Maximum Likelihood (ML) | $p = 1$ | Poisson | high | high |
+| Saddlepoint Maximum Likelihood (SP) | $p = 1$ | Poisson | moderate to high | high |
+
+
+## Forecasting
+
+Il forecast puntuale h-step e ottenuto per ricorsione, sostituendo i futuri valori non osservati con le loro previsioni condizionate:
+
+$$
+\hat X_{T+h|\mathcal{I}_T} = \sum_{i=1}^p \hat\alpha_i \tilde{X}_{h-i} + \hat\mu_\varepsilon,
+$$
+
+dove $\tilde{X}_{h-i}=X_{T+h-i}$ se $h-i \le 0$ e $\tilde{X}_{h-i}=\hat{X}_{T+h-i|T}$ altrimenti.
+
+```{r}
+# fit <- INARfit(x, p = 2, inn = "poi")
+# fc <- predict(fit, h = 12, method = "standard")
+# fc
+# plot(fc)
+```
+
+## Forecast bootstrap-based
+
+La procedura bootstrap proposta qui non usa residui AR: nei modelli INAR i residui non ricostruiscono in modo affidabile le innovazioni, perche il thinning e una sorgente casuale addizionale. Si simula invece il futuro condizionatamente agli ultimi p valori osservati:
+
+1. si estraggono innovazioni bootstrap da $\hat G$; in versione parametrica, per esempio $Poi(\hat\lambda)$ o negativa binomiale stimata;
+2. per ogni orizzonte si genera il thinning $\hat\alpha_i \circ^* X_{t-i}^*$ con variabili binomiali indipendenti;
+3. si ripete B volte e si usano media/mediana e quantili empirici come forecast e intervalli predittivi.
+
+```{r}
+# fc_boot <- predict(fit, h = 12, method = "bootstrap", B = 5000,
+#                    innovation = "auto", level = 0.95, seed = 123)
+# fc_boot
+# plot(fc_boot)
+```
+
+### Caso con innovazioni semi-parametriche
+
+Se `INARfit` produce una stima della distribuzione delle innovazioni, ad esempio una pmf `g_hat` con supporto `0:max(x)`, usare:
+
+```{r}
+# fc_sp <- predict(fit, h = 12, method = "bootstrap", B = 5000,
+#                  innovation = "empirical", pmf = fit$g_hat, seed = 123)
+```
+
+Questo e coerente con l'idea di bootstrap INAR-type: mantenere il thinning binomiale e generare innovazioni da una stima di $G$, anziche da residui continui AR.
+
+
+## Generating INAR processes (DA SPOSTARE IN ALTRA VIGNETTA)
 
 
 ```{r geninar1}

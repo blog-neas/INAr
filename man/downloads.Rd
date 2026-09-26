@@ -14,7 +14,9 @@ Wiley repository, <www.wiley.com/go/weiss/discrete-valuedtimeseries>
 data(downloads)
 }
 \description{
-This data contain a time series expressing the daily number of downloads of a TEX editor for the period from June 2006 to February 2007 (T = 267)
+This data contain a time series expressing the daily number of
+downloads of a TEX editor for the period from June 2006 to
+February 2007 (T = 267)
 }
 \examples{
 data(downloads)
@@ -22,8 +24,10 @@ data(downloads)
 plot(downloads$X,type="b")}
 }
 \references{
-Weiß, C. H. (2018). An introduction to discrete-valued time series. John Wiley & Sons.
+Weiß, C. H. (2018). An introduction to discrete-valued time
+series. John Wiley & Sons.
 
-Weiß, C. H. (2008). Thinning operations for modeling time series of counts—a survey. AStA Advances in Statistical Analysis, 92(3), 319-341.
+Weiß, C. H. (2008). Thinning operations for modeling time series
+of counts—a survey. AStA Advances in Statistical Analysis, 92(3), 319-341.
 }
 \keyword{datasets}

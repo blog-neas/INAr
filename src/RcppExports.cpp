@@ -62,6 +62,54 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// all_equal
+bool all_equal(NumericVector x);
+RcppExport SEXP _INAr_all_equal(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(all_equal(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gen_boot_poisson
+NumericVector gen_boot_poisson(int n, double mean_x);
+RcppExport SEXP _INAr_gen_boot_poisson(SEXP nSEXP, SEXP mean_xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type mean_x(mean_xSEXP);
+    rcpp_result_gen = Rcpp::wrap(gen_boot_poisson(n, mean_x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gen_boot
+NumericVector gen_boot(NumericVector x);
+RcppExport SEXP _INAr_gen_boot(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(gen_boot(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SMC_doubleBOOT_Cpp
+Rcpp::List SMC_doubleBOOT_Cpp(NumericVector x, int B1, int B2, unsigned int method);
+RcppExport SEXP _INAr_SMC_doubleBOOT_Cpp(SEXP xSEXP, SEXP B1SEXP, SEXP B2SEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type B1(B1SEXP);
+    Rcpp::traits::input_parameter< int >::type B2(B2SEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type method(methodSEXP);
+    rcpp_result_gen = Rcpp::wrap(SMC_doubleBOOT_Cpp(x, B1, B2, method));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SMC_pitBOOT_Cpp
 NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method);
 RcppExport SEXP _INAr_SMC_pitBOOT_Cpp(SEXP xSEXP, SEXP BSEXP, SEXP methodSEXP) {
@@ -132,6 +180,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// INARfitted_cpp
+NumericVector INARfitted_cpp(NumericVector X, double mINN, DoubleVector a);
+RcppExport SEXP _INAr_INARfitted_cpp(SEXP XSEXP, SEXP mINNSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type mINN(mINNSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(INARfitted_cpp(X, mINN, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// INARforecast_cpp
+Rcpp::List INARforecast_cpp(NumericVector X, double mINN, DoubleVector a, int h, int B, double alpha);
+RcppExport SEXP _INAr_INARforecast_cpp(SEXP XSEXP, SEXP mINNSEXP, SEXP aSEXP, SEXP hSEXP, SEXP BSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type mINN(mINNSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type a(aSEXP);
+    Rcpp::traits::input_parameter< int >::type h(hSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(INARforecast_cpp(X, mINN, a, h, B, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
 // INARp_cpp
 NumericVector INARp_cpp(NumericVector resid, DoubleVector a);
 RcppExport SEXP _INAr_INARp_cpp(SEXP residSEXP, SEXP aSEXP) {
@@ -144,19 +221,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// INARfitted_cpp
-NumericVector INARfitted_cpp(NumericVector X, double resid, DoubleVector a);
-RcppExport SEXP _INAr_INARfitted_cpp(SEXP XSEXP, SEXP residSEXP, SEXP aSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
-    Rcpp::traits::input_parameter< double >::type resid(residSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(INARfitted_cpp(X, resid, a));
-    return rcpp_result_gen;
-END_RCPP
-}
 // MINARp_gen_cpp
 NumericMatrix MINARp_gen_cpp(NumericMatrix resid, NumericMatrix A);
 RcppExport SEXP _INAr_MINARp_gen_cpp(SEXP residSEXP, SEXP ASEXP) {
@@ -166,32 +230,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type resid(residSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
     rcpp_result_gen = Rcpp::wrap(MINARp_gen_cpp(resid, A));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Xresid
-Rcpp::List Xresid(NumericVector X, NumericVector alphas, double mINN, double vINN);
-RcppExport SEXP _INAr_Xresid(SEXP XSEXP, SEXP alphasSEXP, SEXP mINNSEXP, SEXP vINNSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP);
-    Rcpp::traits::input_parameter< double >::type mINN(mINNSEXP);
-    Rcpp::traits::input_parameter< double >::type vINN(vINNSEXP);
-    rcpp_result_gen = Rcpp::wrap(Xresid(X, alphas, mINN, vINN));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Xmoments
-Rcpp::List Xmoments(NumericVector X, NumericVector alphas);
-RcppExport SEXP _INAr_Xmoments(SEXP XSEXP, SEXP alphasSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type X(XSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type alphas(alphasSEXP);
-    rcpp_result_gen = Rcpp::wrap(Xmoments(X, alphas));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -227,17 +265,20 @@ static const R_CallMethodDef CallEntries[] = {
     {"_INAr_SMC_Cpp", (DL_FUNC) &_INAr_SMC_Cpp, 2},
     {"_INAr_SMC_semiparBOOT_Cpp", (DL_FUNC) &_INAr_SMC_semiparBOOT_Cpp, 3},
     {"_INAr_SMC_parBOOT_Cpp", (DL_FUNC) &_INAr_SMC_parBOOT_Cpp, 3},
+    {"_INAr_all_equal", (DL_FUNC) &_INAr_all_equal, 1},
+    {"_INAr_gen_boot_poisson", (DL_FUNC) &_INAr_gen_boot_poisson, 2},
+    {"_INAr_gen_boot", (DL_FUNC) &_INAr_gen_boot, 1},
+    {"_INAr_SMC_doubleBOOT_Cpp", (DL_FUNC) &_INAr_SMC_doubleBOOT_Cpp, 4},
     {"_INAr_SMC_pitBOOT_Cpp", (DL_FUNC) &_INAr_SMC_pitBOOT_Cpp, 3},
     {"_INAr_sortunique", (DL_FUNC) &_INAr_sortunique, 1},
     {"_INAr_ecdfcpp", (DL_FUNC) &_INAr_ecdfcpp, 2},
     {"_INAr_HMC_Cpp", (DL_FUNC) &_INAr_HMC_Cpp, 1},
     {"_INAr_HMC_BOOT_Cpp", (DL_FUNC) &_INAr_HMC_BOOT_Cpp, 2},
     {"_INAr_YW_cpp", (DL_FUNC) &_INAr_YW_cpp, 1},
-    {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_INARfitted_cpp", (DL_FUNC) &_INAr_INARfitted_cpp, 3},
+    {"_INAr_INARforecast_cpp", (DL_FUNC) &_INAr_INARforecast_cpp, 6},
+    {"_INAr_INARp_cpp", (DL_FUNC) &_INAr_INARp_cpp, 2},
     {"_INAr_MINARp_gen_cpp", (DL_FUNC) &_INAr_MINARp_gen_cpp, 2},
-    {"_INAr_Xresid", (DL_FUNC) &_INAr_Xresid, 4},
-    {"_INAr_Xmoments", (DL_FUNC) &_INAr_Xmoments, 2},
     {"_INAr_inar1_poi_loglik_cpp", (DL_FUNC) &_INAr_inar1_poi_loglik_cpp, 3},
     {"_INAr_saddle_nll_cpp", (DL_FUNC) &_INAr_saddle_nll_cpp, 3},
     {NULL, NULL, 0}
