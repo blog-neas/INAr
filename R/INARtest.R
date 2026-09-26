@@ -302,11 +302,11 @@ IPtest <- function(X, B1 = 399, B2 = 399, inn = "poi", saveboot = FALSE) {
 # ZIDItest(genINAR(1000,a = 0.5, par = c(2,0.9),inn = "negbin")$X,"pv")
 # ZIDItest(genINAR(1000,a = 0.5, par = c(2,0.1),inn = "negbin")$X,"vdb")
 #
-IPtest(X = rpois(1000,2), B1 = 399, B2 = 99, inn = "poi")
-IPtest(X = rnbinom(1000,21,0.5), B1 = 399, B2 = 99, inn = "poi")
-IPtest(X = genINAR(1000,0.4,2,"poi")$X, B1 = 399, B2 = 99, inn = "poi")
-IPtest(X = genINAR(1000,0.4,c(2,0.5),"negbin")$X, B1 = 399, B2 = 99, inn = "poi")
-IPtest(X = genINAR(1000,0.4,c(2,0.5),"bin")$X, B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = rpois(1000,2), B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = rnbinom(1000,21,0.5), B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = genINAR(1000,0.4,2,"poi")$X, B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = genINAR(1000,0.4,c(2,0.5),"negbin")$X, B1 = 399, B2 = 99, inn = "poi")
+# IPtest(X = genINAR(1000,0.4,c(2,0.5),"bin")$X, B1 = 399, B2 = 99, inn = "poi")
 
 #' Perform Harris-McCabe INAR(1) test.
 #'
