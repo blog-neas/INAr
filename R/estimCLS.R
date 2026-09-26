@@ -33,7 +33,7 @@ estimCLS <- function(X, p, inn) {
     alphas <- mod[-1]
     attr(alphas, "names") <- paste0("a",1:p)
 
-    mINN <- mod[1]
+    mINN <- mod[1] # media innovazioni = termine noto
 
     # OLD, MA ERRATO, VARIANCE INNOVAZIONI != VARIANCE RESIDUI
     # vINN <- sum((Yreg - Xreg%*%mod)^2)/(n-(p+1))
@@ -44,10 +44,7 @@ estimCLS <- function(X, p, inn) {
 
     # var dei residui != var. innovazioni
     res_var <- mean(res^2)
-
-    # medie dei thinning laggati
-    lag_means <- colMeans(Xreg[, -1, drop = FALSE])
-
+    lag_means <- colMeans(Xreg[, -1, drop = FALSE]) # ottengo stima medie dei thinning laggati
     thinning_var <- sum(alphas * (1 - alphas) * lag_means)
 
     vINN <- res_var - thinning_var
@@ -83,8 +80,13 @@ estimCLS <- function(X, p, inn) {
     #     stop("Innovation distribution not implemented yet.")
     # }
 
+#     additional output:
+    r <- acf(X, plot = FALSE)$acf[2:(p+1)]
+    R <- YW_cpp(r)
+
     OUT <- list("alphas" = alphas,
                 "par" = par,
+                "R" = R,
                 "meanX" = mean(X), "varX" = var(X)
                 # "meanINN" = mINN, "varINN" = vINN
                 )

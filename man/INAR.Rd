@@ -3,17 +3,28 @@
 \name{INAR}
 \alias{INAR}
 \alias{summary.INAR}
-\alias{plot.INAR}
 \alias{fitted.INAR}
+\alias{predict.INAR}
+\alias{plot.INAR}
 \title{Fitting INAR(p) Models}
 \usage{
 INAR(X, p, inn = "poi", method = "CLS")
 
 \method{summary}{INAR}(object, ...)
 
-\method{plot}{INAR}(object)
-
 \method{fitted}{INAR}(object, ...)
+
+\method{predict}{INAR}(
+  object,
+  n.ahead = 1,
+  type = c("mean", "bootstrap"),
+  B = 999,
+  level = 0.95,
+  seed = NULL,
+  ...
+)
+
+\method{plot}{INAR}(x, ...)
 }
 \arguments{
 \item{X}{data vector}
@@ -26,10 +37,30 @@ INAR(X, p, inn = "poi", method = "CLS")
 
 \item{object, }{an \code{INAR} object}
 
+\item{...}{further arguments.}
+
+\item{n.ahead}{forecast horizon.}
+
+\item{type}{either "mean" or "bootstrap".}
+
+\item{B}{number of bootstrap trajectories.}
+
+\item{level}{prediction interval level.}
+
+\item{seed}{optional random seed.}
+
+\item{x, }{an \code{INAR} object}
+
+\item{object}{an object of class "INAR".}
+
 \item{..., }{additional options}
 }
 \value{
 The fitted model, an object of class \code{INAR}
+
+an object of class "INARforecast".
+
+the original object, invisibly.
 }
 \description{
 summary method for class \code{INAR}.

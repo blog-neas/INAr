@@ -9,7 +9,7 @@ series_varpv <- function(mu, alpha, max_j = 2000L) {
 #' @param x NumericVector
 #' @param method unsigned int
 #' @details
-#' This is an internal function, it will be excluded in future versions.
+#' This is an internal function.
 #' @noRd
 SMC_Cpp <- function(x, method) {
     .Call('_INAr_SMC_Cpp', PACKAGE = 'INAr', x, method)
@@ -35,6 +35,47 @@ SMC_semiparBOOT_Cpp <- function(x, B, method) {
 #' @noRd
 SMC_parBOOT_Cpp <- function(x, B, method) {
     .Call('_INAr_SMC_parBOOT_Cpp', PACKAGE = 'INAr', x, B, method)
+}
+
+#' Retry sampling if all values in the sample are equal
+#' which can cause issues for the test statistic.
+#' @param x NumericVector
+#' @details
+#' This is an internal function.
+#' @noRd
+all_equal <- function(x) {
+    .Call('_INAr_all_equal', PACKAGE = 'INAr', x)
+}
+
+#' Perform parametric bootstrap sampling from a Poisson distribution with given mean and variance.
+#' @param n int
+#' @param mean_x double
+#' @details
+#' This is an internal function.
+#' @noRd
+gen_boot_poisson <- function(n, mean_x) {
+    .Call('_INAr_gen_boot_poisson', PACKAGE = 'INAr', n, mean_x)
+}
+
+#' Perform non-parametric bootstrap sampling
+#' @param n int
+#' @details
+#' This is an internal function.
+#' @noRd
+gen_boot <- function(x) {
+    .Call('_INAr_gen_boot', PACKAGE = 'INAr', x)
+}
+
+#' Double bootstrap version of the Sun-McCabe score test.
+#' @param x NumericVector
+#' @param B1 int
+#' @param B2 int
+#' @param method unsigned int
+#' @details
+#' This is an internal function, it will be excluded in future versions.
+#' @noRd
+SMC_doubleBOOT_Cpp <- function(x, B1, B2, method) {
+    .Call('_INAr_SMC_doubleBOOT_Cpp', PACKAGE = 'INAr', x, B1, B2, method)
 }
 
 #' PIT bootstrap version of the Sun-McCabe score test.
@@ -91,12 +132,16 @@ YW_cpp <- function(r) {
     .Call('_INAr_YW_cpp', PACKAGE = 'INAr', r)
 }
 
-INARp_cpp <- function(resid, a) {
-    .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
+INARfitted_cpp <- function(X, mINN, a) {
+    .Call('_INAr_INARfitted_cpp', PACKAGE = 'INAr', X, mINN, a)
 }
 
-INARfitted_cpp <- function(X, resid, a) {
-    .Call('_INAr_INARfitted_cpp', PACKAGE = 'INAr', X, resid, a)
+INARforecast_cpp <- function(X, mINN, a, h, B, alpha = 0.95) {
+    .Call('_INAr_INARforecast_cpp', PACKAGE = 'INAr', X, mINN, a, h, B, alpha)
+}
+
+INARp_cpp <- function(resid, a) {
+    .Call('_INAr_INARp_cpp', PACKAGE = 'INAr', resid, a)
 }
 
 #' Generate a MINAR(p) series
@@ -109,14 +154,6 @@ INARfitted_cpp <- function(X, resid, a) {
 #' This is an internal function.
 MINARp_gen_cpp <- function(resid, A) {
     .Call('_INAr_MINARp_gen_cpp', PACKAGE = 'INAr', resid, A)
-}
-
-Xresid <- function(X, alphas, mINN, vINN) {
-    .Call('_INAr_Xresid', PACKAGE = 'INAr', X, alphas, mINN, vINN)
-}
-
-Xmoments <- function(X, alphas) {
-    .Call('_INAr_Xmoments', PACKAGE = 'INAr', X, alphas)
 }
 
 inar1_poi_loglik_cpp <- function(x, alpha, lambda) {

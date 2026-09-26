@@ -32,13 +32,8 @@
 #' @references
 #'   \insertAllCited{}
 #' @return A number.
-#' @importFrom stats rpois
-#' @importFrom stats rgeom
-#' @importFrom stats rnorm
-#' @importFrom stats runif
-#' @importFrom stats rbinom
-#' @importFrom stats rnbinom
-#' @importFrom gamlss.dist rZIP
+#' @importFrom stats rpois rgeom rnorm runif rbinom rnbinom
+#' @importFrom gamlss.dist rDPO rZIP
 #' @importFrom skellam rskellam
 #' @importFrom HMMpa rgenpois
 #' @importFrom VGAM ryules
@@ -90,19 +85,19 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
         # gamlss.dist::rZIP
         resid_ <- rZIP(s, mu = l_, sigma = sig_)
     }
-    else if(inn == "bimodal_poisson"){
-        stopifnot(length(par)==3)
-
-        lam1_ <- unname(par[1])
-        lam2_ <- unname(par[2])
-        mixp_ <- unname(par[3])
-
-        u_rand <- runif(s)
-
-        sel <- u_rand < mixp_
-        resid_[sel] <- rpois(sum(sel),lam1_)
-        resid_[!sel] <- rpois(sum(!sel),lam2_)
-    }
+    # else if(inn == "bimodal_poisson"){
+    #     stopifnot(length(par)==3)
+    #
+    #     lam1_ <- unname(par[1])
+    #     lam2_ <- unname(par[2])
+    #     mixp_ <- unname(par[3])
+    #
+    #     u_rand <- runif(s)
+    #
+    #     sel <- u_rand < mixp_
+    #     resid_[sel] <- rpois(sum(sel),lam1_)
+    #     resid_[!sel] <- rpois(sum(!sel),lam2_)
+    # }
     else if(inn == "negbin"){
         stopifnot(length(par) == 2)
 
@@ -125,9 +120,10 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
 
     }
     else if(inn == "geom"){
-        stopifnot(length(par) == 2)
+        stopifnot(length(par) == 1)
 
         pi_ <- unname(par[1])
+
         stopifnot(pi_ > 0, pi_ < 1)
 
         resid_ <- rgeom(s, pi_)
@@ -139,13 +135,16 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
     #
     #     resid_ <- sample(0:max_,s,replace = TRUE)
     # }
-    else if(inn == "binomial"){
+    else if(inn == "bin"){
         stopifnot(length(par) == 2)
 
-        enne_ <- unname(par[1])
-        p_ <- unname(par[2])
+        size_ <- unname(par[1])
+        prob_ <- unname(par[2])
 
-        resid_ <- rbinom(s,enne_,p_)
+        stopifnot(size_ >= 0, size_ == as.integer(size_))
+        stopifnot(prob_ >= 0, prob_ <= 1)
+
+        resid_ <- rbinom(s, size_, prob_)
     }
     else if(inn == "genpoi"){
         stopifnot(length(par) == 2)
@@ -185,21 +184,30 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
 
         resid_ <- rkatz(s, a_, b_)
     }
-    else if(inn == "truncnorm"){
+    else if(inn == "dpoi"){
+        stopifnot(length(par) == 2)
+
         mu_ <- unname(par[1])
         sig_ <- unname(par[2])
 
-        vals <- round(rnorm(s, mu_, sig_),0)
-        resid_ <- ifelse(vals < 0, 0, vals)
-    }
-    else if(inn == "truncskel"){
-        lam1_ <- unname(par[1])
-        lam2_ <- unname(par[2])
+        resid_ <- rDPO(s, mu_, sig_)
 
-        # skellam::rskellam
-        vals <- rskellam(s, lam1_, lam2_)
-        resid_ <- ifelse(vals < 0, 0, vals)
     }
+    # else if(inn == "truncnorm"){
+    #     mu_ <- unname(par[1])
+    #     sig_ <- unname(par[2])
+    #
+    #     vals <- round(rnorm(s, mu_, sig_),0)
+    #     resid_ <- ifelse(vals < 0, 0, vals)
+    # }
+    # else if(inn == "truncskel"){
+    #     lam1_ <- unname(par[1])
+    #     lam2_ <- unname(par[2])
+    #
+    #     # skellam::rskellam
+    #     vals <- rskellam(s, lam1_, lam2_)
+    #     resid_ <- ifelse(vals < 0, 0, vals)
+    # }
     # good package is not available anymore
     # else if(inn=="good"){
     #     z_ <- unname(par[1])
@@ -208,56 +216,56 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
     #     # good::rgood
     #     resid_ <- rgood(s, z_, s_)
     # }
-    else if(inn=="yule"){
-        rho_ <- unname(par[1])
-        stopifnot(rho_ > 0)
-
-        # VGAM::ryules
-        resid_ <- ryules(s,rho_)
-    }
-    else if(inn=="zeta"){
-        esse_ <- unname(par[1])
-        stopifnot(esse_ > 0)
-
-        # VGAM::rzeta
-        resid_ <- VGAM::rzeta(s, esse_)
-    }
-    else if(inn=="poislind"){
-        theta_ <- unname(par[1])
-        stopifnot(theta_ > 0)
-
-        # tolerance::rpoislind
-        resid_ <- tolerance::rpoislind(s,theta_)
-    }
-    else if(inn=="mix_bin"){
-        stopifnot(length(par)==5)
-
-        enne1_ <- unname(par[1]) # size
-        pb1_ <- unname(par[2]) # prob
-        enne2_ <- unname(par[3]) # size, gamma
-        pb2_ <- unname(par[4]) # prob successo
-        mixp_ <- unname(par[5])
-
-        selettore <- runif(s) < mixp_
-
-        resid_[selettore] <-  rbinom(sum(selettore),enne1_,pb1_)
-        resid_[!selettore] <- rbinom(sum(!selettore),enne2_,pb2_)
-    }
-    else if(inn=="mix_bin_negbin"){
-        stopifnot(length(par)==5)
-
-        enne_ <- unname(par[1]) # size
-        pb_ <- unname(par[2]) # prob
-        g_ <- unname(par[3]) # size, gamma
-        pnb_ <- unname(par[4]) # prob successo
-        mixp_ <- unname(par[5])
-
-        selettore <- runif(s) < mixp_
-        p.compl_ <- 1-pnb_
-
-        resid_[selettore] <-  rbinom(sum(selettore),enne_,pb_)
-        resid_[!selettore] <- rnbinom(sum(!selettore),g_,p.compl_)
-    }
+    # else if(inn=="yule"){
+    #     rho_ <- unname(par[1])
+    #     stopifnot(rho_ > 0)
+    #
+    #     # VGAM::ryules
+    #     resid_ <- ryules(s,rho_)
+    # }
+    # else if(inn=="zeta"){
+    #     esse_ <- unname(par[1])
+    #     stopifnot(esse_ > 0)
+    #
+    #     # VGAM::rzeta
+    #     resid_ <- VGAM::rzeta(s, esse_)
+    # }
+    # else if(inn=="poislind"){
+    #     theta_ <- unname(par[1])
+    #     stopifnot(theta_ > 0)
+    #
+    #     # tolerance::rpoislind
+    #     resid_ <- tolerance::rpoislind(s,theta_)
+    # }
+    # else if(inn=="mix_bin"){
+    #     stopifnot(length(par)==5)
+    #
+    #     enne1_ <- unname(par[1]) # size
+    #     pb1_ <- unname(par[2]) # prob
+    #     enne2_ <- unname(par[3]) # size, gamma
+    #     pb2_ <- unname(par[4]) # prob successo
+    #     mixp_ <- unname(par[5])
+    #
+    #     selettore <- runif(s) < mixp_
+    #
+    #     resid_[selettore] <-  rbinom(sum(selettore),enne1_,pb1_)
+    #     resid_[!selettore] <- rbinom(sum(!selettore),enne2_,pb2_)
+    # }
+    # else if(inn=="mix_bin_negbin"){
+    #     stopifnot(length(par)==5)
+    #
+    #     enne_ <- unname(par[1]) # size
+    #     pb_ <- unname(par[2]) # prob
+    #     g_ <- unname(par[3]) # size, gamma
+    #     pnb_ <- unname(par[4]) # prob successo
+    #     mixp_ <- unname(par[5])
+    #
+    #     selettore <- runif(s) < mixp_
+    #     p.compl_ <- 1-pnb_
+    #
+    #     resid_[selettore] <-  rbinom(sum(selettore),enne_,pb_)
+    #     resid_[!selettore] <- rnbinom(sum(!selettore),g_,p.compl_)
+    # }
     else{
         stop("please specify one of the available distributions", call. = FALSE)
     }

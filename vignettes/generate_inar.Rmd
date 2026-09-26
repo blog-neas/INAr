@@ -13,14 +13,12 @@ vignette: >
 
 ## Introduction
 
-```{r setup, warning=FALSE}
-knitr::opts_chunk$set(include = FALSE)
+```{r setup, warning=FALSE, include = FALSE}
 library(INAr)
 library(ggplot2)
 library(patchwork)
 
 set.seed(6)
-
 ```
 
 The INAr package provides the `genINAR()` function to simulate univariate INAR(p) processes with various innovation distributions. This vignette demonstrates how to use `genINAR()` to generate a univariate INAR(1) time series with different innovation processes, and visualise the results.
@@ -89,7 +87,6 @@ X <- genINAR(
   inn     = "poi",    # Poisson innovations
   burnout = 500)      # burn-in to reach stationarity
 ```
-
 
 
 ## Visualise the simulated series
