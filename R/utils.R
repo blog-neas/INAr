@@ -13,11 +13,11 @@
 #' @keywords internal
 #' @noRd
 info_inn <- data.frame(
-    inn = c("poi", "negbin", "genpoi", "katz","none"),
-    inn_name = c("Poisson", "Negative Binomial", "Generalized Poisson", "Katz","none"),
-    inn_num = c(1,2,3,4,NA),
-    smc = c(TRUE, TRUE, FALSE, FALSE,NA),
-    hmc = c(FALSE, FALSE, FALSE, FALSE,NA)
+    inn = c("poi", "negbin", "genpoi", "katz","geom","bin","dpoi","none"),
+    inn_name = c("Poisson", "Negative Binomial", "Generalized Poisson", "Katz","Geometric","Binomial","Double Poisson","none"),
+    inn_num = c(1,2,3,4,5,6,7,NA),
+    smc = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, NA),
+    hmc = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NA)
 )
 # usethis::use_data(info_inn, internal = TRUE)
 
@@ -38,7 +38,7 @@ info_inn <- data.frame(
 get_info <- function(LIST){
     id_inn <- which(info_inn$inn == LIST$inn)
     innovation <- info_inn$inn_name[id_inn]
-    method_name <- if(LIST$B > 0 & !is.na(LIST$method) & LIST$method %in% c("par","semipar")){ifelse(LIST$method == "par", "Parametric", "Semi-parametric")}else{""}
+    method_name <- if(any(LIST$B > 0) & !is.na(LIST$method) & LIST$method %in% c("par","semipar")){ifelse(LIST$method == "par", "Parametric", "Semi-parametric")}else{""}
 
     if(LIST$test == "smc"){
         OUT <- list(
@@ -109,7 +109,19 @@ get_info <- function(LIST){
             null.value = c(S = 0),
             check = TRUE
         )
+    }else if(LIST$test == "ip"){
+        OUT <- list(
+            method = paste("Ievoli-Palazzo INAR(1) Poissonity test.",
+                           "SMC boostrap with", innovation, "innovations,",
+                           "B1 =", LIST$B[1], "and B2 =", LIST$B[2],"boostrap replications."),
+            inn_name = innovation,
+            inn_num = info_inn$inn_num[id_inn],
+            alternative = "greater",
+            null.value = c(inn = "Poisson"),
+            check = info_inn$smc[id_inn]
+        )
     }
+
 
     if(!is.null(LIST$parameter)) OUT$parameter <- LIST$parameter
     if(is.null(LIST$statistic)){OUT$statistic <- c(S = NA)}else{OUT$statistic <- LIST$statistic}

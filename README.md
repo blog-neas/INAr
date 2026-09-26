@@ -2,14 +2,14 @@
 # INAr R Project <img src="man/img/hexlogo.png" align="right" height="138.5" />
 <!-- badger source: https://github.com/GuangchuangYu/badger -->
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/INAr?color=orange)](https://cran.r-project.org/package=INAr)
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/INAr?color=orange)](https://cran.r-project.org/package=INAr) -->
+[![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml)
 [![Project Status: Active - The project is being actively developed](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License: GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-project.org/web/licenses/GPL-3)
 <!-- badges: end -->
 
 Generation, estimation and testing of Integer Autoregressive models
 
-<!-- [![R-CMD-check](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/blog-neas/INAr/actions/workflows/check-standard.yaml) -->
 <!-- [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) -->
 <!-- [![codecov](https://codecov.io/gh/blog-neas/INAr/branch/main/graph/badge.svg?token=0XHCFZZYN8)](https://codecov.io/gh/blog-neas/INAr) -->
 
@@ -21,13 +21,14 @@ INAR(p) models are proved to useful for the study of realizations of random vari
 The package aims to provide tools for the generation, estimation and testing of these models.
 For a detailed description of the package functionalities, please refer to the [vignette]().
 
-INAr is not the only R package for the analysis of integer-valued time series, but it is among the few ones specifically focused on INAR(p) processes. Here are some others:
+INAr is among the few R packages specifically focused on the analysis of INAR(p) processes. Here are some others:
 
 - [tsinteger](https://github.com/RLesur/crrri) by Manoel Santos
 
 - [spINAR](https://github.com/MFaymon/spINAR) by Maxime Faymonville
 
 - [tscount](https://r-packages.io/packages/tscount) by Tobias Liboschik
+
 
 ## Installation
 
@@ -60,51 +61,51 @@ Some functionalities are already available, while others are planned for the fut
 	- [x] Negative Binomial
 	- [x] Generalized Poisson
 	- [x] Katz
+	- [x] Additional innovations: Geometric, Binomial
 - [ ] Include the possibility to use custom innovations
-
 
 2. **Estimation of INAR(p) processes**
 
 - [ ] CML estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
-	- [ ] with p > 1 and additional innovations
+	- [ ] with p = 1 and Generalized Poisson innovations
+	- [ ] with p >= 1 and additional innovations (Katz, Geometric, Binomial, ...)
 - [ ] CLS estimation of INAR(p) processes
 	- [x] with p >= 1 and Poisson innovations
 	- [x] with p >= 1 and Negative Binomial innovations
 	- [x] with p >= 1 and Generalized Poisson innovations
-	- [ ] with p >= 1 and additional innovations (Katz, Good, ...)
+	- [x] with p >= 1 and Katz innovations
+	- [x] with p >= 1 and additional innovations (Geometric, Binomial, Double Poisson)
 - [ ] SP estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and additional innovations (Generalized Poisson, Katz, Good, ...)
-	- [ ] with p > 1 and additional innovations
+	- [ ] with p = 1 and Generalized Poisson innovations
+	- [ ] with p >= 1 and additional innovations (Katz, Geometric, Binomial, ...)
 - [ ] YW estimation of INAR(p) processes
 	- [x] with p >= 1 and Poisson innovations
 	- [x] with p >= 1 and Negative Binomial innovations
 	- [x] with p >= 1 and Generalized Poisson innovations
-	- [ ] with p >= 1 and additional innovations (Katz, Good, ...)
-
+	- [x] with p >= 1 and Katz innovations
+	- [x] with p >= 1 and additional innovations (Geometric, Binomial, Double Poisson)
 
 3. **Testing for the presence of INAR structure** 
 
-- [ ] Sun & McCabe Test
+- [ ] Sun & McCabe Test `SMCtest`
 	- [x] Exact test for different distributions of the innovations (Poisson, Negative Binomial, Generalized Poisson and Katz)
 	- [x] Semiparametric Bootstrap test
 	- [x] Parametric Bootstrap test - Poisson, Negative Binomial and Generalized Poisson
 	- [ ] Parametric Bootstrap test - Other innovations (Katz, Good, ...)
-- [ ] Harris & McCabe Test
+- [ ] Harris & McCabe Test `HMCtest`
 	- [X] Exact test for different distributions of the innovations
 	- [ ] Bootstrap test
-- [x] Zero Inflation Test
+- [x] Zero Inflation Test `ZItest`
 	- [x] Puig and Valero (2006)
 	- [x] van den Broek (1995)
-- [x] Under- and Over- Dispersion Test (Fisher, 1950)
+- [x] Under- and Over- Dispersion Test `DItest` (Fisher, 1950)
 - [ ] Goodness-of-fit tests
-	- [x] Chi-squared test (Weiss et al, 2019)
+	- [x] Chi-squared test `ZIDItest` (Weiss et al, 2019)
 	- [ ] Poissonity test (under development)
-
 
 4. **Visualization and summary of INAR(p) models**
 
@@ -131,6 +132,7 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] Releasing to CRAN
 	- [ ] Lifecycle
 	- [ ] References
+
 
 #### Further steps and developments
 

@@ -32,25 +32,6 @@ NumericVector INARp_cpp(NumericVector resid, DoubleVector a) {
     return sim;
 }
 
-// [[Rcpp::export]]
-NumericVector INARfitted_cpp(NumericVector X, double resid, DoubleVector a) {
-
-    unsigned int n = X.length();
-    unsigned int p = a.length();
-    double vals = 0.0;
-    NumericVector fitted = clone(X);
-
-    // calcolo i fitted senza sovrascrivere i lag osservati di X
-    for (unsigned int t = p; t < n; t++) {
-        vals = 0.0;
-        for(unsigned int k = 0 ; k < p; k++) {
-            vals += X[t - k - 1] * a[k];
-        }
-        fitted[t] = vals + resid;
-    }
-
-    return fitted;
-}
 
 /*** R
 # check INAR(p)

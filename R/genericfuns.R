@@ -188,18 +188,54 @@ summary.INAR <- function (object, ...){
     invisible(object)
 }
 
-#' Plotting INAR(p) Models
+
+#' Summary of INAR forecast
 #'
-#' summary method for class `INAR`.
-#' @rdname INAR
-#' @method plot INAR
+#' summary method for class `INARforecast`.
+#' @rdname INARforecast
+#' @method summary INARforecast
 #'
-#' @param object, an `INAR` object
-plot.INAR <- function (object){
-    warning("plot.INAR is not yet implemented. Returning the original object.")
+#' @param object an `INARforecast` object
+#' @param ..., additional options
+#'
+#' @return the original object, invisibly.
+#' @export
+summary.INARforecast <- function(object, ...){
+
+    cat("\nINAR forecast\n")
+    cat("Call:\n")
+    print(object$call)
+    cat("Horizon:", object$n.ahead, "step ahead(s) \n")
+    warning("summary.INARforecast is not yet implemented. Returning the original object.")
     invisible(object)
+
+    #
+    # if (x$method == "bootstrap") {
+    #     cat("Bootstrap replications:", x$B, "\n")
+    #     cat("Prediction interval level:", x$level, "\n\n")
+    #
+    #     tab <- data.frame(
+    #         h = seq_len(x$n.ahead),
+    #         mean = x$mean,
+    #         median = x$median,
+    #         lower = x$lower,
+    #         upper = x$upper
+    #     )
+    #
+    # } else {
+    #
+    #     cat("\n")
+    #
+    #     tab <- data.frame(
+    #         h = seq_len(x$n.ahead),
+    #         mean = x$mean
+    #     )
+    # }
+    #
+    # print(round(tab, digits), row.names = FALSE)
+    #
+    # invisible(x)
 }
-# methods(summary)
 
 #' Get INAR(p) fitted values
 #'
@@ -211,8 +247,135 @@ plot.INAR <- function (object){
 #' @param ..., additional options
 #' @export
 fitted.INAR <- function(object, ...){
-    warning("fitted.INAR is not yet implemented. Returning the original object.")
-    invisible(object)
+    stopifnot(inherits(object, "INAR"))
+
+    fitted <- INARfitted_cpp(object$data, object$mINN, object$alphas)
+    return(fitted)
+}
+
+
+#' Forecast method for INAR(p) models
+#' predict method for class `INAR`.
+#'
+#' @rdname INAR
+#' @method predict INAR
+#' @importFrom stats median quantile
+#'
+#' @param object an object of class "INAR".
+#' @param n.ahead forecast horizon.
+#' @param type either "mean" or "bootstrap".
+#' @param B number of bootstrap trajectories.
+#' @param level prediction interval level.
+#' @param seed optional random seed.
+#' @param ... further arguments.
+#'
+#' @return an object of class "INARforecast".
+#' @export
+predict.INAR <- function(object,
+                         n.ahead = 1,
+                         type = c("mean", "bootstrap"),
+                         B = 999,
+                         level = 0.95,
+                         seed = NULL,
+                         ...) {
+
+    type <- match.arg(type)
+
+    stopifnot(B > 1, n.ahead >= 1)
+    stopifnot(inherits(object, "INAR"))
+
+    if(type == "mean"){
+        forecast <- INARforecast_cpp(object$data , object$mINN, object$alphas, h = n.ahead, B = 0)$forecast
+        lower <- NA
+        upper <- NA
+        forecastmedian <- NA
+    }else{
+        if(!is.null(seed)) set.seed(seed)
+        Bdata <- INARforecast_cpp(object$data , object$mINN, object$alphas, h = n.ahead, B = B)
+        forecast <- Bdata$forecast
+        paths <- Bdata$paths
+        forecastmedian <- apply(paths, 1, median)
+        lower <- apply(paths, 1, quantile, probs = (1 - level) / 2)
+        upper <- apply(paths, 1, quantile, probs = 1 - ( 1 - level) / 2)
+    }
+
+    OUT <- list(
+        forecast = forecast,
+        forecastmedian = forecastmedian,
+        lower = lower,
+        upper = upper,
+        call = object$call,
+        n.ahead = n.ahead,
+        type = type,
+        B = B,
+        level = level
+    )
+    class(OUT) <- "INARforecast"
+    invisible(OUT)
+}
+
+
+
+#' Plotting INAR(p) Models
+#'
+#' summary method for class `INAR`.
+#' @rdname INAR
+#' @method plot INAR
+#'
+#' @importFrom ggplot2 ggplot geom_line labs
+#'
+#' @param x, an `INAR` object
+#' @param ..., additional options
+#' @return the original object, invisibly.
+#' @export
+plot.INAR <- function (x, ...){
+
+    data <- x$data
+    df <- data.frame(time = length(data), value = data) # , resid = data$residuals, stdresid = data$stdresiduals)
+
+    gg1 <- ggplot(mapping = aes(x=df$time, y=df$value)) +
+        geom_line(color = "darkorange", linewidth = 1) +
+        labs(x = "Time",
+             y = NULL)
+
+    gg1
+
+    # gg2 <- ggacf(df$value, lag.max = 20)
+    # gg3 <- ggpacf(df$value, lag.max = 20)
+    #
+    # gg1 / (gg2 + gg3) # richiede l'import di patchwork
+
+    # gg4 <- ggplot(df, aes(x = value)) +
+    #     geom_histogram(aes(y = ..density..), bins = max(df$value), fill = "steelblue", color = "black", alpha = 0.7) +
+    #     geom_density(color = "darkorange", size = 1) +
+    #     theme_minimal() +
+    #     labs(x = "Value",
+    #          y = "Density")
+    #
+    # gg5 <- ggplot(df, aes(x = time, y = resid)) +
+    #     geom_line(color = "steelblue", linewidth = 1) +
+    #     theme_minimal() +
+    #     labs(x = "Time",
+    #          y = "Residuals")
+
+    invisible(x)
+}
+
+
+
+#' Plotting forecast INAR(p) Models
+#'
+#' plot method for class `INARforecast`.
+#' @rdname INARforecast
+#' @method plot INARforecast
+#'
+#' @param x, an `INARforecast` object
+#' @param ..., additional options
+#' @return the original object, invisibly.
+#' @export
+plot.INARforecast <- function (x, ...){
+    warning("plot.INARforecast is not yet implemented. Returning the original object.")
+    invisible(x)
 }
 
 

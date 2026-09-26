@@ -1,3 +1,17 @@
+# INAr 0.3.6
+
+* [LP] Including some innovations in the package structure and in the code organization to improve the overall efficiency and speed of the package. In particular, I added the Geometric, Binomial and Katz distributions. These distributions are used in:
+    * `genINAR()`, to generate INAR(p) processes with Katz, Geometric, Binomial and Double Poisson innovations;
+    * `getPAR()`, to retrieve YW and CLS estimation parameters for the Katz, Geometric, Binomial and Double Poisson cases.
+
+
+# INAr 0.3.5
+
+* [LP] Under development: `fitted.values.INAR()`, extracts fitted values from an INAR(p). 
+
+* [LP] Under development: `forecast.INAR()`, computes h-step ahead forecasts from an INAR(p) model. 
+
+
 # INAr 0.3.4
 
 * [LP] Updating estimation procedures. In particular, I am working on the extension of the Yule-Walker(YW) and Conditional Least Squares (CLS) estimation procedure from only INAR(1) to more general INAR(p) processes. Now the two procedures are available for the Poisson, Negative Binomial and Generalized Poisson cases, they will be extended to the Katz case in the next updates.

@@ -14,7 +14,7 @@
 #' @references
 #'   \insertAllCited{}
 #' @noRd
-estimSP <- function(X, p, inn = "poi", control = list()){
+estimSP <- function(X, p, inn = "poi", control = list()) {
     stopifnot(p==1) # to remove when implemented for p>1
     stopifnot(inn == "poi") # to remove when implemented for other inn
 
@@ -22,19 +22,18 @@ estimSP <- function(X, p, inn = "poi", control = list()){
         YW <- estimYW(X, p, inn)
         theta0 <- par_transform(a = YW$alphas,par = YW$par,inn = inn)
     }else{
-        theta0 <- par_transform(a = control$init[1:p],par = control$init[-c(1:p)], inn = inn)
+        theta0 <- par_transform(a = control$init[1:p], par = control$init[-c(1:p)], inn = inn)
     }
 
-    if(p == 1 & inn == "poi"){
+    if(p == 1 && inn == "poi"){
         opt <- optim(theta0, nll_transformed_inar1_poi_sp, data = X, method = "BFGS", control = control) #, hessian = hessian)
         theta_hat <- opt$par
-        par_hat <- par_back(theta_hat,inn)
+        par_hat <- par_back(theta_hat, inn)
     }
 
     OUT <- list("alphas" = par_hat$alphas,
                 "par" = par_hat$par,
                 "meanX" = mean(X), "varX" = var(X)
-                # "meanINN" = mINN, "varINN" = vINN
     )
     return(OUT)
 }

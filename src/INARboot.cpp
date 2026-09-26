@@ -1,4 +1,4 @@
-// [[Rcpp::plugins("cpp11")]]
+// [[Rcpp::plugins(cpp14)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 
 #include <RcppArmadilloExtensions/sample.h>
@@ -154,7 +154,7 @@ using namespace Rcpp;
 //' @param x NumericVector
 //' @param method unsigned int
 //' @details
-//' This is an internal function, it will be excluded in future versions.
+//' This is an internal function.
 //' @noRd
 // [[Rcpp::export]]
 NumericVector SMC_Cpp(NumericVector x, unsigned int method){
@@ -330,6 +330,7 @@ NumericVector SMC_semiparBOOT_Cpp(NumericVector x, int B, unsigned int method){
 }
 
 
+
 //' Parametric bootstrap version of the Sun-McCabe score test.
 //' @param x NumericVector
 //' @param B int
@@ -343,14 +344,8 @@ NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
     unsigned int niter;
     double mean_x = mean(noNA(x));
     double var_x = var(noNA(x));
-
-    // Function genUniGpois("GenUniGpois");
-
-    // NumericVector out(3);
-    // NumericVector MB(B);
-    // NumericVector VB(B);
-
     NumericVector s_temp(B);
+
     if(method==1){
 
         // POISSON
@@ -374,6 +369,7 @@ NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
                 // con false esce, con true resta
             } while ( std::isnan(s_temp[i]) & (niter < 10) );
         }
+
     }
     if(method==2){
         // NEGBIN
@@ -461,6 +457,130 @@ NumericVector SMC_parBOOT_Cpp(NumericVector x, int B, unsigned int method){
     }
 
     return s_temp;
+}
+
+
+
+//' Retry sampling if all values in the sample are equal
+//' which can cause issues for the test statistic.
+//' @param x NumericVector
+//' @details
+//' This is an internal function.
+//' @noRd
+// [[Rcpp::export]]
+bool all_equal(NumericVector x) {
+    int n = x.length();
+
+    if (n <= 1) {
+        return true;
+    }
+
+    for (int i = 1; i < n; i++) {
+        if (x[i] != x[0]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+
+//' Perform parametric bootstrap sampling from a Poisson distribution with given mean and variance.
+//' @param n int
+//' @param mean_x double
+//' @details
+//' This is an internal function.
+//' @noRd
+// [[Rcpp::export]]
+NumericVector gen_boot_poisson(int n, double mean_x) {
+    NumericVector xb(n);
+
+    do {
+        xb = Rcpp::rpois(n, mean_x);
+    } while (all_equal(xb));
+
+    return xb;
+}
+
+
+
+//' Perform non-parametric bootstrap sampling
+//' @param n int
+//' @details
+//' This is an internal function.
+//' @noRd
+// [[Rcpp::export]]
+NumericVector gen_boot(NumericVector x) {
+    int n = x.length();
+    NumericVector xb(n);
+
+    do {
+        xb = RcppArmadillo::sample(x,n,true);
+    } while (all_equal(xb));
+
+    return xb;
+}
+
+
+
+//' Double bootstrap version of the Sun-McCabe score test.
+//' @param x NumericVector
+//' @param B1 int
+//' @param B2 int
+//' @param method unsigned int
+//' @details
+//' This is an internal function, it will be excluded in future versions.
+//' @noRd
+// [[Rcpp::export]]
+Rcpp::List SMC_doubleBOOT_Cpp(NumericVector x, int B1, int B2, unsigned int method){
+    int n = x.length();
+    unsigned int niter;
+    double mean_xb1;
+    NumericVector s1_temp(B1);
+    NumericVector z(B1);
+    NumericMatrix S_comb(B1,B2);
+
+    for(int i = 0; i < B1; i++){
+        // 1mo BOOT: GENERO BOOTSTRAP NON-PARAMETRICO
+        NumericVector xb1(n);
+        NumericVector s2_temp(B2);
+        niter = 0;
+        // print(xb);
+
+        LogicalVector id(n);
+        do {
+            xb1 = gen_boot(x);
+            s1_temp[i] = SMC_Cpp(xb1,method)[0];
+
+            niter++;
+            // con false esce, con true resta
+        } while ( std::isnan(s1_temp[i]) & (niter < 10) );
+
+        mean_xb1 = mean(noNA(xb1));
+        for(int j = 0; j < B2; j++){
+            // 2do BOOT: GENERO BOOTSTRAP PARAMETRICO POISSON
+
+            niter = 0;
+            do {
+                NumericVector xb2 = gen_boot_poisson(n,mean_xb1);
+
+                // method = POISSON
+                s2_temp[j] = SMC_Cpp(xb2, 1)[0];
+
+                niter++;
+
+            } while (std::isnan(s2_temp[j]) && niter < 10);
+        }
+        S_comb(i,_) = s2_temp;
+        z[i] = (s1_temp[i] - mean(s2_temp))/sd(s2_temp);
+    }
+
+    return List::create(
+        _["z"] = z,
+        _["s1"] = s1_temp,
+        _["S_comb"] = S_comb
+    );
 }
 
 
@@ -600,6 +720,19 @@ NumericVector SMC_pitBOOT_Cpp(NumericVector x, int B, unsigned int method){
 # S[2] # pval normale
 # x <- rpois(100,3)
 # Pb <- SMC_parBOOT_Cpp(x,99,3)
+# set.seed(1913)
+# x <- rnbinom(1000, 5, 0.5)
+# ok <- SMC_doubleBOOT_Cpp(x,399,99,1)
+# asd1 <- apply(ok$S_comb, 1, function(x)ks.test(x,ok$s1)$p.value)
+# mean(asd1 < 0.05)
+# #
+# x <- rpois(1000,3)
+# ok <- SMC_doubleBOOT_Cpp(x,399,99,1)
+# plot(density(ok$z))
+# asd1 <- apply(ok$S_comb, 1, function(x)ks.test(x,ok$s1)$p.value)
+# asd2 <- apply(ok$S_comb, 1, function(x)ks.test(x,ok$s1)$stat)
+# plot(density(asd1))
+# plot(density(asd2))
 */
 
 
@@ -692,7 +825,7 @@ DataFrame ecdfcpp(NumericVector eval, NumericVector x) {
 //' This is an internal function, it will be excluded in future versions.
 //' @noRd
 // [[Rcpp::export]]
-NumericVector HMC_Cpp(NumericVector x){
+NumericVector HMC_Cpp(NumericVector x) {
      int n = x.length();
      double mean_x = mean(noNA(x));
      double sd_x = sd(noNA(x));
@@ -767,7 +900,7 @@ NumericVector HMC_Cpp(NumericVector x){
 //' This is an internal function, it will be excluded in future versions.
 //' @noRd
 // [[Rcpp::export]]
-NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
+NumericVector HMC_BOOT_Cpp(NumericVector x, int B) {
      int n = x.length();
      unsigned int niter;
 
@@ -794,43 +927,6 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
              // con false esce, con true resta
          } while ( std::isnan(s_temp[i]) & (niter < 10) );
      }
-
-
-     // for(int i = 0; i < B; i++){
-     //
-     //     NumericVector xb(n);
-     //     niter = 0;
-     //     // print(xb);
-     //
-     //     // check!
-     //     LogicalVector id(n);
-     //     do {
-     //         id = xb==xb[0];
-     //
-     //         while(Rcpp::all(id).is_true()) {
-     //             xb = RcppArmadillo::sample(x,n,true);
-     //             id = xb==xb[0];
-     //         }
-     //
-     //         s_temp[i] = HMC_Cpp(xb)[0];
-     //
-     //         if(!std::isfinite(s_temp[i])){
-     //             s_temp[i] = sign(s_temp[i])*pow(n,10);
-     //         };
-     //
-     //         // asd = std::isnan(s_temp[i]);
-     //         // if(asd){
-     //         //     std::cout << std::isnan(s_temp[i]) << std::endl;
-     //         //     // Rprintf("condition is: %d \n", asd);
-     //         //     // Rprintf("s_temp is: %f \n", s_temp[i]);
-     //         // }
-     //
-     //         niter += 1;
-     //         // con false esce, con true resta
-     //         // check for whether a value is finite, e.g. not NaN,Inf, or -Inf, by using std::is_finite()
-     //     } while (!std::isfinite(s_temp[i]) & (niter < 10) );
-     //
-     // }
 
      // std::cout << s_temp << std::endl;
      return s_temp;
@@ -880,5 +976,4 @@ NumericVector HMC_BOOT_Cpp(NumericVector x, int B){
 #     times = 100
 # )
 # RHO_BOOT_Cpp_Parallel(x,99,4)
-
 */
