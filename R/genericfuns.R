@@ -422,6 +422,103 @@ plot.INARforecast <- function (x, ...){
 
 
 
+#' Plot bootstrap distribution of an INAR test
+#'
+#' @method plot INARtest
+#'
+#' @importFrom ggplot2 ggplot stat_ecdf geom_density stat_function labs theme_bw
+#' @importFrom stats ks.test pnorm
+#'
+#' @param x an object of class `INARtest`.
+#' @param which a character string specifying the type of plot to produce. Options are "density" for a density plot or "ecdf" for an empirical cumulative distribution function (ECDF) plot.
+#' @param ... additional arguments.
+#'
+#' @return A `ggplot` object.
+#' @export
+plot.INARtest <- function(x, which = "density", ...) {
+
+    if (!inherits(x, "INARtest")) {
+        stop("'x' must be an object of class 'INARtest'.", call. = FALSE)
+    }
+
+    if (x$test =="smc") {
+        # inserire parametrizzazioni specifici per SMC
+        # se serve, altrimenti eliminare questi if
+
+        if (is.null(x$bootvec)) {
+            stop(
+                "No bootstrap replications were found in the object.",
+                "Run SMCtest(..., saveboot = TRUE).",
+                call. = FALSE
+            )
+        }
+
+    } else {
+        stop(
+            "This plot method is currently implemented only for SMC tests.",
+            call. = FALSE
+        )
+    }
+
+
+    # controllo per presenza di replicazioni bootstrap finite
+    boot <- as.numeric(x$bootvec)
+    boot <- boot[is.finite(boot)]
+
+    if (length(boot) < 2L) {
+        stop(
+            "At least two finite bootstrap replications are required.",
+            call. = FALSE
+        )
+    }
+
+    # normal_mean <- unname(x$normal.reference["mean"])
+    # normal_sd <- unname(x$normal.reference["sd"])
+    # reference vc va cambiata solo per test di dispersion, per il resto è una Normale Standard
+    ks_result <- ks.test(boot,"pnorm",mean = 0,sd = 1,exact = FALSE)
+
+    ks_statistic <- unname(ks_result$statistic)
+    ks_pvalue <- ks_result$p.value
+
+    plot_subtitle <- sprintf(
+        "Kolmogorov-Smirnov test: D = %.4f, p-value = %s",
+        ks_statistic,
+        format.pval(ks_pvalue,digits = 4,eps = 0.0001)
+    )
+
+    plot_data <- data.frame(
+        statistic = boot
+    )
+
+
+    if(which == "density") {
+        gg <- ggplot(plot_data,aes(x = statistic)) +
+            # density of a standard normal distribution:
+            stat_function(fun = dnorm,args = list(mean = 0,sd = 1),
+                          linewidth = 0.9,colour = "darkred",linetype = "dashed") +
+            geom_density(linewidth = 0.9,colour = "navy") +
+            labs(
+                title = "Bootstrap distribution",
+                subtitle = plot_subtitle,
+                x = paste(toupper(x$test),"Bootstrap statistics"),
+                y = NULL
+            )
+    }else if(which == "ecdf") {
+        gg <- ggplot(plot_data,aes(x = statistic)) +
+            stat_ecdf(geom = "step",linewidth = 0.9,colour = "navy") +
+            stat_function(fun = pnorm,args = list(mean = 0,sd = 1),
+                linewidth = 0.9,colour = "darkred",linetype = "dashed") +
+            labs(
+                title = "Bootstrap distribution",
+                subtitle = plot_subtitle,
+                x = paste(toupper(x$test),"Bootstrap statistics"),
+                y = NULL
+                )
+    }
+    return(gg)
+}
+
+
 # Set methods (S4 style) ...................
 # setMethod("print", "INAR", print.INAR)
 # setMethod("summary", "INAR", summary.INAR)

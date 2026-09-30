@@ -42,6 +42,7 @@ get_info <- function(LIST){
 
     if(LIST$test == "smc"){
         OUT <- list(
+            test = LIST$test,
             method = paste(method_name, "Sun-McCabe",
                            ifelse(LIST$B > 0, "bootstrap", ""),
                            "test with", innovation, "innovations.",
@@ -54,6 +55,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "hmc"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Harris-McCabe",
                            ifelse(LIST$B > 0, "bootstrap", ""),
                            "test. ",
@@ -66,6 +68,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "zi_pv"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Test for zero-inflation in INAR(1) models - Puig & Valero."), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
@@ -75,6 +78,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "zi_vdb"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Test for zero-inflation in INAR(1) models - van den Broek"), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
@@ -84,6 +88,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "di"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Test for dispersion in INAR(1) models."), #  with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
@@ -93,6 +98,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "zidi_pv"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Chi-squared test for joint zero-inflation and dispersion in INAR(1) models - PV version."), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
@@ -102,6 +108,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "zidi_vdb"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Chi-squared test for joint zero-inflation and dispersion in INAR(1) models - VDB version."), # with", innovation, "innovations."),
             inn_name = innovation,
             inn_num = info_inn$inn_num[id_inn],
@@ -111,6 +118,7 @@ get_info <- function(LIST){
         )
     }else if(LIST$test == "ip"){
         OUT <- list(
+            test = LIST$test,
             method = paste("Ievoli-Palazzo INAR(1) Poissonity test.",
                            "SMC boostrap with", innovation, "innovations,",
                            "B1 =", LIST$B[1], "and B2 =", LIST$B[2],"boostrap replications."),

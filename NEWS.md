@@ -1,10 +1,15 @@
+# INAR 0.3.7
+
+* [LP] Added the `plot.INARtest()` function to plot the results of the INAR tests. It computes the distribution of the bootstrap test statistics and performs the Kolmogorov-Smirnov test to evaluate the goodness of fit of the bootstrap distribution to the theoretical one. The function is still in development phase, it will be fully available for all the available tests in the next updates.
+
+* [LP] The function `genINAR()` now has the possibility to generate INAR(p) processes with custom innovations by using the `custominn` option. More details are provided in the documentation..
+
+
 # INAr 0.3.6
 
 * [LP] Including some innovations in the package structure and in the code organization to improve the overall efficiency and speed of the package. These distributions are used in:
     * `genINAR()`, to generate INAR(p) processes with Katz, Geometric, Binomial, ZIP, ZINBF and Double Poisson innovations;
     * `getPAR()`, to retrieve YW and CLS estimation parameters for the Katz, Geometric, Binomial and Double Poisson cases.
-
-* [LP] The function `genINAR()` now has the possibility to generate INAR(p) processes with custom innovations by using the `custominn` option.
 
 * [LP] Added the `predict.INAR()` and `print.INARforecast()` functions to compute h-step ahead predictions from an INAR(p) model. The function is still in development phase, it will be fully available in the next updates.
 
