@@ -2,21 +2,30 @@
 % Please edit documentation in R/genericfuns.R
 \name{summary.INARforecast}
 \alias{summary.INARforecast}
+\alias{print.INARforecast}
 \alias{plot.INARforecast}
 \title{Summary of INAR forecast}
 \usage{
 \method{summary}{INARforecast}(object, ...)
+
+\method{print}{INARforecast}(x, ...)
 
 \method{plot}{INARforecast}(x, ...)
 }
 \arguments{
 \item{object}{an \code{INARforecast} object}
 
-\item{..., }{additional options}
+\item{...}{further arguments.}
+
+\item{x}{an object of class "INARforecast".}
 
 \item{x, }{an \code{INARforecast} object}
+
+\item{..., }{additional options}
 }
 \value{
+the original object, invisibly.
+
 the original object, invisibly.
 
 the original object, invisibly.
