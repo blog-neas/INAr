@@ -311,9 +311,51 @@ predict.INAR <- function(object,
         level = level
     )
     class(OUT) <- "INARforecast"
-    invisible(OUT)
+    return(OUT)
 }
 
+
+#' Print method for INAR forecast
+#' Print method for class `INARforecast`.
+#'
+#' @rdname INARforecast
+#' @method print INARforecast
+#' @export
+#' @importFrom utils head
+#'
+#' @param x an object of class "INARforecast".
+#' @param ... further arguments.
+#'
+#' @return the original object, invisibly.
+#' @export
+print.INARforecast <- function(x, ...) {
+
+    cat("\nINAR forecast\n")
+    cat("Horizon:", x$n.ahead, "step ahead(s)\n")
+    cat("Method:", x$type, "\n\n")
+
+    if (x$type == "mean") {
+
+        result <- data.frame(
+            step = seq_len(x$n.ahead),
+            forecast = x$forecast
+        )
+
+    } else {
+
+        result <- data.frame(
+            step = seq_len(x$n.ahead),
+            forecast = x$forecast,
+            median = x$forecastmedian,
+            lower = x$lower,
+            upper = x$upper
+        )
+    }
+
+    print(result, row.names = FALSE)
+
+    invisible(x)
+}
 
 
 #' Plotting INAR(p) Models

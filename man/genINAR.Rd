@@ -4,7 +4,7 @@
 \alias{genINAR}
 \title{Generate INAR(p) models with different innovations}
 \usage{
-genINAR(n, a, par, inn = "poi", burnout = 500)
+genINAR(n, a, par, inn = "poi", cutominn = NULL, burnout = 500)
 }
 \arguments{
 \item{n}{integer, number of observations, length of the series.}
@@ -16,6 +16,8 @@ genINAR(n, a, par, inn = "poi", burnout = 500)
 \item{inn}{character, innovation distribution. Default value is \code{"poi"}, alternative values are \code{"negbin"} for Negative Binomial, \code{"genpoi"} for Generalized Poisson and \code{"katz"} for the Katz family.}
 
 \item{burnout}{integer, number of starting observations to discard. Set to 500 by default.}
+
+\item{custominn}{list, a custom function to generate innovations. If provided, this function will be used instead of the built-in ones. The list should contain two elements: \code{dgp}, a function that generates the innovations and \code{par}, a list of parameters to be passed to the dgp function. The dgp function should take an integer n as its first argument and return a numeric vector of length n containing the generated innovations. The par list can contain any additional parameters required by the dgp function.}
 }
 \value{
 A number.

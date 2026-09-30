@@ -4,6 +4,7 @@
 #' @param a vector, thinning parameters. The lenght of this vector defines the number of lags `p` of the INAR(p) process.
 #' @param par vector, parameters related with the model, see the details section.
 #' @param inn character, innovation distribution. Default value is `"poi"`, alternative values are `"negbin"` for Negative Binomial, `"genpoi"` for Generalized Poisson and `"katz"` for the Katz family.
+#' @param custominn list, a custom function to generate innovations. If provided, this function will be used instead of the built-in ones. The list should contain two elements: `dgp`, a function that generates the innovations and `par`, a list of parameters to be passed to the dgp function. The dgp function should take an integer n as its first argument and return a numeric vector of length n containing the generated innovations. The par list can contain any additional parameters required by the dgp function.
 #' @param burnout integer, number of starting observations to discard. Set to 500 by default.
 # #' @param ... Additional arguments passed to the functions generating the random numbers.
 #' @details
@@ -33,7 +34,7 @@
 #'   \insertAllCited{}
 #' @return A number.
 #' @importFrom stats rpois rgeom rnorm runif rbinom rnbinom
-#' @importFrom gamlss.dist rDPO rZIP
+#' @importFrom gamlss.dist rDPO rZIP rZINBF
 #' @importFrom skellam rskellam
 #' @importFrom HMMpa rgenpois
 #' @importFrom VGAM ryules
@@ -47,7 +48,7 @@
 #' genINAR(500, a = 0.5, par = lam, inn = "poi")
 #'
 #' @export
-genINAR <- function(n, a, par, inn="poi", burnout=500){
+genINAR <- function(n, a, par, inn="poi", cutominn = NULL, burnout=500){
     stopifnot(is.vector(a) ,all(a >= 0), sum(a) < 1)
     lags <- length(a)
     inn <- tolower(inn)
@@ -84,6 +85,17 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
 
         # gamlss.dist::rZIP
         resid_ <- rZIP(s, mu = l_, sigma = sig_)
+    }else if(inn == "zinb"){
+        stopifnot(length(par)==2)
+
+        g_ <- unname(par[1]) # size, gamma
+        p_ <- unname(par[2]) # prob successo
+
+        # gamlss.dist::rZINBF
+        # CONTROLLARE SE FUNZIONA BENE, PERCHÉ NON È DOCUMENTATA SE GENERA
+        # DATI SEGUENDO LA STESSA PMF DELLA rnbinom !!!!
+        # in particolare: capire come impostare i parametri della generatrice
+        resid_ <- rZINBF(s, mu = g_, sigma = p_)
     }
     # else if(inn == "bimodal_poisson"){
     #     stopifnot(length(par)==3)
@@ -266,7 +278,62 @@ genINAR <- function(n, a, par, inn="poi", burnout=500){
     #     resid_[selettore] <-  rbinom(sum(selettore),enne_,pb_)
     #     resid_[!selettore] <- rnbinom(sum(!selettore),g_,p.compl_)
     # }
-    else{
+    else if (inn == "custom") {
+
+        if (is.null(custominn)) {
+            stop(
+                "'custominn' must be provided when inn = \"custom\".",
+                call. = FALSE
+            )
+        }
+
+        if (!is.list(custominn)) {
+            stop("'custominn' must be a list.", call. = FALSE)
+        }
+
+        if (!is.function(custominn$dgp)) {
+            stop(
+                "'custominn$dgp' must be a function.",
+                call. = FALSE
+            )
+        }
+
+        custom_par <- custominn$par
+
+        if (is.null(custom_par)) {
+            custom_par <- list()
+        } else if (!is.list(custom_par)) {
+            custom_par <- as.list(custom_par)
+        }
+
+        resid_ <- do.call(
+            custominn$dgp,
+            c(list(n = s), custom_par)
+        )
+
+        # Check se le caratteristiche dei residui sono coerenti con INARp_cpp
+        if (!is.numeric(resid_) || !is.atomic(resid_)) {
+            stop(
+                "The custom innovation generator must return a numeric vector.",
+                call. = FALSE
+            )
+        }
+
+        if (anyNA(resid_) || any(!is.finite(resid_))) {
+            stop(
+                "Custom innovations cannot contain missing or non-finite values.",
+                call. = FALSE
+            )
+        }
+
+        if (any(resid_ < 0) || any(resid_ != floor(resid_))) {
+            stop(
+                "Custom innovations must be non-negative integer values.",
+                call. = FALSE
+            )
+        }
+
+    }else{
         stop("please specify one of the available distributions", call. = FALSE)
     }
 

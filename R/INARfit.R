@@ -206,6 +206,12 @@ getPAR <- function(mINN, vINN, inn, eps = 1e-8) {
         }
 
         par <- c("a" = a, "b" = b)
+    }else if(inn == "zip"){
+        # TO DO
+
+    }else if(inn == "zinb"){
+        # TO DO
+
     }else if(inn == "dpoi"){
         mu <- max(mINN, eps)
         sigma <- max(vINN / mINN, eps)

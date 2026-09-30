@@ -1,10 +1,13 @@
 # INAr 0.3.6
 
-* [LP] Including some innovations in the package structure and in the code organization to improve the overall efficiency and speed of the package. In particular, I added the Geometric, Binomial and Katz distributions. These distributions are used in:
-    * `genINAR()`, to generate INAR(p) processes with Katz, Geometric, Binomial and Double Poisson innovations;
+* [LP] Including some innovations in the package structure and in the code organization to improve the overall efficiency and speed of the package. These distributions are used in:
+    * `genINAR()`, to generate INAR(p) processes with Katz, Geometric, Binomial, ZIP, ZINBF and Double Poisson innovations;
     * `getPAR()`, to retrieve YW and CLS estimation parameters for the Katz, Geometric, Binomial and Double Poisson cases.
 
-* [LP] Added the `predict.INAR()` function to compute h-step ahead predictions from an INAR(p) model. The function is still in development phase, but it will be available in the next updates. 
+* [LP] The function `genINAR()` now has the possibility to generate INAR(p) processes with custom innovations by using the `custominn` option.
+
+* [LP] Added the `predict.INAR()` and `print.INARforecast()` functions to compute h-step ahead predictions from an INAR(p) model. The function is still in development phase, it will be fully available in the next updates.
+
 
 # INAr 0.3.5
 
