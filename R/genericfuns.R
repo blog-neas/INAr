@@ -553,18 +553,18 @@ plot.INARtest <- function(x, which = "density", ...) {
         )
 
 
-        gg <- ggplot(plot_data2,aes(x = statistic, group = names)) +
+        gg <- ggplot(plot_data2,aes(x = statistic)) +
             labs(
                 title = plot_title,
                 subtitle = plot_subtitle,
-                x = gsub(" bootstrap replications"),
+                x = "Bootstrap replications",
                 y = NULL
             )
 
         if(which == "density") {
             gg <- gg +
                 # density of a standard normal distribution:
-                geom_density(linewidth = 0.8,colour = "gray80") +
+                geom_density(aes(group = names), linewidth = 0.8,colour = "gray80") +
                 stat_function(fun = dnorm,args = list(mean = 0,sd = 1),
                               linewidth = 0.9,colour = "darkred",linetype = "dashed") +
                 geom_density(data = plot_data1, linewidth = 0.9,colour = "navy")
@@ -572,7 +572,7 @@ plot.INARtest <- function(x, which = "density", ...) {
         }else if(which == "ecdf") {
             gg <- gg +
                 # ecdf of a standard normal distribution
-                stat_ecdf(geom = "step",linewidth = 0.8,colour = "gray80") +
+                stat_ecdf(aes(group = names), geom = "step",linewidth = 0.8,colour = "gray80") +
                 stat_function(fun = pnorm,args = list(mean = 0,sd = 1),
                               linewidth = 0.9,colour = "darkred",linetype = "dashed") +
                 stat_ecdf(data = plot_data1, geom = "step",linewidth = 0.9,colour = "navy")
