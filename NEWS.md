@@ -1,6 +1,6 @@
 # INAR 0.3.7
 
-* [LP] Added the `plot.INARtest()` function to plot the results of the INAR tests. It computes the distribution of the bootstrap test statistics and performs the Kolmogorov-Smirnov test to evaluate the goodness of fit of the bootstrap distribution to the theoretical one. The function is still in development phase, it will be fully available for all the available tests in the next updates.
+* [LP] Added the `plot.INARtest()` function to plot the results of the INAR tests. It computes the distribution of the bootstrap test statistics SMC, HMC and IP and performs the Kolmogorov-Smirnov test to evaluate the goodness of fit of the bootstrap distribution to the theoretical one.
 
 * [LP] The function `genINAR()` now has the possibility to generate INAR(p) processes with custom innovations by using the `custominn` option. More details are provided in the documentation..
 

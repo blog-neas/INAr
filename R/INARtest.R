@@ -270,7 +270,6 @@ IPtest <- function(X, B1 = 399, B2 = 399, inn = "poi", saveboot = FALSE) {
         ))
     OUT$data.name = deparse1(substitute(X))
 
-
     smc_est <- SMC_Cpp(X, OUT$inn_num)
     OUT$statistic <- c(S = smc_est[1])
     OUT$p.value <- smc_est[2]
@@ -279,7 +278,7 @@ IPtest <- function(X, B1 = 399, B2 = 399, inn = "poi", saveboot = FALSE) {
     OUT$statistic.boot <- c(Sb = mean(Sdb$z))
     # EXPERIMENTAL: the test statistic is not well-posed, TO DO FROM SCRATCH!
     OUT$p.value.boot <- mean(abs(Sdb$z) > abs(smc_est[1]), na.rm = TRUE)
-    if(saveboot) OUT$bootvec <- Sdb
+    # if(saveboot) OUT$bootvec <- Sdb
 
     # OUT$statistic <- c("mean(D)" = mean(apply(Sb$S_comb, 1, function(x)suppressWarnings(ks.test(x,Sb$s1)$stat))))
     # OUT$p.value <- mean(apply(Sb$S_comb, 1, function(x)suppressWarnings(ks.test(x,Sb$s1)$p.value)) < 0.05)
