@@ -585,10 +585,6 @@ plot.INARtest <- function(x, which = "density", ...) {
         )
     }
 
-
-    # normal_mean <- unname(x$normal.reference["mean"])
-    # normal_sd <- unname(x$normal.reference["sd"])
-    # reference vc va cambiata solo per test di dispersion, per il resto è una Normale Standard
     return(gg)
 }
 
