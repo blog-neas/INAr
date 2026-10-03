@@ -512,7 +512,7 @@ plot.INARtest <- function(x, which = "density", ...) {
 
         plot_title <- "Bootstrap distribution of Poissonity statistic"
 
-        boot <- as.numeric(bootvec$s1)
+        boot <- as.numeric(x$bootvec$s1)
         boot <- boot[is.finite(boot)]
 
         if (length(boot) < 2L) {
@@ -522,7 +522,7 @@ plot.INARtest <- function(x, which = "density", ...) {
             )
         }
 
-        boot2 <- bootvec$s2
+        boot2 <- x$bootvec$s2
         if (ncol(boot2) < 2L) {
             stop(
                 "At least two B2 bootstrap replications are required.",
