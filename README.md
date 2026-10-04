@@ -71,14 +71,14 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] with p $\geq$ 1
 - [ ] CLS estimation of INAR(p) processes
 	- [x] with p $\geq$ 1 and Poisson, Negative Binomial, Generalized Poisson, Katz and ZIP innovations
-	- [.] with p $\geq$ 1 and additional innovations (Geometric, Binomial, Double Poisson)
+	- ◉ with p $\geq$ 1 and additional innovations (Geometric, Binomial, Double Poisson)
 - [ ] SP estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
 	- [ ] with p = 1 and additional innovations (Negative Binomial, Generalized Poisson, Katz, Geometric, Binomial, ZIP, ...)
 	- [ ] with p $\geq$ 1
 - [ ] YW estimation of INAR(p) processes
 	- [x] with p $\geq$ 1 and Poisson, Negative Binomial, Generalized Poisson, Katz and ZIP innovations
-	- [.] with p $\geq$ 1 and additional innovations (Geometric, Binomial, Double Poisson)
+	- ◉ with p $\geq$ 1 and additional innovations (Geometric, Binomial, Double Poisson)
 
 3. **Testing for the presence of INAR structure** 
 
@@ -127,7 +127,7 @@ Some functionalities are already available, while others are planned for the fut
 Legend: 
 
 - [x] = available
-- [.] = testing
+- ◉ = testing
 - [ ] = planned/in progress
 
 

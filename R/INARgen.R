@@ -29,6 +29,14 @@
 #' **Katz**. Innovations are \eqn{\varepsilon_t \sim Poi(\lambda)}
 #' * `par` =  c(\eqn{\alpha,\beta}).. alpha and beta ...
 #'
+#' **Zero-Inflated Poisson** \insertCite{piancastelli2019inferential}{INAr}. Innovations are \eqn{\varepsilon_t \sim ZIP(\lambda,\rho)}
+#' \deqn{P(\varepsilon_t = k) = \begin{cases}
+#' \rho + (1-\rho) e^{-\lambda}, & \text{if } k = 0, \\
+#' (1-\rho)\dfrac{e^{-\lambda} \lambda^k}{k!}, & \text{if } k > 0,
+#' \end{cases}}
+#' for \eqn{k \in \mathbb{N}}, where \eqn{\lambda \geq 0} is the Poisson parameter and \eqn{\rho \in [0,1]} is the zero-inflation mixing parameter.
+#' * `par` =  c(\eqn{\lambda,\rho}).
+#'
 #' By the way, gatto gatto miao miao [genINAR()].
 #' @references
 #'   \insertAllCited{}
