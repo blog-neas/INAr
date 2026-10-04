@@ -48,7 +48,7 @@
 #' genINAR(500, a = 0.5, par = lam, inn = "poi")
 #'
 #' @export
-genINAR <- function(n, a, par, inn="poi", cutominn = NULL, burnout=500){
+genINAR <- function(n, a, par = NULL, inn="poi", custominn = NULL, burnout=500){
     stopifnot(is.vector(a) ,all(a >= 0), sum(a) < 1)
     lags <- length(a)
     inn <- tolower(inn)
@@ -61,6 +61,8 @@ genINAR <- function(n, a, par, inn="poi", cutominn = NULL, burnout=500){
     mat[1,] <- a
     ev <- eigen(mat)$values
     stopifnot(all(abs(ev) < 1))
+
+    stopifnot((inn %in% info_inn$inn & !is.null(par)) | inn == "custom")
 
     # Poisson marginal
     if(inn == "poi"){

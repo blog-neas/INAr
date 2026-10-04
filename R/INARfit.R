@@ -207,8 +207,12 @@ getPAR <- function(mINN, vINN, inn, eps = 1e-8) {
 
         par <- c("a" = a, "b" = b)
     }else if(inn == "zip"){
-        # TO DO
+        cvINN <- vINN/mINN
+        lambda <- cvINN + mINN - 1
+        # sigma = mixing parameter
+        sigma <- 1 - mINN/lambda
 
+        par <- c("lambda" = lambda, "sigma" = sigma)
     }else if(inn == "zinb"){
         # TO DO
 
@@ -248,73 +252,3 @@ getPAR <- function(mINN, vINN, inn, eps = 1e-8) {
     }
     return(par)
 }
-
-# TENERE SEMPRE COMMENTATO!
-# library(INAr)
-# N <-10000
-# y <- genINAR(N,0.6,par=c(2,0.5),inn="dpoi")$X
-# mod <- INAR(X=y, p=2, inn="dpoi", method = "YW")
-# plot(y,type = "b")
-# mod$par
-# y <- genINAR(N,c(0.4,0.2),par=c(2,0.5),inn="dpoi")$X
-# mod <- INAR(X=y, p=2, inn="dpoi", method = "CLS")
-# plot(y,type = "b")
-# mod$par
-# y <- genINAR(N,c(0.4,0.2),par=c(2,0.5),inn="katz")$X
-# mod <- INAR(X=y, p=2, inn="katz", method = "CLS")
-# plot(y,type = "b")
-# mod$par
-# y <- genINAR(N,c(0.4,0.2),par=0.5,inn="geom")$X
-# mod <- INAR(X=y, p=2, inn="geom", method = "CLS")
-# plot(y,type = "b")
-# mod$par
-# y <- genINAR(N,c(0.4,0.2),par=c(2,0.5),inn="bin")$X
-# mod <- INAR(X=y, p=2, inn="bin", method = "CLS")
-# plot(y,type = "b")
-# mod$par
-# veloce esempio --------------------------------------------------------
-# library(INAr)
-# N <-100
-# y <- genINAR(N,c(0.2,0.4,0.1),par=1.5,inn="poi")$X
-# # mod <- INAR(X=y, p=3, inn="poi", method = "YW")
-# # p1 <- predict(mod,200, type = "mean")
-# # p2 <- predict(mod,200, type = "boot")
-# # # plot:
-# # plot(c(y,rep(NA,200)),type = "b")
-# # abline(h = mean(y), lty=2)
-# # lines(c(rep(NA,N),p1$forecast), col = "blue")
-# # lines(c(rep(NA,N),p2$forecast), col = "red")
-# # lines(c(rep(NA,N),p2$lower), col = "green")
-# # lines(c(rep(NA,N),p2$upper), col = "green")
-# #
-# library(INAr)
-# N <-100
-# y <- genINAR(N,c(0.2,0.4,0.1),par=1.5,inn="poi")$X
-# z <- rep(NA,N)
-# zb <- rep(NA,N)
-# zb2 <- rep(NA,N)
-# for(i in 80:99){
-#     mod <- INAR(X=y[1:i], p=1, inn="poi", method = "YW")
-#     z[i+1] <- predict(mod,1, type = "mean")$forecast
-#     zb[i+1] <- predict(mod,1, type = "boot", B = 4999)$forecastmedian
-#     zb2[i+1] <- predict(mod,1, type = "boot", B = 4999)$forecast
-# }
-# plot(y,type = "b")
-# abline(h = mean(y), lty=2)
-# lines(z, col = "blue")
-# lines(zb, col = "red")
-# lines(zb2, col = "green")
-#
-# mean(abs(y[81:100] - z[81:100]), na.rm = TRUE)
-# mean(abs(y[81:100] - zb[81:100]), na.rm = TRUE)
-# mean(abs(y[81:100] - zb2[81:100]), na.rm = TRUE)
-#
-# y <- genINAR(N,c(0.9,0.01),par=2,inn="poi")$X
-# INAR(y, p=2)
-# y <- genINAR(N,c(0.6,0.2),par=c(2,0.7),inn="negbin")$X
-# mod <- INAR(y, p=2, inn="negbin")
-# predict(mod,5)
-# y <- genINAR(N,c(0.8,0.01),par=2,inn="poi")$X
-# mod < INAR(y, p=2, inn="negbin")
-# predict(mod,5)
-

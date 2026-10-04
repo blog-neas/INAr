@@ -422,6 +422,173 @@ plot.INARforecast <- function (x, ...){
 
 
 
+#' Plot bootstrap distribution of an INAR test
+#'
+#' @method plot INARtest
+#'
+#' @importFrom ggplot2 ggplot stat_ecdf geom_density stat_function labs theme_bw
+#' @importFrom stats ks.test pnorm
+#' @importFrom dplyr case_match
+#'
+#' @param x an object of class `INARtest`.
+#' @param which a character string specifying the type of plot to produce. Options are "density" for a density plot or "ecdf" for an empirical cumulative distribution function (ECDF) plot.
+#' @param ... additional arguments.
+#'
+#' @return A `ggplot` object.
+#' @export
+plot.INARtest <- function(x, which = "density", ...) {
+
+    if (!inherits(x, "INARtest")) {
+        stop("'x' must be an object of class 'INARtest'.", call. = FALSE)
+    }
+
+    if (is.null(x$bootvec)) {
+        stop(
+            "No bootstrap replications were found in the object.",
+            "Add the argument `saveboot = TRUE` when calling the test function.",
+            call. = FALSE
+        )
+    }
+
+
+    if (x$test %in% c("smc", "hmc")) {
+
+        # controllo per presenza di replicazioni bootstrap finite
+        boot <- as.numeric(x$bootvec)
+        boot <- boot[is.finite(boot)]
+
+        if (length(boot) < 2L) {
+            stop(
+                "At least two finite bootstrap replications are required.",
+                call. = FALSE
+            )
+        }
+
+        plot_title <- sprintf(
+            "Bootstrap distribution of %s statistic",
+            toupper(x$test)
+        )
+
+        ks_result <- ks.test(boot,"pnorm",mean = 0,sd = 1, exact = FALSE)
+
+        ks_statistic <- unname(ks_result$statistic)
+        ks_pvalue <- ks_result$p.value
+
+        plot_subtitle <- sprintf(
+            "Kolmogorov-Smirnov test: D = %.4f, p-value = %s",
+            ks_statistic,
+            format.pval(ks_pvalue,digits = 4,eps = 0.0001)
+        )
+
+        plot_data <- data.frame(
+            statistic = boot
+        )
+
+        gg <- ggplot(plot_data,aes(x = statistic)) +
+            labs(
+                title = plot_title,
+                subtitle = plot_subtitle,
+                x = gsub(" bootstrap replications", "", x$method), # paste("B =",length(x$bootvec),"Bootstrap replications"),
+                y = NULL
+            )
+
+
+        if(which == "density") {
+            gg <- gg +
+                # density of a standard normal distribution:
+                stat_function(fun = dnorm,args = list(mean = 0,sd = 1),
+                              linewidth = 0.9,colour = "darkred",linetype = "dashed") +
+                geom_density(linewidth = 0.9,colour = "navy")
+        }else if(which == "ecdf") {
+            gg <- gg +
+                # ecdf of a standard normal distribution
+                stat_function(fun = pnorm,args = list(mean = 0,sd = 1),
+                              linewidth = 0.9,colour = "darkred",linetype = "dashed") +
+                stat_ecdf(geom = "step",linewidth = 0.9,colour = "navy")
+        }
+
+
+    } else if (x$test == "ip") {
+
+        plot_title <- "Bootstrap distribution of Poissonity statistic"
+
+        boot <- as.numeric(x$bootvec$s1)
+        boot <- boot[is.finite(boot)]
+
+        if (length(boot) < 2L) {
+            stop(
+                "At least two finite B1 bootstrap replications are required.",
+                call. = FALSE
+            )
+        }
+
+        boot2 <- x$bootvec$s2
+        if (ncol(boot2) < 2L) {
+            stop(
+                "At least two B2 bootstrap replications are required.",
+                call. = FALSE
+            )
+        }
+
+        # densità normale per boot1 solo
+        ks_result <- ks.test(boot,"pnorm",mean = 0,sd = 1, exact = FALSE)
+
+        ks_statistic <- unname(ks_result$statistic)
+        ks_pvalue <- ks_result$p.value
+
+        plot_subtitle <- sprintf(
+            "Kolmogorov-Smirnov test for B1: D = %.4f, p-value = %s",
+            ks_statistic,
+            format.pval(ks_pvalue,digits = 4,eps = 0.0001)
+        )
+
+        plot_data1 <- data.frame(
+            names = "S1",
+            statistic = boot
+        )
+
+        plot_data2 <- data.frame(
+            names = rep(paste0("S2_",1:length(boot)), each = ncol(boot2)),
+            statistic = t(boot2) |> as.vector()
+        )
+
+
+        gg <- ggplot(plot_data2,aes(x = statistic)) +
+            labs(
+                title = plot_title,
+                subtitle = plot_subtitle,
+                x = "Bootstrap replications",
+                y = NULL
+            )
+
+        if(which == "density") {
+            gg <- gg +
+                # density of a standard normal distribution:
+                geom_density(aes(group = names), linewidth = 0.8,colour = "gray80") +
+                stat_function(fun = dnorm,args = list(mean = 0,sd = 1),
+                              linewidth = 0.9,colour = "darkred",linetype = "dashed") +
+                geom_density(data = plot_data1, linewidth = 0.9,colour = "navy")
+
+        }else if(which == "ecdf") {
+            gg <- gg +
+                # ecdf of a standard normal distribution
+                stat_ecdf(aes(group = names), geom = "step",linewidth = 0.8,colour = "gray80") +
+                stat_function(fun = pnorm,args = list(mean = 0,sd = 1),
+                              linewidth = 0.9,colour = "darkred",linetype = "dashed") +
+                stat_ecdf(data = plot_data1, geom = "step",linewidth = 0.9,colour = "navy")
+        }
+
+    } else {
+        stop(
+            "This plot is not implemented for the current test.",
+            call. = FALSE
+        )
+    }
+
+    return(gg)
+}
+
+
 # Set methods (S4 style) ...................
 # setMethod("print", "INAR", print.INAR)
 # setMethod("summary", "INAR", summary.INAR)
