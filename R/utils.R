@@ -13,11 +13,11 @@
 #' @keywords internal
 #' @noRd
 info_inn <- data.frame(
-    inn = c("poi", "negbin", "genpoi", "katz","geom","bin","dpoi","none"),
-    inn_name = c("Poisson", "Negative Binomial", "Generalized Poisson", "Katz","Geometric","Binomial","Double Poisson","none"),
-    inn_num = c(1,2,3,4,5,6,7,NA),
-    smc = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, NA),
-    hmc = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NA)
+    inn = c("poi", "negbin", "genpoi", "katz","geom","bin","dpoi","zip","none"),
+    inn_name = c("Poisson", "Negative Binomial", "Generalized Poisson", "Katz","Geometric","Binomial","Double Poisson","Zero-Inflated Poisson","none"),
+    inn_num = c(1,2,3,4,5,6,7,8,NA),
+    smc = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NA),
+    hmc = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NA)
 )
 # usethis::use_data(info_inn, internal = TRUE)
 
@@ -129,7 +129,6 @@ get_info <- function(LIST){
             check = info_inn$smc[id_inn]
         )
     }
-
 
     if(!is.null(LIST$parameter)) OUT$parameter <- LIST$parameter
     if(is.null(LIST$statistic)){OUT$statistic <- c(S = NA)}else{OUT$statistic <- LIST$statistic}

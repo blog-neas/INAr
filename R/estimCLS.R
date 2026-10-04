@@ -93,21 +93,3 @@ estimCLS <- function(X, p, inn) {
     return(OUT)
 }
 
-
-
-# esempio, tipo unit root test
-# library(INAr)
-# xx <- genINAR(100000, a = 0.5, par = 2, inn = "poi")$X
-# INAr:::estimCLS(xx, p = 1, inn = "poi")
-# zz <- genINAR(100000, a = 0.4, par = c(5,0.8), inn = "negbin")$X
-# INAr:::estimCLS(zz, p = 1, inn = "negbin")
-# yy <- genINAR(100000, a = 0.3, par = c(2,0.5), inn = "genpoi")$X
-# INAr:::estimCLS(yy, p = 1, inn = "genpoi")
-# #
-# xx <- genINAR(100000, a = c(0.5,0.2), par = 2, inn = "poi")$X
-# INAr:::estimCLS(xx, p = 2, inn = "poi")
-# zz <- genINAR(100000, a = c(0.5,0.2), par = c(5,0.8), inn = "negbin")$X
-# INAr:::estimCLS(zz, p = 2, inn = "negbin")
-# yy <- genINAR(100000, a = c(0.5,0.1), par = c(2,0.5), inn = "genpoi")$X
-# INAr:::estimCLS(yy, p = 2, inn = "genpoi")
-

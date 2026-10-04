@@ -1,3 +1,10 @@
+# INAR 0.3.8
+
+* [LP] Now it is possible to generate INAR(p) processes with ZIP innoations and estimate model parameters by using the YW or CLS procedures.
+
+* [LP] Still working on the same implementation for ZINB INAR(p) models.
+
+
 # INAR 0.3.7
 
 * [LP] Added the `plot.INARtest()` function to plot the results of the INAR tests. It computes the distribution of the bootstrap test statistics SMC, HMC and IP and performs the Kolmogorov-Smirnov test to evaluate the goodness of fit of the bootstrap distribution to the theoretical one.
