@@ -57,38 +57,28 @@ Some functionalities are already available, while others are planned for the fut
 1. **Generation of INAR(p) processes** 
 
 - [x] Generation of INAR(p) process with different innovations
-	- [x] Poisson
-	- [x] Negative Binomial
-	- [x] Generalized Poisson
-	- [x] Katz
-	- [x] Additional innovations: Geometric, Binomial
-- [ ] Include the possibility to use custom innovations
+	- [x] Poisson, Negative Binomial, Geometric, Binomial
+	- [x] Generalized Poisson, Katz
+	- [x] ZIP
+	- [ ] other innovations (Good, Double Poisson, ZINB, ...)
+- [x] Include the possibility to use custom innovations
 
 2. **Estimation of INAR(p) processes**
 
 - [ ] CML estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
-	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and Generalized Poisson innovations
-	- [ ] with p >= 1 and additional innovations (Katz, Geometric, Binomial, ...)
+	- [ ] with p = 1 and additional innovations (Negative Binomial, Generalized Poisson, Katz, Geometric, Binomial, ZIP, ...)
+	- [ ] with p $\geq$ 1
 - [ ] CLS estimation of INAR(p) processes
-	- [x] with p >= 1 and Poisson innovations
-	- [x] with p >= 1 and Negative Binomial innovations
-	- [x] with p >= 1 and Generalized Poisson innovations
-	- [x] with p >= 1 and Katz innovations
-	- [x] with p >= 1 and additional innovations (Geometric, Binomial, Double Poisson)
+	- [x] with p $\geq$ 1 and Poisson, Negative Binomial, Generalized Poisson, Katz and ZIP innovations
+	- [.] with p $\geq$ 1 and additional innovations (Geometric, Binomial, Double Poisson)
 - [ ] SP estimation of INAR(p) processes
 	- [x] with p = 1 and Poisson innovations
-	- [ ] with p = 1 and Negative Binomial innovations
-	- [ ] with p = 1 and Generalized Poisson innovations
-	- [ ] with p = 1 and additional innovations (Katz, Good, ...)
-	- [ ] with p > 1 and additional innovations
+	- [ ] with p = 1 and additional innovations (Negative Binomial, Generalized Poisson, Katz, Geometric, Binomial, ZIP, ...)
+	- [ ] with p $\geq$ 1
 - [ ] YW estimation of INAR(p) processes
-	- [x] with p >= 1 and Poisson innovations
-	- [x] with p >= 1 and Negative Binomial innovations
-	- [x] with p >= 1 and Generalized Poisson innovations
-	- [x] with p >= 1 and Katz innovations
-	- [x] with p >= 1 and additional innovations (Geometric, Binomial, Double Poisson)
+	- [x] with p $\geq$ 1 and Poisson, Negative Binomial, Generalized Poisson, Katz and ZIP innovations
+	- [.] with p $\geq$ 1 and additional innovations (Geometric, Binomial, Double Poisson)
 
 3. **Testing for the presence of INAR structure** 
 
@@ -133,6 +123,12 @@ Some functionalities are already available, while others are planned for the fut
 	- [ ] Releasing to CRAN
 	- [ ] Lifecycle
 	- [ ] References
+
+Legend: 
+
+- [x] = available
+- [.] = testing
+- [ ] = planned/in progress
 
 
 #### Further steps and developments
